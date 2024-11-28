@@ -1,0 +1,90 @@
+/* Ensure the navbar container uses flexbox */
+.navbar .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Center the search bar within the available space */
+  .search-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  /* Align the logo to the left corner */
+  .navbar-logo {
+    max-width: 200px; /* Set a max width for the logo */
+    width: auto;
+  }
+
+  .search-container.active input {
+    width: 200px;
+    opacity: 1;
+
+  }
+
+  /* Optional: Style for the search icon */
+  .search-container .material-icons {
+    cursor: pointer;
+    align-items: center;
+  }
+
+  /* Style for the sub-navbar */
+  .navbar-nav {
+    display: flex;
+    width: 100%; /* Make navbar-nav take up full width */
+  }
+
+  .navbar-nav .left-group {
+    display: flex;
+    justify-content: flex-start;
+    flex-grow: 1;
+  }
+
+  .navbar-nav .right-group {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .navbar-nav .nav-item {
+    padding: 0 15px; /* Adjust padding to space out items further if necessary */
+  }
+
+  .container {
+    overflow: hidden;
+    .slider {
+      animation: slidein 30s linear infinite;
+      white-space: nowrap;
+      .logos {
+        width: 100%;
+        display: inline-block;
+        margin: 0px 0;
+        .fab {
+          width: calc(100% / 5);
+          animation: fade-in 0.5s
+            cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+        }
+      }
+    }
+  }
+
+  @keyframes slidein {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-100%, 0, 0);
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
