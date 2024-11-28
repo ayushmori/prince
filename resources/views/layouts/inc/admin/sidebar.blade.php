@@ -45,8 +45,8 @@
             
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home Silder</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="general-widget.html">Add Silder</a></li>
-                <li><a href="chart-widget.html">View Silder</a></li>
+                <li><a href="{{ url('admin/sliders/create' )}}">Add Silder</a></li>
+                <li><a href="{{ url('admin/sliders' )}}">View Silder</a></li>
               </ul>
             </li>
 

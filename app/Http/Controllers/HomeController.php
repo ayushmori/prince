@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Slider;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $sliders = Slider::all();
+
+        // Pass the sliders data to the view
+        return view('index',compact('sliders'));
     }
 }

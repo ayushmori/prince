@@ -4,34 +4,28 @@
 
 @section('content')
 
-    <!-- Image Full Page Slider -->
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img class="d-block w-100" src="{{ asset('assets/silder/silder-1.jpg') }}" alt="First slide">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('assets/silder/silder-2.jpg') }}" alt="Second slide">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('assets/silder/silder-3.jpg') }}" alt="Third slide">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('assets/silder/silder-1.jpg') }}" alt="Third slide">
-        </div>
-        <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('assets/silder/silder-2.jpg') }}" alt="Third slide">
-        </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        @foreach ($sliders as $key => $sliderItem)
+            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                @if ($sliderItem->image)
+                    <img src="{{ asset($sliderItem->image) }}" class="d-block w-100" alt="Image">
+                @endif
+            </div>
+        @endforeach
     </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+
 
 
     <!-- Brands Slider  -->

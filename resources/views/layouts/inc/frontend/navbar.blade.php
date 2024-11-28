@@ -23,10 +23,35 @@
 
     <!-- Admin and Dropdown (Right Side) -->
     <div class="d-flex">
-      <!-- Admin Icon -->
-      <span class="navbar-text me-3">
-        <i class="fas fa-user-cog"></i> Admin
-      </span>
+      <!-- Admin -->
+<div class="dropdown me-3">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fa-solid fa-user"></i> 
+      @guest
+          Log In
+      @else
+          {{ Auth::user()->name }}
+      @endguest
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      @guest
+          <li><a href="{{ route('login') }}" class="dropdown-item">Login</a></li>
+          <li><a href="{{ route('register') }}" class="dropdown-item">Register</a></li>
+      @else
+          <li><a href="#" class="dropdown-item">{{ Auth::user()->name }}</a></li>
+          <li>
+              <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                  Logout
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  @csrf
+              </form>
+          </li>
+      @endguest
+  </ul>
+</div>
+
+      </div>
 
       <!-- Language Dropdown with Flag Icon -->
       <div class="dropdown me-3">
@@ -40,10 +65,12 @@
         </ul>
       </div>
 
+      <!-- Download Button -->
+      <a href="#" class="btn btn-primary">Download</a>
 
       
       <!-- Login  -->
-      @guest
+      {{-- @guest
       <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
       <li><a href="{{ route('register') }}" class="nav-link">Register</a></li>
     @else
@@ -56,7 +83,7 @@
           @csrf
         </form>
       </li>
-    @endguest
+    @endguest --}}
 
 
 
