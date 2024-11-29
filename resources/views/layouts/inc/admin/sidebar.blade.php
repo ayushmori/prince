@@ -37,8 +37,8 @@
 
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="layout"></i><span>Category</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="box-layout.html">Add Category</a></li>
-                <li><a href="layout-rtl.html">View Category</a></li>
+                <li><a href="{{url('admin/category/create')}}">Add Category</a></li>
+                <li><a href="{{url('admin/category')}}">View Category</a></li>
               </ul>
             </li>
             
