@@ -29,7 +29,7 @@
                     </div>
                     <div class="mb-3">
                         <label>Current Image</label><br>
-                        <img src="{{ asset($slider->image) }}" alt="Slider Image" style="width: 100px; height: 100px;">
+                        <img src="{{ asset($slider->image) }}" alt="Slider Image" height="50px">
                     </div>
                     <div class="mb-3">
                         <label>Upload New Image</label>

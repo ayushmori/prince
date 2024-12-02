@@ -26,7 +26,7 @@
       <!-- Admin -->
 <div class="dropdown me-3">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-      <i class="fa-solid fa-user"></i> 
+      <i class="fa-solid fa-user"></i>
       @guest
           Log In
       @else
@@ -68,7 +68,7 @@
       <!-- Download Button -->
       <a href="#" class="btn btn-primary">Download</a>
 
-      
+
       <!-- Login  -->
       {{-- @guest
       <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
@@ -87,7 +87,7 @@
 
 
 
-    
+
     </div>
   </div>
 </nav>
@@ -109,7 +109,11 @@
         </div>
 
         <!-- Right Group - Space items on the right -->
+
         <div class="right-group">
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('news')}}">News</a>
+              </li>
           <li class="nav-item">
             <a class="nav-link" href="#">About Us</a>
           </li>
