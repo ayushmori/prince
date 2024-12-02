@@ -46,27 +46,6 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin.')->gro
         Route::delete('/{slider}', 'destroy')->name('destroy');
     });
 
-    // Route::resource('categories', CategoryController::class);
-
-    Route::controller(CategoryController::class)->prefix('category')->group(function () {
-         // Index - Show all categories
-    Route::get('/', 'index')->name('index');
-    
-    // Create - Show form for creating a category
-    Route::get('/create', 'create')->name('create');
-    
-    // Store - Save new category to the database
-    Route::post('/create', 'store')->name('store');
-    
-    // Edit - Show form for editing an existing category
-    Route::get('/edit/{category_id}', 'edit')->name('edit'); // Note: Changed to GET
-    
-    // Update - Update the category in the database
-    Route::put('/update/{category_id}', 'update')->name('update');  // Correct route definition for PUT
-    
-    // Destroy - Delete a category
-    Route::delete('/{category}', 'destroy')->name('destroy');
-    });
 });
 
 
