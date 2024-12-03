@@ -1,3 +1,4 @@
+
  <!-- Page Sidebar Start-->
  <div class="sidebar-wrapper">
     <div>
@@ -10,7 +11,7 @@
         <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
         <div id="sidebar-menu">
           <ul class="sidebar-links" id="simple-bar">
-            <li class="back-btn"><a href="index.html"><img class="img-fluid" src="{{ asset('admin/images/logo/logo-icon.png') }}" alt=""></a>
+            <li class="back-btn"><a href="#"><img class="img-fluid" src="{{ asset('admin/images/logo/logo-icon.png') }}" alt=""></a>
               <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
             </li>
             <li class="sidebar-main-title">
@@ -21,15 +22,15 @@
             </li>
             <li class="sidebar-list">
               <a class="sidebar-link sidebar-title" href="{{ route('admin.dashboard') }}">
-                  <i data-feather="home"></i><span>Dashboard</span>
+                  <i data-feather="home"></i><span  class="lan-3">Dashboard</span>
               </a>
             </li>
 
 
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Brands</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="general-widget.html">Add Brand</a></li>
-                <li><a href="chart-widget.html">View Brand</a></li>
+                <li><a href="{{ url('admin/brands/create' )}}">Add Brand</a></li>
+                <li><a href="{{ url('admin/brands' )}}">View Brand</a></li>
               </ul>
             </li>
 
@@ -37,16 +38,24 @@
 
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="layout"></i><span>Category</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="box-layout.html">Add Category</a></li>
-                <li><a href="layout-rtl.html">View Category</a></li>
+                <li><a href="{{ url('admin/categories/create' )}}">Add Category</a></li>
+                <li><a href="{{ url('admin/categories' )}}">View Category</a></li>
               </ul>
             </li>
             
             
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home Silder</span></a>
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home Slider</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="{{ url('admin/sliders/create' )}}">Add Silder</a></li>
-                <li><a href="{{ url('admin/sliders' )}}">View Silder</a></li>
+                <li><a href="{{ url('admin/sliders/create' )}}">Add Slider</a></li>
+                <li><a href="{{ url('admin/sliders' )}}">View Slider</a></li>
+              </ul>
+            </li>
+
+
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>News</span></a>
+              <ul class="sidebar-submenu">
+                <li><a href="{{ url('admin/sliders/create' )}}">Add News</a></li>
+                <li><a href="{{ url('admin/sliders' )}}">View News</a></li>
               </ul>
             </li>
 

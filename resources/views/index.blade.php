@@ -10,7 +10,7 @@
         @foreach ($sliders as $key => $sliderItem)
             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                 @if ($sliderItem->image)
-                    <img src="{{ asset($sliderItem->image) }}" class="d-block w-100" alt="Image">
+                    <img src="{{ asset('uploads/slider/'.$sliderItem->image) }}" class="d-block w-100" alt="Image">
                 @endif
             </div>
         @endforeach

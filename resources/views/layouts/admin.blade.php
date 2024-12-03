@@ -50,17 +50,25 @@
 
     @livewireStyles
 </head>
-<body>
+<body onload="startTime()">
+    <div class="loader-wrapper">
+      <div class="loader-index"><span></span></div>
+      <svg>
+        <defs></defs>
+        <filter id="goo">
+          <fegaussianblur in="SourceGraphic" stddeviation="11" result="blur"></fegaussianblur>
+          <fecolormatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"> </fecolormatrix>
+        </filter>
+      </svg>
+    </div>
 
-  <div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-wrapper compact-wrapper" id="pageWrapper">
     @include('layouts.inc.admin.navbar')
     <div class="page-body-wrapper">
         @include('layouts.inc.admin.sidebar')
         <div class="page-body">
-          <div class="container-fluid"> 
-                @yield('content')
-            </div>
-        </div>
+                 @yield('content')
+         </div>
     </div>
 </div>
 
@@ -105,10 +113,13 @@
 
 <!-- Theme JS -->
 <script src="{{ asset('admin/js/script.js') }}"></script>
-<script src="{{ asset('admin/js/theme-customizer/customizer.js') }}"></script>
 
-<!-- Livewire Scripts -->
-@livewireScripts
+@yield('scripts')
+    @livewireScripts
+    <livewire:styles />
+    <livewire:scripts />
+
+    @stack('script')
 
 </body>
 </html>

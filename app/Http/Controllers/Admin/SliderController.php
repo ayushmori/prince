@@ -35,17 +35,17 @@ class SliderController extends Controller
     {
         return view('admin.slider.create');
     }
+    
     public function store(SliderFormRequest $request)
     {
         $validatedData = $request->validated();
-
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
             $file->move('uploads/slider/', $filename);
-            $validatedData['image'] = "uploads/slider/$filename";
+            $validatedData['image'] = $filename;
         }
         
 
@@ -59,6 +59,8 @@ class SliderController extends Controller
 
         return redirect('admin/sliders')->with('message','Slider added Successfuly');
     }
+
+    
     public function edit(Slider $slider)
     {
         return view('admin.slider.edit',compact('slider'));
@@ -77,7 +79,7 @@ class SliderController extends Controller
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
             $file->move('uploads/slider/', $filename);
-            $validatedData['image'] = "uploads/slider/$filename";
+            $validatedData['image'] = $filename;
         }
         
 
