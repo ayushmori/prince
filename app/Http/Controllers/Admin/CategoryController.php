@@ -34,21 +34,33 @@ class CategoryController extends Controller
         $category->name = $validatedData['name'];
         $category->slug = Str::slug($validatedData['slug']);
         $category->description = $validatedData['description'];
-        $category->serial_number = $validatedData['serial_number']; 
+        $category->serial_number = $validatedData['serial_number'];
 
         // Handle the image upload if exists
         if ($request->hasFile('image')) {
             $file = $request->file('image');
+
+            // Validate the file
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
 
-            // Move the file to the specified path
+            // Ensure directory exists
             $path = public_path('uploads/category');
+            if (!file_exists($path)) {
+                mkdir($path, 0755, true);
+            }
+
+            // Move the file
             $file->move($path, $filename);
 
-            // Save the image path in the database
-            $category->image = $filename;
+            // Save the relative path in the database
+            $category->image = 'uploads/category/' . $filename;
         }
+
 
 
         // Save the new category to the database
@@ -115,7 +127,7 @@ class CategoryController extends Controller
         if (!file_exists(public_path('uploads/category'))) {
             mkdir(public_path('uploads/category'), 0777, true);
         }
-        
+
 
         // Delete the category from the database
         $category->delete();
