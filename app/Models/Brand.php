@@ -14,4 +14,5 @@ class Brand extends Model
         'description',
         'serial_number',
     ];
+    
 }

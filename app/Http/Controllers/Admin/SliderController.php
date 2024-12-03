@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\SliderFormRequest;
+use App\Models\Brand;
 
 class SliderController extends Controller
 {
@@ -14,6 +15,7 @@ class SliderController extends Controller
     {
         // Retrieve all sliders from the database
         $sliders = Slider::all();
+
 
         // Pass the sliders data to the view
         return view('admin.slider.index',compact('sliders'));
@@ -23,12 +25,13 @@ class SliderController extends Controller
     {
         // Retrieve all sliders from the database
         $sliders = Slider::all();
+        $brand = Brand::all();
 
         // Pass the sliders data to the view
-        return view('index',compact('sliders'));
+        return view('index',compact('sliders','brand'));
     }
 
-    
+
 
 
     public function create()
@@ -47,7 +50,7 @@ class SliderController extends Controller
             $file->move('uploads/slider/', $filename);
             $validatedData['image'] = "uploads/slider/$filename";
         }
-        
+
 
         $validatedData['status'] = $request->status == true ? '1':'0';
         Slider::create([
@@ -72,14 +75,14 @@ class SliderController extends Controller
             if (File::exists($destination)) {
                 File::delete($destination);
             }
-        
+
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
             $file->move('uploads/slider/', $filename);
             $validatedData['image'] = "uploads/slider/$filename";
         }
-        
+
 
         $validatedData['status'] = $request->status == true ? '1':'0';
         Slider::where('id',$slider->id)->update([
