@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -43,15 +44,15 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin.')->gro
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
-// Route::get('news', [NewsController::class, 'index'])->name('news');
-// Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
-// Route::get('admin/news', [NewsController::class, 'Adminindex'])->name('news.admin');
-// Route::get('admin/news/create', [NewsController::class, 'create'])->name('news.create');
-// Route::post('admin/news', [NewsController::class, 'store'])->name('news.store');
-// Route::get('admin/news/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
-// Route::put('admin/news/{id}', [NewsController::class, 'update'])->name('news.update');
-// Route::delete('admin/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
-// Route::get('admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+Route::get('news', [NewsController::class, 'index'])->name('news');
+Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
+Route::get('admin/news', [NewsController::class, 'Adminindex'])->name('news.admin');
+Route::get('admin/news/create', [NewsController::class, 'create'])->name('news.create');
+Route::post('admin/news', [NewsController::class, 'store'])->name('news.store');
+Route::get('admin/news/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
+Route::put('admin/news/{id}', [NewsController::class, 'update'])->name('news.update');
+Route::delete('admin/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+Route::get('admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
 
 Route::middleware([RoleMiddleware::class])->prefix('admin')->group(function () {

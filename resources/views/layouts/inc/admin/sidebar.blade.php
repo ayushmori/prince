@@ -28,7 +28,6 @@
 
 
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Brands</span></a>
-<<<<<<< HEAD
               <ul class="sidebar-submenu">
                 <li><a href="{{ url('admin/brands/create' )}}">Add Brand</a></li>
                 <li><a href="{{ url('admin/brands' )}}">View Brand</a></li>
@@ -46,34 +45,9 @@
             
             
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home Slider</span></a>
-=======
-                <ul class="sidebar-submenu">
-                  <li><a href="{{route('brands.create')}}">Add Brand</a></li>
-                  <li><a href="{{route('brands.index')}}">View Brand</a></li>
-                </ul>
-              </li>
-
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="layout"></i><span>Category</span></a>
-              <ul class="sidebar-submenu">
-                <li><a href="{{url('admin/category/create')}}">Add Category</a></li>
-                <li><a href="{{url('admin/category')}}">View Category</a></li>
-              </ul>
-            </li>
-
-
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home Silder</span></a>
->>>>>>> ae66caab048e7867ffa88050cf9cb61658d416d9
               <ul class="sidebar-submenu">
                 <li><a href="{{ url('admin/sliders/create' )}}">Add Slider</a></li>
                 <li><a href="{{ url('admin/sliders' )}}">View Slider</a></li>
-              </ul>
-            </li>
-
-
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>News</span></a>
-              <ul class="sidebar-submenu">
-                <li><a href="{{ url('admin/sliders/create' )}}">Add News</a></li>
-                <li><a href="{{ url('admin/sliders' )}}">View News</a></li>
               </ul>
             </li>
 
