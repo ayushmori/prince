@@ -19,49 +19,6 @@
     </div>
   </div>
 
-{{--         
-                <tbody>
-                  @foreach ($categories as $category)
-                  <tr>
-                    <td>{{ $category->id }}</td>
-                    <td>{{ $category->slug }}</td>
-                    <td>
-                      <p>{{ $category->description }}</p>
-                    </td>
-                    <td>{{ $category->serial_number }}</td>
-                    <td>
-                      @if(isset($category->image) && $category->image)
-                          <img src={{ asset('/uploads/category/' . $category->image) }} alt="{{ $category->name }}" style="width: 70px; height: 70px; border-radius: 50%;">
-                      @else
-                          <span>No Image Available</span>
-                      @endif
-                    </td>
-                    <td>
-                      <!-- Edit Button -->
-                      <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-success btn-sm">
-                        Edit
-                      </a>
-  
-                      <!-- Delete Button (Form Approach) -->
-                      <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this category?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Delete
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> --}}
-
 
     <div class="container-fluid">
         <div class="row">
