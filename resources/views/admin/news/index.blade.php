@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h1>News Admin</h1>
-                        <a href="{{ route('news.create') }}" class="btn btn-success mb-3">Create News</a>
+                        <a href="{{ route('admin.news.create') }}" class="btn btn-success mb-3">Create News</a>
                     </div>
                     <div class="card-body">
                         @if (session('success'))
@@ -47,8 +47,8 @@
                                             </td>
                                             <td>{{ Str::limit($article->description, 50) }}</td>
                                             <td>
-                                                <a href="{{ route('news.edit', $article->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                                                <form action="{{ route('news.destroy', $article->id) }}" method="POST" style="display:inline-block;">
+                                                <a href="{{ route('admin.news.edit', $article->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                                <form action="{{ route('admin.news.destroy', $article->id) }}" method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>

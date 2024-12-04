@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\SliderFormRequest;
 use App\Models\Brand;
+use App\Models\Category;
+use App\Models\MiniSlider;
+use App\Models\SecondSlider;
 
 class SliderController extends Controller
 {
@@ -26,9 +29,13 @@ class SliderController extends Controller
         // Retrieve all sliders from the database
         $sliders = Slider::all();
         $brand = Brand::all();
+        $category = Category::all();
+        $secondSlider = SecondSlider::all();
+        $minislider = MiniSlider::all();
 
         // Pass the sliders data to the view
-        return view('index',compact('sliders','brand'));
+        return view('index', compact('sliders', 'brand', 'category', 'secondSlider','minislider'));
+
     }
 
 
@@ -38,7 +45,7 @@ class SliderController extends Controller
     {
         return view('admin.slider.create');
     }
-    
+
     public function store(SliderFormRequest $request)
     {
         $validatedData = $request->validated();
@@ -63,7 +70,7 @@ class SliderController extends Controller
         return redirect('admin/sliders')->with('message','Slider added Successfuly');
     }
 
-    
+
     public function edit(Slider $slider)
     {
         return view('admin.slider.edit',compact('slider'));

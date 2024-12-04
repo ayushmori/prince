@@ -39,28 +39,16 @@ class CategoryController extends Controller
         // Handle the image upload if exists
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-
-            // Validate the file
-            $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
-
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
 
-            // Ensure directory exists
+            // Move the file to the specified path
             $path = public_path('uploads/category');
-            if (!file_exists($path)) {
-                mkdir($path, 0755, true);
-            }
-
-            // Move the file
             $file->move($path, $filename);
 
-            // Save the relative path in the database
-            $category->image = 'uploads/category/' . $filename;
+            // Save the image path in the database
+            $category->image = $filename;
         }
-
 
 
         // Save the new category to the database

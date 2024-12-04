@@ -53,7 +53,7 @@
                   <td>{{ $slider->title }}</td>
                   <td>
                     @if(isset($slider->image) && $slider->image)
-                        <img src="{{ asset($slider->image) }}" alt="{{ $slider->title }}" style="width: 70px; height: 70px; border-radius: 50%;">
+                        <img src="{{ asset('/uploads/slider/' . $slider->image) }}" alt="{{ $slider->title }}" style="width: 70px; height: 70px; border-radius: 50%;">
                     @else
                         <span>No Image Available</span>
                     @endif

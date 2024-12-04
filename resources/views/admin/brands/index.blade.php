@@ -23,17 +23,17 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card"> 
+                <div class="card">
                     <div class="card-header">
                       <h3>Brands
-                        <a href="{{ route('brands.create') }}" class="btn btn-primary btn-sm text-white float-end">Create Brand</a>
+                        <a href="{{ route('admin.brands.create') }}" class="btn btn-primary btn-sm text-white float-end">Create Brand</a>
                       </h3>
                     </div>
 
                     @if(session('message'))
                         <div class="alert alert-danger">{{session('message')}}</div>
                     @endif
-                    
+
                     <div class="card-body">
                         <div class="table-responsive product-table">
                             <table class="display dataTable no-footer">
@@ -60,8 +60,8 @@
                                             <td>{{ \Str::limit($brand->description, 50) }}</td>
                                             <td>{{ $brand->serial_number }}</td>
                                             <td>
-                                                <a href="{{ route('brands.create', $brand->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                                <form action="{{ route('brands.delete', $brand->id) }}" method="POST" style="display:inline-block;">
+                                                <a href="{{ route('admin.brands.create', $brand->id) }}" class="btn btn-success btn-sm">Edit</a>
+                                                <form action="{{ route('admin.brands.delete', $brand->id) }}" method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
