@@ -25,16 +25,16 @@
             <div class="col-sm-12">
                 <div class="card"> 
                     <div class="card-header">
-                      <h3>Brands
+                      <h3>Brand
                         <a href="{{ route('brands.create') }}" class="btn btn-primary btn-sm text-white float-end">Create Brand</a>
                       </h3>
                     </div>
 
-                    @if(session('message'))
-                        <div class="alert alert-danger">{{session('message')}}</div>
-                    @endif
-                    
                     <div class="card-body">
+                        @if(session('message'))
+                            <div class="alert alert-danger">{{session('message')}}</div>
+                        @endif
+                        
                         <div class="table-responsive product-table">
                             <table class="display dataTable no-footer">
                                 <thead>

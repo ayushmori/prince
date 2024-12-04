@@ -7,7 +7,9 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Frontend\FrontendController;
 
 Auth::routes();
 
@@ -17,11 +19,21 @@ Route::middleware([RoleMiddleware::class])->prefix('admin')->group(function () {
     Route::get('brands/create/{id?}', [BrandController::class, 'form'])->name('brands.create'); // Correct name
     Route::post('brands/save/{id?}', [BrandController::class, 'save'])->name('brands.save');
     Route::delete('brands/delete/{id}', [BrandController::class, 'delete'])->name('brands.delete');
+
+    Route::get('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'about']);
+    Route::post('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'store']);
+
+    Route::get('/contact-us', [App\Http\Controllers\Admin\ContactUsController::class, 'adminPanel']);
+
 });
 
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/', [SliderController::class,'view'])->name('sliders');
+
+Route::get('/about-us', [FrontendController::class, 'aboutpage']);
+Route::get('/contact-us', [FrontendController::class, 'contactpage']);
+Route::post('/submit-form', [ContactUsController::class, 'submit']);
 
 // Admin middleware routes for Sliders
 Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin.')->group(function () {

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\AboutSettings;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,8 +20,12 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        Paginator::useBootstrap();
+
+        // Share the About settings
+        $aboutSettings = AboutSettings::first(); // Fetch the first AboutSettings record
+        View::share('aboutSettings', $aboutSettings); // Share it with all views
     }
 }

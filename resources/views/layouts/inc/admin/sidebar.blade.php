@@ -44,10 +44,17 @@
             </li>
             
             
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home Slider</span></a>
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home</span></a>
               <ul class="sidebar-submenu">
                 <li><a href="{{ url('admin/sliders/create' )}}">Add Slider</a></li>
                 <li><a href="{{ url('admin/sliders' )}}">View Slider</a></li>
+              </ul>
+            </li>
+
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Setting</span></a>
+              <ul class="sidebar-submenu">
+                <li><a href="{{ url('admin/settings/about-us' )}}">About-Us</a></li>
+                <li><a href="{{ url('admin/contact-us' )}}">Contact-Us</a></li>
               </ul>
             </li>
 
@@ -56,9 +63,8 @@
                     <i data-feather="book"></i><span>News</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li><a href="{{route('news.admin')}}">News Details</a></li>
-                    <li><a href="news-single.html">News Single</a></li>
                     <li><a href="{{route('news.create')}}">Add News</a></li>
+                    <li><a href="{{route('news.admin')}}">View News</a></li>
                 </ul>
             </li>
 

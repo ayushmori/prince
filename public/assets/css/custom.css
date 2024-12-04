@@ -88,3 +88,55 @@
       opacity: 1;
     }
   }
+
+  /* contact-us */
+
+.containerr {
+  background: #FFFFFF;
+  width: 70%;
+  height: 650px;
+  margin: 5% auto;
+  position: relative;
+}
+.containerr .map {
+  width: 45%;
+  float: left;
+}
+.containerr .contact-form {
+  width: 30%;
+  margin-left: 2%;
+  float: left;
+}
+.containerr .contact-form .title {
+  font-size: 2.5em;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #242424;
+  margin: 5% 8%;
+}
+.containerr .contact-form .subtitle {
+  font-size: 1.2em;
+  font-weight: 400;
+  margin: 0 4% 5% 8%;
+}
+.containerr .contact-form input,
+.containerr .contact-form textarea {
+  width: 500px;
+  padding: 3%;
+  margin: 2% 8%;
+  color: #242424;
+  border: 1px solid #B7B7B7;
+}
+.containerr .contact-form input::placeholder,
+.containerr .contact-form textarea::placeholder {
+  color: #242424;
+}
+.containerr .contact-form .btn-send {
+  background: #2737e3;
+  width: 180px;
+  height: 60px;
+  color: #FFFFFF;
+  font-weight: 700;
+  margin: 2% 8%;
+  border: none;
+}

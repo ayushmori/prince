@@ -1,92 +1,143 @@
-<style>
-    .footer-area {
-    background-color: {{ $appSetting->primary_color }};
-}
-</style>
-<div>
-    <div class="footer-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <h4 class="footer-heading">{{$appSetting->website_name}}</h4>
-                    <div class="footer-underline"></div>
-                    <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="footer-heading">Quick Links</h4>
-                    <div class="footer-underline"></div>
-                    <div class="mb-2"><a href="{{ url('/') }}" class="text-white">Home</a></div>
-                    <div class="mb-2"><a href="{{ url('/about-us') }}" class="text-white">About Us</a></div>
-
-                    <div class="mb-2"><a href="{{ url('/contact-us') }}" class="text-white">Contact Us</a></div>
-                    <div class="mb-2"><a href="{{ url('/blogs') }}" class="text-white">Blogs</a></div>
-                    <div class="mb-2"><a href="{{ url('/sitemap') }}" class="text-white">Sitemaps</a></div>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="footer-heading">Shop Now</h4>
-                    <div class="footer-underline"></div>
-                    <div class="mb-2"><a href="{{ url('/collections') }}" class="text-white">Collections</a></div>
-                    <div class="mb-2"><a href="{{ url('/') }}" class="text-white">Trending Products</a></div>
-                    <div class="mb-2"><a href="{{ url('/new-arrivals') }}" class="text-white">New Arrivals Products</a></div>
-                    <div class="mb-2"><a href="{{ url('/featured-products') }}" class="text-white">Featured Products</a></div>
-                    <div class="mb-2"><a href="{{ url('/cart') }}" class="text-white">Cart</a></div>
-                </div>
-                <div class="col-md-3">
-                    <h4 class="footer-heading">Reach Us</h4>
-                    <div class="footer-underline"></div>
-                    <div class="mb-2">
-                        <p>
-                            <i class="fa fa-map-marker"></i>
-                           
-                             {{$appSetting->address ?? ''}}
-                        </p>
-                    </div>
-                    <div class="mb-2">
-                        <a href="" class="text-white">
-                            <i class="fa fa-phone"></i> {{$appSetting->phone_1 ?? ''}}
-                        </a>
-                    </div>
-                    <div class="mb-2">
-                        <a href="{{$appSetting->website_url ?? ''}}" class="text-white">
-                            <i class="fa fa-envelope"></i> {{$appSetting->website_name ?? ''}}@gmail.com
-                        </a>
-                    </div>
-                </div>
-            </div>
+    <!-- Footer -->
+    <footer
+            class="text-center text-lg-start text-white"
+            style="background-color: #1c2331"
+            >
+      <!-- Section: Social media -->
+      <section
+               class="d-flex justify-content-between p-4"
+               style="background-color: #2973B9"
+               >
+        <!-- Left -->
+        <div class="me-5">
+          <span>Get connected with us on social networks:</span>
         </div>
-    </div>
-    <div class="copyright-area">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-8">
-                    <p class=""> &copy; 2024 - {{$appSetting->website_name ?? ''}} All rights reserved.</p>
-                </div>
-                <div class="col-md-4">
-                    <div class="social-media">
-                        Get Connected:
-                        {{$appSetting->phone_1 ?? 'phone_1'}}
-                        @if ($appSetting->facebook)    
-                        <a href="{{$appSetting->facebook}}" target="_blank"><i class="fa fa-facebook"></i></a>
-                        @endif
-
-                        @if ($appSetting->twitter)    
-                        <a href="{{$appSetting->twitter}}" target="_blank"><i class="fa fa-twitter"></i></a>
-                        @endif
-
-                        @if ($appSetting->instagram)    
-                        <a href="{{$appSetting->instagram}}" target="_blank"><i class="fa fa-instagram"></i></a>
-                        @endif
-                        
-                        @if ($appSetting->youtube)    
-                        <a href="{{$appSetting->youtube}}" target="_blank"><i class="fa fa-youtube"></i></a>
-                        @endif
-                    </div>
-                </div>
-            </div>
+        <!-- Left -->
+  
+        <!-- Right -->
+        <div>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-google"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-github"></i>
+          </a>
         </div>
-    </div>
-</div>
+        <!-- Right -->
+      </section>
+      <!-- Section: Social media -->
+  
+      <!-- Section: Links  -->
+      <section class="">
+        <div class="container text-center text-md-start mt-5">
+          <!-- Grid row -->
+          <div class="row mt-3">
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <!-- Content -->
+              <h6 class="text-uppercase fw-bold">Company name</h6>
+              <hr
+                  class="mb-4 mt-0 d-inline-block mx-auto"
+                  style="width: 60px; background-color: #7c4dff; height: 2px"
+                  />
+              <p>
+                Here you can use rows and columns to organize your footer
+                content. Lorem ipsum dolor sit amet, consectetur adipisicing
+                elit.
+              </p>
+            </div>
+            <!-- Grid column -->
+  
+            <!-- Grid column -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold">Products</h6>
+              <hr
+                  class="mb-4 mt-0 d-inline-block mx-auto"
+                  style="width: 60px; background-color: #7c4dff; height: 2px"
+                  />
+              <p>
+                <a href="#!" class="text-white">MDBootstrap</a>
+              </p>
+              <p>
+                <a href="#!" class="text-white">MDWordPress</a>
+              </p>
+              <p>
+                <a href="#!" class="text-white">BrandFlow</a>
+              </p>
+              <p>
+                <a href="#!" class="text-white">Bootstrap Angular</a>
+              </p>
+            </div>
+            <!-- Grid column -->
+  
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold">Useful links</h6>
+              <hr
+                  class="mb-4 mt-0 d-inline-block mx-auto"
+                  style="width: 60px; background-color: #7c4dff; height: 2px"
+                  />
+              <p>
+                <a href="#!" class="text-white">Your Account</a>
+              </p>
+              <p>
+                <a href="#!" class="text-white">Become an Affiliate</a>
+              </p>
+              <p>
+                <a href="#!" class="text-white">Shipping Rates</a>
+              </p>
+              <p>
+                <a href="#!" class="text-white">Help</a>
+              </p>
+            </div>
+            <!-- Grid column -->
+  
+            <!-- Grid column -->
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold">Contact</h6>
+              <hr
+                  class="mb-4 mt-0 d-inline-block mx-auto"
+                  style="width: 60px; background-color: #7c4dff; height: 2px"
+                  />
+              <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+              <p><i class="fas fa-envelope mr-3"></i> info@example.com</p>
+              <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+              <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+            </div>
+            <!-- Grid column -->
+          </div>
+          <!-- Grid row -->
+        </div>
+      </section>
+      <!-- Section: Links  -->
+  
+      <!-- Copyright -->
+      <div
+           class="text-center p-3"
+           style="background-color: rgba(0, 0, 0, 0.2)"
+           >
+        © 2020 Copyright:
+        <a class="text-white" href=""
+           >12345678</a
+          >
+      </div>
+      <!-- Copyright -->
+    </footer>
+
+
+    
