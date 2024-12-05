@@ -23,9 +23,9 @@
 <div class="row">
     <div class="col-md-12">
 
-      @if(session('message'))
-        <div class="alert alert-success mb-3">{{ session('message')}}</div>
-      @endif
+        @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
       <div class="card">
         <div class="card-header">
@@ -34,9 +34,9 @@
                 </h5>
         </div>
             <div class="card-body">
-                <form action="{{ route('brands.save', $brand->id ?? '') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.brands.save', $brand->id ?? '') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                
+
                     <div class="mb-3 row">
                         <label class="col-sm-3 col-form-label">Brand Name</label>
                         <div class="col-sm-9">
