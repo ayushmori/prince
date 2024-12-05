@@ -21,7 +21,7 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('news', [NewsController::class, 'index'])->name('news');
 Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
-Route::get('/', [SliderController::class, 'view'])->name('sliders');  // Frontend Controller
+Route::get('/', [SliderController::class, 'view'])->name('sliders');
 
 
 
