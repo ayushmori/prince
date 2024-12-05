@@ -44,19 +44,36 @@
             </li>
             
             
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Home</span></a>
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Many Slider</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="{{ url('admin/sliders/create' )}}">Add Slider</a></li>
-                <li><a href="{{ url('admin/sliders' )}}">View Slider</a></li>
+                <li><a href="{{ url('admin/sliders/create' )}}">Add Many Slider</a></li>
+                <li><a href="{{ url('admin/sliders' )}}">View Many Slider</a></li>
               </ul>
             </li>
 
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Setting</span></a>
-              <ul class="sidebar-submenu">
-                <li><a href="{{ url('admin/settings/about-us' )}}">About-Us</a></li>
-                <li><a href="{{ url('admin/contact-us' )}}">Contact-Us</a></li>
-              </ul>
+            <li class="sidebar-list">
+                <a class="sidebar-link sidebar-title" href="#">
+                    <i data-feather="layers"></i><span>Sigle Slider</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('admin.secondsliders.create') }}">Add Sigle Slider</a></li>
+                    <li><a href="{{ route('admin.secondsliders.index') }}">View Sigle Sliders</a></li>
+                </ul>
             </li>
+
+            <li class="sidebar-list">
+                <a class="sidebar-link sidebar-title" href="#">
+                    <i data-feather="layers"></i><span>There Image Slider</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('admin.minisiders.create') }}">Add There Image Slider</a></li>
+                    <li><a href="{{ route('admin.minisiders.index') }}">View There Image Slider</a></li>
+                </ul>
+            </li>
+
+
+
+
 
             <li class="sidebar-list">
                 <a class="sidebar-link sidebar-title" href="#">
@@ -69,6 +86,12 @@
             </li>
 
 
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Setting</span></a>
+              <ul class="sidebar-submenu">
+                <li><a href="{{ url('admin/settings/about-us' )}}">About-Us</a></li>
+                <li><a href="{{ url('admin/contact-us' )}}">Contact-Us</a></li>
+              </ul>
+            </li>
 
           </ul>
         </div>

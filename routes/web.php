@@ -9,7 +9,9 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MiniSliderController;
 use App\Http\Controllers\Frontend\FrontendController;
+use App\Http\Controllers\Admin\SecondSliderController;
 
 Auth::routes();
 
@@ -36,7 +38,7 @@ Route::get('/contact-us', [FrontendController::class, 'contactpage']);
 Route::post('/submit-form', [ContactUsController::class, 'submit']);
 
 // Admin middleware routes for Sliders
-Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin.')->group(function () {
+Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin')->group(function () {
     Route::controller(SliderController::class)->prefix('sliders')->name('sliders.')->group(function () {
         Route::get('/', 'index')->name('index'); // Show all sliders
         Route::get('/create', 'create')->name('create'); // Show form for creating a slider
@@ -67,9 +69,44 @@ Route::delete('admin/news/{id}', [NewsController::class, 'destroy'])->name('news
 Route::get('admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
 
-Route::middleware([RoleMiddleware::class])->prefix('admin')->group(function () {
-    Route::get('brands', [BrandController::class, 'index'])->name('brands.index');
-    Route::get('brands/create/{id?}', [BrandController::class, 'form'])->name('brands.create'); // Correct name
-    Route::post('brands/save/{id?}', [BrandController::class, 'save'])->name('brands.save');
-    Route::delete('brands/delete/{id}', [BrandController::class, 'delete'])->name('brands.delete');
+// Route::middleware([RoleMiddleware::class])->prefix('admin')->group(function () {
+//     Route::get('brands', [BrandController::class, 'index'])->name('brands.index');
+//     Route::get('brands/create/{id?}', [BrandController::class, 'form'])->name('brands.create'); // Correct name
+//     Route::post('brands/save/{id?}', [BrandController::class, 'save'])->name('brands.save');
+//     Route::delete('brands/delete/{id}', [BrandController::class, 'delete'])->name('brands.delete');
+// });
+
+
+//<---------------------------------------Slider Controllers -------------------------------------------------------->//
+
+
+Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin.')->group(function () {
+    Route::controller(SliderController::class)->prefix('sliders')->name('sliders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/create', 'store')->name('store');
+        Route::get('/{slider}/edit', 'edit')->name('edit');
+        Route::put('/{slider}', 'update')->name('update');
+        Route::delete('/{slider}', 'destroy')->name('destroy');
+    });
+});
+Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+    Route::controller(SecondSliderController::class)->prefix('secondsliders')->name('admin.secondsliders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/create', 'store')->name('store');
+        Route::get('/{secondSlider}/edit', 'edit')->name('edit');
+        Route::put('/{secondSlider}', 'update')->name('update');
+        Route::delete('/{secondSlider}', 'destroy')->name('destroy');
+    });
+});
+Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+    Route::controller(MiniSliderController::class)->prefix('minisiders')->name('admin.minisiders.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/create', 'store')->name('store');
+        Route::get('/{minisiders}/edit', 'edit')->name('edit');
+        Route::put('/{minisiders}', 'update')->name('update');
+        Route::delete('/{minisiders}', 'destroy')->name('destroy');
+    });
 });

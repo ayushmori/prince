@@ -58,8 +58,8 @@
                         <span>No Image Available</span>
                     @endif
                 </td>
-                
-                  <td> 
+
+                  <td>
                     <p>{{ $slider->description }}</p>
                   </td>
                   <td>{{ $slider->status }}</td>
@@ -69,7 +69,7 @@
                     <a href="{{ route('admin.sliders.edit', $slider->id) }}" class="btn btn-success btn-sm">
                       Edit
                     </a>
-                
+
                     <!-- Delete Button (Form Approach) -->
                     <form action="{{ route('admin.sliders.destroy', $slider->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this slider?');">
                       @csrf
@@ -78,9 +78,9 @@
                           Delete
                       </button>
                   </form>
-                  
+
                 </td>
-                
+
                 </tr>
                 @endforeach
               </tbody>

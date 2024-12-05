@@ -34,7 +34,7 @@ class CategoryController extends Controller
         $category->name = $validatedData['name'];
         $category->slug = Str::slug($validatedData['slug']);
         $category->description = $validatedData['description'];
-        $category->serial_number = $validatedData['serial_number']; 
+        $category->serial_number = $validatedData['serial_number'];
 
         // Handle the image upload if exists
         if ($request->hasFile('image')) {
@@ -105,7 +105,7 @@ class CategoryController extends Controller
         $category->save();
 
         // Redirect back with a success message
-        return redirect()->route('admin.categories.index')->with('message', 'Category updated successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
 
     }
 
@@ -115,12 +115,12 @@ class CategoryController extends Controller
         if (!file_exists(public_path('uploads/category'))) {
             mkdir(public_path('uploads/category'), 0777, true);
         }
-        
+
 
         // Delete the category from the database
         $category->delete();
 
         // Redirect with a success message
-        return redirect()->route('admin.categories.index')->with('error', 'Category deleted successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
 }
