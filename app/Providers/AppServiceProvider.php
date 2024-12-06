@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\AboutSettings;
+use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Share the About settings
         $aboutSettings = AboutSettings::first(); // Fetch the first AboutSettings record
-        View::share('aboutSettings', $aboutSettings); // Share it with all views
+        View::share('aboutSettings', $aboutSettings); // Share it with all 
+        
+
+        // Share categories with all views
+    View::share('brands', Brand::orderBy('name', 'asc')->limit(4)->get());
+    View::share('categories', Category::orderBy('name', 'asc')->limit(4)->get());
     }
 }
