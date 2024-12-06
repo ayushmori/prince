@@ -29,6 +29,7 @@ class CategoryFormRequest extends FormRequest
             'slug' => 'required|string|max:255',
             'description' => 'required|string',
             'serial_number' => 'required|unique:categories,serial_number,' . $this->category, // Allow update for existing category
+            'parent_id' => 'nullable|exists:categories,id', // Ensure parent_id exists in the categories table if provided
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
@@ -47,6 +48,7 @@ class CategoryFormRequest extends FormRequest
             'serial_number.required' => 'The serial number is required.',
             'serial_number.unique' => 'This serial number is already taken.',
             'image.image' => 'Please upload a valid image file.',
+            'parent_id.exists' => 'The selected parent category is invalid.', // Error message for invalid parent_id
         ];
     }
 }

@@ -6,102 +6,133 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\CategoryFormRequest;
 
 class CategoryController extends Controller
 {
-    // Show all categories
+    // View all categories (root categories)
+    public function view()
+    {
+        // Fetch root categories (categories with no parent)
+        $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
+        return view('frontend.category.index', compact('categories'));
+    }
+
+    // Get child categories for a parent
+    public function getChildren(Category $category)
+{
+    $children = $category->children()->with('children')->get();
+    return response()->json($children);
+}
+
+
+    // In your CategoryController
     public function index()
     {
-        $categories = Category::all(); // Fetch all categories from the database
-        return view('admin.category.index', compact('categories')); // Pass categories to the view
+        $parentCategories = Category::with('children')->whereNull('parent_id')->get();
+        return view('admin.category.index', compact('parentCategories'));
     }
 
-    // Show the form for creating a new category
+
+    // Show a specific category by slug
+    public function show($id)
+    {
+        // Fetch the category by its ID or slug
+        $category = Category::findOrFail($id);  // Change this line to find by ID
+        return view('frontend.category.show', compact('category'));
+    }
+
+
+    // Show the category creation form
     public function create()
     {
-        return view('admin.category.create'); // Return the view for creating a category
+        // Fetch parent categories (no parent_id)
+        $parentCategories = Category::with('children')->whereNull('parent_id')->get();
+        return view('admin.category.create', compact('parentCategories'));
     }
 
-    // Store a newly created category in the database
+    // Store a newly created category
     public function store(CategoryFormRequest $request)
     {
-        $validatedData = $request->validated(); // Validate and retrieve the validated data
+        $validated = $request->validated();
 
-        // Create a new Category instance
         $category = new Category;
-        $category->name = $validatedData['name'];
-        $category->slug = Str::slug($validatedData['slug']);
-        $category->description = $validatedData['description'];
-        $category->serial_number = $validatedData['serial_number'];
+        $category->name = $validated['name'];
+        $category->slug = Str::slug($validated['slug']); // Ensure the slug is formatted correctly
+        $category->parent_id = $validated['parent_id'];
+        $category->serial_number = $validated['serial_number'] ?? null;
+        $category->description = $validated['description']; // Fix: Ensure description is assigned
 
-        // Handle the image upload if exists
         if ($request->hasFile('image')) {
+            // Save the uploaded image
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
-
-            // Move the file to the specified path
             $path = public_path('uploads/category');
+            if (!file_exists($path)) {
+                mkdir($path, 0755, true); // Create the directory if it doesn't exist
+            }
             $file->move($path, $filename);
-
-            // Save the image path in the database
             $category->image = $filename;
         }
 
-
-        // Save the new category to the database
         $category->save();
-
-        // Redirect with a success message
-        return redirect()->route('admin.categories.index')->with('message', 'Category Added Successfully');
+        return redirect()->route('admin.categories.index')->with('message', 'Category added successfully!');
     }
 
-    // Show the form for editing a specific category
+
+    // Show the category editing form
     public function edit(Category $category)
     {
-        return view('admin.category.edit', compact('category')); // Return the edit view with existing category data
+        $parentCategories = Category::with('children')->whereNull('parent_id')->get();
+
+
+        if ($parentCategories->isEmpty()) {
+            // Handle case where no parent categories are found
+            return redirect()->route('admin.categories.index')->with('error', 'No parent categories found.');
+        }
+        // return dd($parentCategories->toArray());
+
+        return view('admin.category.edit', compact('category', 'parentCategories'));
     }
 
-    // Update the specified category in the database
-    public function update(Request $request, Category $category)
+
+    // Update an existing category
+    public function update(CategoryFormRequest $request, Category $category)
     {
-        // Validate the incoming request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
             'description' => 'required|string',
-            'serial_number' => 'required|unique:categories,serial_number,' . $category->id, // Ignore current category
+            'serial_number' => 'required|unique:categories,serial_number,' . $category->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'parent_id' => 'nullable|exists:categories,id',
         ]);
 
-        // Update category properties
         $category->name = $validatedData['name'];
         $category->slug = Str::slug($validatedData['slug']);
         $category->description = $validatedData['description'];
         $category->serial_number = $validatedData['serial_number'];
+        $category->parent_id = $validatedData['parent_id'] ?? null;
 
-        // Handle the image upload if a new image is uploaded
         if ($request->hasFile('image')) {
-            // Delete the old image if it exists
-            if ($category->image && file_exists(public_path($category->image))) {
-                unlink(public_path($category->image));
+            // Delete old image if it exists
+            if ($category->image && file_exists(public_path('uploads/category/' . $category->image))) {
+                unlink(public_path('uploads/category/' . $category->image));
             }
 
-            // Store the new image
+            // Save the new image
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
             $path = public_path('uploads/category');
+            if (!file_exists($path)) {
+                mkdir($path, 0755, true); // Create directory if it doesn't exist
+            }
             $file->move($path, $filename);
-
-            // Update the category's image path
             $category->image = $filename;
         }
 
-
-        // Save the updated category data
         $category->save();
 
         // Redirect back with a success message
@@ -109,15 +140,16 @@ class CategoryController extends Controller
 
     }
 
-    // Delete the specified category from the database
+
+    // Delete a category
     public function destroy(Category $category)
     {
-        if (!file_exists(public_path('uploads/category'))) {
-            mkdir(public_path('uploads/category'), 0777, true);
+        // Delete category image if exists
+        if ($category->image && file_exists(public_path('uploads/category/' . $category->image))) {
+            unlink(public_path('uploads/category/' . $category->image));
         }
 
-
-        // Delete the category from the database
+        // Delete the category record
         $category->delete();
 
         // Redirect with a success message

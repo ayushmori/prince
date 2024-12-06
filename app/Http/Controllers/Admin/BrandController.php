@@ -14,7 +14,9 @@ class BrandController extends Controller
     {
         $brands = Brand::orderBy('serial_number', 'asc')->get();
         return view('admin.brands.index', compact('brands'));
+
     }
+    
 
     public function form($id = null)
     {
@@ -30,6 +32,35 @@ class BrandController extends Controller
         return view('admin.brands.create', compact('brand', 'nextSerialNumber'));
     }
 
+    // public function save(Request $request, $id = null)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Accepts only image files
+    //         'description' => 'nullable|string',
+    //         'serial_number' => 'required|integer|unique:brands,serial_number,' . $id, // Ensure uniqueness, except for the current record (if editing)
+    //     ]);
+
+    //     $brand = $id ? Brand::findOrFail($id) : new Brand();
+    //     if ($request->hasFile('image')) {
+    //         $image = $request->file('image');
+    //         $imagePath = 'brands/' . uniqid() . '.' . $image->getClientOriginalExtension();
+    //         $image->move(public_path('brands'), $imagePath);
+    //         if ($id && $brand->image) {
+    //             File::delete(public_path('brands/' . $brand->image)); // Ensure path is correct when deleting
+    //         }
+    //         $brand->image = $imagePath;
+    //     }
+
+    //     $brand->name = $request->name;
+    //     $brand->description = $request->description;
+    //     $brand->serial_number = $request->serial_number;
+    //     $brand->save();
+    //     $existingSerialNumbers = Brand::orderBy('serial_number', 'asc')->pluck('serial_number')->toArray();
+    //     $nextSerialNumber = $this->getNextAvailableSerialNumber($existingSerialNumbers);
+    //     return redirect()->route('admin.brands.index')->with('success', $id ? 'Brand updated successfully!' : 'Brand created successfully!');
+    // }
+
     public function save(Request $request, $id = null)
     {
         $request->validate([
@@ -39,14 +70,27 @@ class BrandController extends Controller
             'serial_number' => 'required|integer|unique:brands,serial_number,' . $id, // Ensure uniqueness, except for the current record (if editing)
         ]);
 
-        $brand = $id ? Brand::findOrFail($id) : new Brand();
+        $brand = $id ? Brand::find($id) : new Brand();
+
+        if (!$brand) {
+            return redirect()->route('admin.brands.index')
+                ->with('error', 'Brand not found!');
+        }
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = 'brands/' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('brands'), $imagePath);
-            if ($id && $brand->image) {
-                File::delete(public_path('brands/' . $brand->image)); // Ensure path is correct when deleting
+
+            if (!$image->move(public_path('brands'), $imagePath)) {
+                return redirect()->route('admin.brands.index')
+                    ->with('error', 'Failed to upload the image. Please try again.');
             }
+
+
+            if ($id && $brand->image) {
+                File::delete(public_path('brands/' . $brand->image));
+            }
+
             $brand->image = $imagePath;
         }
 
@@ -59,6 +103,7 @@ class BrandController extends Controller
         return redirect()->route('brands.index')->with('message', $id ? 'Brand updated successfully!' : 'Brand created successfully!');
     }
 
+
     public function delete($id)
     {
         $brand = Brand::findOrFail($id);
@@ -69,7 +114,7 @@ class BrandController extends Controller
         return redirect()->route('brands.index')->with('error', 'Brand deleted successfully!');
     }
 
-  
+
     protected function getNextAvailableSerialNumber(array $existingSerialNumbers)
     {
         $nextSerialNumber = null;

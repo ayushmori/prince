@@ -25,8 +25,8 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3>View News 
-                            <a href="{{ route('news.create') }}" class="btn btn-primary btn-sm text-white float-end">Create News</a>
+                        <h3>View News
+                            <a href="{{ route('admin.news.create') }}" class="btn btn-primary btn-sm text-white float-end">Create News</a>
                         </h3>
                     </div>
 
@@ -63,8 +63,8 @@
                                             </td>
                                             <td>{{ Str::limit($article->description, 50) }}</td>
                                             <td>
-                                                <a href="{{ route('news.edit', $article->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                                <form action="{{ route('news.destroy', $article->id) }}" method="POST" style="display:inline-block;">
+                                                <a href="{{ route('admin.news.edit', $article->id) }}" class="btn btn-success btn-sm">Edit</a>
+                                                <form action="{{ route('admin.news.destroy', $article->id) }}" method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>

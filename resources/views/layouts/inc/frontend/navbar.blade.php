@@ -81,7 +81,7 @@
         <!-- Left Group - Space items on the left -->
         <div class="left-group">
           <li class="nav-item">
-            <a class="nav-link" href="#" style="color: white">Category</a>
+            <a class="nav-link" href="{{route('categories.view')}}">Category</a>
           </li>
         </div>
 

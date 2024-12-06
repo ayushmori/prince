@@ -42,8 +42,8 @@
                 <li><a href="{{ url('admin/categories' )}}">View Category</a></li>
               </ul>
             </li>
-            
-            
+
+
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Many Slider</span></a>
               <ul class="sidebar-submenu">
                 <li><a href="{{ url('admin/sliders/create' )}}">Add Main Slider</a></li>
@@ -80,8 +80,8 @@
                     <i data-feather="book"></i><span>News</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li><a href="{{route('news.create')}}">Add News</a></li>
-                    <li><a href="{{route('news.admin')}}">View News</a></li>
+                    <li><a href="{{route('admin.news.create')}}">Add News</a></li>
+                    <li><a href="{{route('admin.news')}}">View News</a></li>
                 </ul>
             </li>
 

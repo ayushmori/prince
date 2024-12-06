@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
@@ -15,66 +16,83 @@ use App\Http\Controllers\Admin\SecondSliderController;
 
 Auth::routes();
 
-Route::middleware([RoleMiddleware::class])->prefix('admin')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('brands', [BrandController::class, 'index'])->name('brands.index');
-    Route::get('brands/create/{id?}', [BrandController::class, 'form'])->name('brands.create'); // Correct name
-    Route::post('brands/save/{id?}', [BrandController::class, 'save'])->name('brands.save');
-    Route::delete('brands/delete/{id}', [BrandController::class, 'delete'])->name('brands.delete');
 
+
+//<---------------------------------------Frontend Controller -------------------------------------------------------->//
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('news', [NewsController::class, 'index'])->name('news');
+Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
+Route::get('/', [SliderController::class, 'view'])->name('sliders');
+Route::get('/about-us', [FrontendController::class, 'aboutpage']);
+Route::get('/contact-us', [FrontendController::class, 'contactpage']);
+Route::post('/submit-form', [ContactUsController::class, 'submit']);
+Route::get('categories', [CategoryController::class, 'view'])->name('categories.view');
+Route::get('/category/{category}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
+Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+
+
+
+
+
+
+
+
+
+
+// <------------------------------------------Admin Middleware and Controllers-------------------------------------------------->//
+
+
+
+Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
     Route::get('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'about']);
     Route::post('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'store']);
 
     Route::get('/contact-us', [App\Http\Controllers\Admin\ContactUsController::class, 'adminPanel']);
 
-});
 
+//<---------------------------------------Category Controllers -------------------------------------------------------->//
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::get('/', [SliderController::class,'view'])->name('sliders');
-
-Route::get('/about-us', [FrontendController::class, 'aboutpage']);
-Route::get('/contact-us', [FrontendController::class, 'contactpage']);
-Route::post('/submit-form', [ContactUsController::class, 'submit']);
-
-// Admin middleware routes for Sliders
-Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin')->group(function () {
-    Route::controller(SliderController::class)->prefix('sliders')->name('sliders.')->group(function () {
-        Route::get('/', 'index')->name('index'); // Show all sliders
-        Route::get('/create', 'create')->name('create'); // Show form for creating a slider
-        Route::post('/create', 'store')->name('store'); // Save new slider
-        Route::get('/{slider}/edit', 'edit')->name('edit'); // Show form for editing slider
-        Route::put('/{slider}', 'update')->name('update'); // Update slider
-        Route::delete('/{slider}', 'destroy')->name('destroy'); // Delete slider
+    Route::controller(CategoryController::class)->prefix('categories')->group(function () {
+        Route::get('/', 'index')->name('admin.categories.index');
+        Route::get('/create', 'create')->name('admin.categories.create');
+        Route::post('/', 'store')->name('admin.categories.store');
+        Route::get('/{category}/edit', 'edit')->name('admin.categories.edit');
+        Route::put('/{category}', 'update')->name('admin.categories.update');
+        Route::delete('/{category}', 'destroy')->name('admin.categories.destroy');
     });
 
+//<---------------------------------------News Controllers -------------------------------------------------------->//
+
+    Route::controller(NewsController::class)->prefix('news')->group(function () {
+        Route::get('/', 'Adminindex')->name('admin.news');
+        Route::get('/create', 'create')->name('admin.news.create');
+        Route::post('/', 'store')->name('admin.news.store');
+        Route::get('/{id}/edit', 'edit')->name('admin.news.edit');
+        Route::put('/{id}', 'update')->name('admin.news.update');
+        Route::delete('/{id}', 'destroy')->name('admin.news.destroy');
+    });
+
+//<---------------------------------------Brand Controllers -------------------------------------------------------->//
+
+
+    Route::controller(BrandController::class)->prefix('brands')->group(function () {
+        Route::get('/', 'index')->name('admin.brands.index');
+        Route::get('/create/{id?}', 'form')->name('admin.brands.create');
+        Route::post('/save/{id?}', 'save')->name('admin.brands.save');
+        Route::delete('/delete/{id}', 'delete')->name('admin.brands.delete');
+    });
+
+   Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
 });
-Route::prefix('admin')->middleware([RoleMiddleware::class])->name('admin.')->group(function () {
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-});
-
-Route::get('news', [NewsController::class, 'index'])->name('news');
-Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
-Route::get('admin/news', [NewsController::class, 'Adminindex'])->name('news.admin');
-Route::get('admin/news/create', [NewsController::class, 'create'])->name('news.create');
-Route::post('admin/news', [NewsController::class, 'store'])->name('news.store');
-Route::get('admin/news/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
-Route::put('admin/news/{id}', [NewsController::class, 'update'])->name('news.update');
-Route::delete('admin/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
-Route::get('admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
 
-// Route::middleware([RoleMiddleware::class])->prefix('admin')->group(function () {
-//     Route::get('brands', [BrandController::class, 'index'])->name('brands.index');
-//     Route::get('brands/create/{id?}', [BrandController::class, 'form'])->name('brands.create'); // Correct name
-//     Route::post('brands/save/{id?}', [BrandController::class, 'save'])->name('brands.save');
-//     Route::delete('brands/delete/{id}', [BrandController::class, 'delete'])->name('brands.delete');
-// });
+
+
+
+
+
 
 
 //<---------------------------------------Slider Controllers -------------------------------------------------------->//
@@ -110,3 +128,6 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
         Route::delete('/{minisiders}', 'destroy')->name('destroy');
     });
 });
+
+
+// <------------------------------------------------------------------------------------------------------------------------------------>//

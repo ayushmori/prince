@@ -44,7 +44,7 @@
                 <main>
                     @yield('content')
                 </main>
-    
+
             @include('layouts.inc.frontend.footer')
         </div>
 <!-- Popper.js and Bootstrap JS -->
@@ -66,5 +66,12 @@
         alertify.notify(event.detail.text,event.detail.type);
     });
     </script>
+    @yield('scripts')
+    @livewireScripts
+    <livewire:styles />
+    <livewire:scripts />
+
+    @stack('script')
+
 </body>
 </html>

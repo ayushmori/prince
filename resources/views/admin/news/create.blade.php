@@ -34,7 +34,7 @@
                 </h3>
             </div>
             <div class="card-body">
-                <form action="{{ isset($news->id) ? route('news.update', $news->id) : route('news.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ isset($news->id) ? route('admin.news.update', $news->id) : route('admin.news.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @if (isset($news->id))
                         @method('PUT')
