@@ -14,7 +14,9 @@ class BrandController extends Controller
     {
         $brands = Brand::orderBy('serial_number', 'asc')->get();
         return view('admin.brands.index', compact('brands'));
+
     }
+    
 
     public function form($id = null)
     {
