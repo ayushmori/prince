@@ -45,7 +45,7 @@
     </div>
 
     <!-- Mission, Vision, and Goals Section -->
-    {{-- <h2 class="text-center mb-4">Our Mission, Vision, and Goals</h2> --}}
+    <h2 class="text-center mb-4">Our Mission, Vision, and Goals</h2>
     <div class="row">
         <div class="col-md-4 mb-4">
             <div class="card shadow">

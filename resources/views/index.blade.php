@@ -29,52 +29,54 @@
 
 
     <!-- Brands Slider  -->
-    <div id="imageCarousel" class="carousel slide mx-auto mt-5" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @php
-                $totalImages = $brand->count(); // Total number of images in the database
-                $slidesToShow = 5; // Number of slides you want in the carousel
-            @endphp
+<div id="imageCarousel" class="carousel slide mx-auto" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @php
+            $totalImages = $brand->count(); // Total number of images in the database
+            $slidesToShow = ceil($totalImages / 2); // Calculate the number of slides needed
+        @endphp
 
-            @for ($i = 0; $i < $slidesToShow; $i++)
-                <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-                    <div class="container">
-                        <div class="row">
-                            @for ($j = 0; $j < 3; $j++)
-                                <!-- 3 images per slide -->
-                                @php
-                                    // Calculate the index of the image to display
-                                    $imageIndex = ($i * 3 + $j) % $totalImages;
-                                @endphp
-                                <div class="col-4">
+        @for ($i = 0; $i < $slidesToShow; $i++)
+            <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        @for ($j = 0; $j < 2; $j++)
+                            @php
+                                // Calculate the index of the image to display
+                                $imageIndex = ($i * 2 + $j);
+                            @endphp
+                            @if ($imageIndex < $totalImages)
+                                <div class="col-6">
                                     <img src="{{ asset($brand[$imageIndex]->image) }}" alt="Image {{ $imageIndex + 1 }}"
                                         class="img-fluid w-100"
                                         style="object-fit: contain; height:350px; border-radius: 5px;">
                                 </div>
-                            @endfor
-                        </div>
+                            @endif
+                        @endfor
                     </div>
                 </div>
-            @endfor
-        </div>
-
-        <!-- Controls/Arrows -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+            </div>
+        @endfor
     </div>
 
+    <!-- Carousel controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
 
 
 
 
 
-    <div class="container my-5">
+
+<div class="container">
+    <div class="container">
         <h2 class="text-center mb-4">Categories</h2>
         <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -124,11 +126,7 @@
     </div>
 
 
-
-
-
-
-    <div id="Controls" class="carousel slide mx-auto mt-4" style="max-hight: 100px;" data-bs-ride="carousel">
+    <div id="Controls" class="carousel slide mx-auto" style="max-hight: 100px;" data-bs-ride="carousel">
         <div class="carousel-inner">
             @foreach ($secondSlider as $key => $sliderItem)
                 <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
@@ -151,7 +149,7 @@
 
 
 
-    <div id="image" class="carousel slide mx-auto mt-5" data-bs-ride="carousel">
+    <div id="image" class="carousel slide mx-auto" data-bs-ride="carousel">
 
 
         <div class="carousel-inner">
@@ -200,7 +198,7 @@
                     <i class="fab fa-4x" style="">
 
                         <img src="{{ asset($b->image) }}" alt="{{ $b->name }}"
-                            style="width: 100px; height: auto;border-radius: 50%;">
+                            style="width: 100px; height: 100px;border-radius: 50%;">
                     </i>
                 @endforeach
             </div>
@@ -209,7 +207,7 @@
                     <i class="fab  fa-4x">
 
                         <img src="{{ asset($b->image) }}" alt="{{ $b->name }}"
-                            style="width: 100px; height: auto;border-radius: 50%;">
+                            style="width: 100px; height: 100px;border-radius: 50%;">
                     </i>
                 @endforeach
             </div>
@@ -420,7 +418,7 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-
+</div>
 
 
 @endsection
@@ -447,4 +445,5 @@
             }
         });
     });
+
 </script>

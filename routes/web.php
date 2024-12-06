@@ -8,8 +8,10 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MiniSliderController;
+use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Admin\SecondSliderController;
 
 Auth::routes();
@@ -22,6 +24,19 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('news', [NewsController::class, 'index'])->name('news');
 Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
 Route::get('/', [SliderController::class, 'view'])->name('sliders');
+Route::get('/about-us', [FrontendController::class, 'aboutpage']);
+Route::get('/contact-us', [FrontendController::class, 'contactpage']);
+Route::post('/submit-form', [ContactUsController::class, 'submit']);
+Route::get('categories', [CategoryController::class, 'view'])->name('categories.view');
+Route::get('/category/{category}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
+Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+
+
+
+
+
+
+
 
 
 
@@ -30,6 +45,11 @@ Route::get('/', [SliderController::class, 'view'])->name('sliders');
 
 
 Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+    Route::get('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'about']);
+    Route::post('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'store']);
+
+    Route::get('/contact-us', [App\Http\Controllers\Admin\ContactUsController::class, 'adminPanel']);
+
 
 //<---------------------------------------Category Controllers -------------------------------------------------------->//
 

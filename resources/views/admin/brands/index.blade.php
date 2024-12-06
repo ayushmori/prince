@@ -30,26 +30,26 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Brands
-                            <a href="{{ route('admin.brands.create') }}"
-                                class="btn btn-primary btn-sm text-white float-end">Create Brand</a>
-                        </h3>
+                      <h3>Brand
+                        <a href="{{ route('admin.brands.create') }}" class="btn btn-primary btn-sm text-white float-end">Create Brand</a>
+                      </h3>
                     </div>
 
-                    @if (session('error'))
-                        <div class="alert alert-danger">{{ session('error') }}</div>
-                    @endif
-
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-
-
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-
                     <div class="card-body">
+                        @if(session('message'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('message') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        @endif
+
                         <div class="table-responsive product-table">
                             <table class="display dataTable no-footer">
                                 <thead>

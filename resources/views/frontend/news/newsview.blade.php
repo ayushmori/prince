@@ -35,8 +35,7 @@
                                             </center>
                                             <hr>
                                         @else
-                                            <img src="{{ asset('storage/default-image.jpg') }}" alt="Default Image"
-                                                class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
+                                           
                                         @endif
                                     </div>
 
