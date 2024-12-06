@@ -64,7 +64,7 @@ class NewsController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.news')->with('success', 'News has been uploaded successfully!');
+        return redirect()->route('admin.news')->with('message', 'News has been uploaded successfully!');
     }
 
 
@@ -75,7 +75,7 @@ class NewsController extends Controller
         $news->details()->delete();
         $news->delete();
 
-        return redirect()->route('admin.news')->with('success', 'News has been deleted successfully!');
+        return redirect()->route('admin.news')->with('error', 'News has been deleted successfully!');
     }
 
     public function edit($id)
@@ -150,7 +150,7 @@ class NewsController extends Controller
             }
         }
 
-        return redirect()->route('admin.news')->with('success', 'News updated successfully!');
+        return redirect()->route('admin.news')->with('message', 'News updated successfully!');
     }
 
 

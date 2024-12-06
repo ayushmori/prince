@@ -25,7 +25,7 @@
     <div class="d-flex">
       <!-- Admin -->
 <div class="dropdown me-3">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:#2973B9">
       <i class="fa-solid fa-user"></i>
       @guest
           Log In
@@ -55,18 +55,14 @@
 
       <!-- Language Dropdown with Flag Icon -->
       <div class="dropdown me-3">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-flag"></i> Language
+        <button class="btn" type="button" style="background-color:#2973B9; color:white;">
+            <img src="{{ asset('uploads/flag.png') }}" height="20px" width="25px" style="margin-right: 10px" alt=""></i>INDIA
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="#">English</a></li>
-          <li><a class="dropdown-item" href="#">Spanish</a></li>
-          <li><a class="dropdown-item" href="#">French</a></li>
-        </ul>
       </div>
+    
 
       <!-- Download Button -->
-      <a href="#" class="btn btn-primary">Download</a>
+      <a href="#" class="btn" style="background-color:#2973B9; color:white;">Download</a>
 
 
     </div>
@@ -85,7 +81,7 @@
         <!-- Left Group - Space items on the left -->
         <div class="left-group">
           <li class="nav-item">
-            <a class="nav-link" href="#">Category</a>
+            <a class="nav-link" href="#" style="color: white">Category</a>
           </li>
         </div>
 
@@ -93,13 +89,13 @@
 
         <div class="right-group">
             <li class="nav-item">
-                <a class="nav-link" href="{{route('news')}}">News</a>
+                <a class="nav-link" href="{{route('news')}}" style="color: white">News</a>
               </li>
           <li class="nav-item">
-            <a class="nav-link" href="/about-us">About Us</a>
+            <a class="nav-link" href="/about-us" style="color: white">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/contact-us">Contact Us</a>
+            <a class="nav-link" href="/contact-us" style="color: white">Contact Us</a>
           </li>
         </div>
       </ul>

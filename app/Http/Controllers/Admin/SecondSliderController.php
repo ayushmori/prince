@@ -106,7 +106,7 @@ class SecondSliderController extends Controller
 
             $secondSlider->delete();
 
-            return redirect()->route('admin.secondsliders.index')->with('message', 'Slider deleted successfully');
+            return redirect()->route('admin.secondsliders.index')->with('error', 'Slider deleted successfully');
         }
 
         return redirect()->route('admin.secondsliders.index')->with('error', 'Something went wrong');

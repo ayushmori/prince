@@ -105,7 +105,7 @@ class CategoryController extends Controller
         $category->save();
 
         // Redirect back with a success message
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('admin.categories.index')->with('message', 'Category updated successfully.');
 
     }
 
@@ -121,6 +121,6 @@ class CategoryController extends Controller
         $category->delete();
 
         // Redirect with a success message
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categories.index')->with('error', 'Category deleted successfully.');
     }
 }

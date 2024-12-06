@@ -109,7 +109,7 @@
 <!-- Card Wrapper for About Us Settings -->
 <div class="card mb-3">
     <div class="card-header bg-primary text-white">
-        <h3 class="mt-2">Another Section Settings</h3>
+        <h3 class="mt-2">Our Mission, Vision, and Goals</h3>
     </div>
 
     <div class="card-body">
