@@ -81,23 +81,21 @@
                         </div>
 
                         <!-- Parent Category -->
-                        <!-- Parent Category -->
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Parent Category</label>
                             <div class="col-sm-9">
                                 <select class="form-control" name="parent_id">
                                     <option value="">None</option>
                                     @foreach ($parentCategories as $parentCategory)
-                                        <!-- Include the category with indentation for subcategories -->
                                         @include('admin.category.partials.category_option', [
                                             'category' => $parentCategory,
                                             'level' => 0,
+                                            'selectedParent' => $category->parent_id  <!-- Pass selectedParent as part of an array -->
                                         ])
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-
+                        </div>>
 
                         <!-- Image -->
                         <div class="mb-3 row">

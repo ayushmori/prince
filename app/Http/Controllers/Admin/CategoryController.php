@@ -10,23 +10,31 @@ use App\Http\Requests\CategoryFormRequest;
 
 class CategoryController extends Controller
 {
-    // View all categories (root categories)
+
+    // app/Http/Controllers/Admin/CategoryController.php
+
+
+
     public function view()
     {
-        // Fetch root categories (categories with no parent)
         $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
         return view('frontend.category.index', compact('categories'));
     }
 
-    // Get child categories for a parent
-    public function getChildren(Category $category)
-{
-    $children = $category->children()->with('children')->get();
-    return response()->json($children);
-}
+    public function getChildren($categoryId)
+    {
+        $category = Category::with('children.children')->find($categoryId);
 
 
-    // In your CategoryController
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        return response()->json($category->children);
+    }
+
+
+
     public function index()
     {
         $parentCategories = Category::with('children')->whereNull('parent_id')->get();
@@ -34,37 +42,35 @@ class CategoryController extends Controller
     }
 
 
-    // Show a specific category by slug
+
     public function show($id)
     {
-        // Fetch the category by its ID or slug
+
         $category = Category::findOrFail($id);  // Change this line to find by ID
         return view('frontend.category.show', compact('category'));
     }
 
 
-    // Show the category creation form
+
     public function create()
     {
-        // Fetch parent categories (no parent_id)
+
         $parentCategories = Category::with('children')->whereNull('parent_id')->get();
         return view('admin.category.create', compact('parentCategories'));
     }
 
-    // Store a newly created category
     public function store(CategoryFormRequest $request)
     {
         $validated = $request->validated();
 
         $category = new Category;
         $category->name = $validated['name'];
-        $category->slug = Str::slug($validated['slug']); // Ensure the slug is formatted correctly
+        $category->slug = Str::slug($validated['slug']);
         $category->parent_id = $validated['parent_id'];
         $category->serial_number = $validated['serial_number'] ?? null;
         $category->description = $validated['description']; // Fix: Ensure description is assigned
 
         if ($request->hasFile('image')) {
-            // Save the uploaded image
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
             $filename = time() . '.' . $ext;
@@ -86,19 +92,13 @@ class CategoryController extends Controller
     {
         $parentCategories = Category::with('children')->whereNull('parent_id')->get();
 
-
-        if ($parentCategories->isEmpty()) {
-            // Handle case where no parent categories are found
-            return redirect()->route('admin.categories.index')->with('error', 'No parent categories found.');
-        }
-        return dd($parentCategories->toArray());
-
         return view('admin.category.edit', compact('category', 'parentCategories'));
     }
 
 
+
     // Update an existing category
-    public function update(CategoryFormRequest $request, Category $category)
+    public function update(Request $request, Category $category)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',

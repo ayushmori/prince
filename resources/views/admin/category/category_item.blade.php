@@ -12,7 +12,6 @@
         </form>
     </td>
 </tr>
-
 @foreach ($category->children as $child)
     @include('admin.category.category_item', ['category' => $child, 'level' => $level + 1])
 @endforeach

@@ -63,11 +63,10 @@
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Description</label>
                             <div class="col-sm-9">
-                                <textarea class="form-control" name="description" required></textarea>
+                                <input class="form-control" type="text" name="description" required>
                             </div>
                         </div>
 
-                        
                         <!-- Serial Number -->
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Serial Number</label>
@@ -94,13 +93,13 @@
 
 
                         <!-- Image -->
-
-
                         <div class="mb-3 row">
                             <label class="col-sm-3 col-form-label">Image</label>
                             <div class="col-sm-9">
-                                <input class="form-control" type="file" name="image" accept="image/*">
+                                <input class="form-control" type="file" name="image">
                             </div>
+                        </div>
+
                         <!-- Submit -->
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">Save</button>
