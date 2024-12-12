@@ -28,7 +28,7 @@ Route::get('/about-us', [FrontendController::class, 'aboutpage']);
 Route::get('/contact-us', [FrontendController::class, 'contactpage']);
 Route::post('/submit-form', [ContactUsController::class, 'submit']);
 Route::get('categories', [CategoryController::class, 'view'])->name('categories.view');
-Route::get('/category/{categoryId}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
+Route::get('/category/{category}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
 Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/category/{id}/ancestors', [CategoryController::class, 'getAncestors']);
 

@@ -28,11 +28,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Share the About settings
         $aboutSettings = AboutSettings::first(); // Fetch the first AboutSettings record
-        View::share('aboutSettings', $aboutSettings); // Share it with all 
-        
+        View::share('aboutSettings', $aboutSettings); // Share it with all
+
 
         // Share categories with all views
     View::share('brands', Brand::orderBy('name', 'asc')->limit(4)->get());
-    View::share('categories', Category::orderBy('name', 'asc')->limit(4)->get());
+    View::share('categories',  Category::with('parentCategory')->whereNull('parent_id')->get());
     }
 }

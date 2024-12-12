@@ -29,12 +29,13 @@ class SliderController extends Controller
         // Retrieve all sliders from the database
         $sliders = Slider::all();
         $brand = Brand::all();
-        $category = Category::all();
+        $category =  Category::with('parentCategory')->whereNull('parent_id')->get();;
+        $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
         $secondSlider = SecondSlider::all();
         $minislider = MiniSlider::all();
 
         // Pass the sliders data to the view
-        return view('index', compact('sliders', 'brand', 'category', 'secondSlider','minislider'));
+        return view('index', compact('sliders', 'brand', 'category', 'secondSlider','minislider','categories'));
 
     }
 

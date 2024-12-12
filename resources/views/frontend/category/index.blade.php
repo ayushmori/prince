@@ -203,7 +203,7 @@
 
 @extends('layouts.app')
 
-{{-- @section('content')
+@section('content')
     <div class="container">
         <h3>Categories</h3>
         <ul id="category-list" class="list-unstyled">
@@ -307,4 +307,4 @@
             padding-left: 0;
         }
     </style>
-@endsection --}}
+@endsection

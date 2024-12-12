@@ -8,17 +8,41 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+
 <style>
-    /* Ensure the nested dropdowns show up correctly */
-    .dropdown-submenu {
-        position: relative;
-    }
+  #category-list {
+    max-height: 400px;
+    overflow-y: auto;
+    max-width: auto;
+}
 
+.child-categories {
+    display: none;
+    padding-left: 1rem;
+}
 
+.child-categories.show {
+    display: inline-block !important;
+}
 
-    .dropdown-menu {
-        display: none;
-    }
+.loader {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 0.5rem;
+}
+
+.dropdown-item {
+    cursor: pointer;
+    display: flex;
+
+}
+.dropdown-item span{
+
+}
+
+.xyz{
+    display: inline-block;
+}
 </style>
 
 <!-- Main Navbar -->
@@ -105,32 +129,29 @@
             <ul class="navbar-nav">
                 <div class="left-group">
                     <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Category
+                        <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-expanded="false">
+                            Categories
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul id="category-list" class="dropdown-menu" aria-labelledby="categoryDropdown">
                             @foreach ($categories as $category)
-                                <li class="category-item" data-category-id="{{ $category->id }}">
-                                    <span class="category-name">{{ $category->name }}</span>
+                                <li class="dropdown-item category-item" data-category-id="{{ $category->id }}">
+                                    <span class="category-name btn btn-sm btn-primary">{{ $category->name }}</span>
                                     @if ($category->children->isNotEmpty())
-                                        <ul class="child-categories list-unstyled ms-3" style="display: none;">
+                                        <ul class="child-categories list-unstyled ms-3">
                                             @foreach ($category->children as $child)
                                                 <li class="category-item" data-category-id="{{ $child->id }}">
-                                                    <span class="category-name">{{ $child->name }}</span>
+                                                    <span class="category-name btn btn-sm btn-primary">{{ $child->name }}</span>
                                                     @if ($child->children->isNotEmpty())
-                                                        <ul class="child-categories list-unstyled ms-3"
-                                                            style="display: none;">
+                                                    <div class="xyz">
+
+                                                        <ul class="child-categories list-unstyled ms-3">
                                                             @foreach ($child->children as $subchild)
-                                                                <li class="category-item"
-                                                                    data-category-id="{{ $subchild->id }}">
-                                                                    <span
-                                                                        class="category-name">{{ $subchild->name }}</span>
-                                                                </li>
+                                                            <li class="category-item" data-category-id="{{ $subchild->id }}">
+                                                                <span class="category-name btn btn-sm btn-primary">{{ $subchild->name }}</span>
+                                                            </li>
                                                             @endforeach
                                                         </ul>
-                                                    @else
-                                                        <!-- Last child category as a link -->
-                                                        <a href="/category/{{ $child->id }}"
-                                                            class="category-name">{{ $child->name }}</a>
+                                                    </div>
                                                     @endif
                                                 </li>
                                             @endforeach
@@ -139,9 +160,8 @@
                                 </li>
                             @endforeach
                         </ul>
-
-
                     </div>
+
                 </div>
 
                 <!-- Right Group - Space items on the right -->
@@ -161,93 +181,52 @@
         </div>
     </div>
 </nav>
+
 <script>
-/* Hide child categories by default */
-$(document).ready(function () {
-    // Prevent dropdown from closing when clicking on a category or subcategory
-    $('.dropdown-menu').on('click', function (e) {
-        e.stopPropagation();
-    });
+    $(document).ready(function () {
+        // Toggle visibility for child categories
+        $('#category-list').on('hover', '.category-name', function (e) {
+            e.stopPropagation(); // Prevent click events from bubbling
+            const $categoryItem = $(this).closest('.category-item');
+            const $childContainer = $categoryItem.find('.child-categories:first');
 
-    // Toggle child categories when clicking a category name
-    $('.category-name').on("click", function (e) {
-        e.stopPropagation(); // Prevent the click from propagating to the parent item
+            if ($childContainer.length > 0) {
+                // Toggle visibility of already-loaded child categories
+                $childContainer.toggleClass('show');
+            } else {
+                const categoryId = $categoryItem.data('category-id');
+                const $loader = $('<div class="loader">Loading...</div>');
+                $categoryItem.append($loader);
 
-        const categoryItem = $(this).closest('.category-item');
-        const childContainer = categoryItem.find('.child-categories');
+                // Dynamically load child categories
+                $.getJSON(`/category/${categoryId}/children`, function (children) {
+                    $loader.remove();
 
-        if (childContainer.length > 0) {
-            // Toggle visibility of child categories
-            childContainer.toggleClass('show'); // Use jQuery to toggle the visibility
-            console.log('Toggled visibility of child container:', childContainer);
-        } else {
-            const categoryId = categoryItem.data('category-id');
-
-            // Fetch children dynamically if not already loaded
-            fetch(`/category/${categoryId}/children`)
-                .then(response => {
-                    if (!response.ok) {
-                        console.error('Failed to fetch children:', response.status, response.statusText);
-                        throw new Error('Failed to fetch children');
-                    }
-                    return response.json(); // Parse as JSON if response is valid
-                })
-                .then(children => {
                     if (children.length > 0) {
-                        console.log('Fetched children:', children);
-
-                        const newChildContainer = $('<ul class="child-categories list-unstyled ms-3"></ul>');
-
-                        children.forEach(child => {
-                            const childItem = $(`
-                                <li class="category-item" data-category-id="${child.id}">
-                                    <span class="category-name">${child.name}</span>
-                                </li>
-                            `);
-
-                            // Check if the child has its own children and add them
-                            if (child.children && child.children.length > 0) {
-                                const subChildContainer = $('<ul class="child-categories list-unstyled ms-3" style="display: none;"></ul>');
-
-                                child.children.forEach(subChild => {
-                                    const subChildItem = $(`
-                                        <li class="category-item" data-category-id="${subChild.id}">
-                                            <span class="category-name">${subChild.name}</span>
-                                        </li>
-                                    `);
-                                    subChildContainer.append(subChildItem);
-                                });
-                                childItem.append(subChildContainer);
-                            }
-
-                            newChildContainer.append(childItem);
+                        const $newChildContainer = $('<ul>', {
+                            class: 'child-categories list-unstyled ms-3'
                         });
 
-                        console.log('Appending new child container to', categoryItem);
-                        categoryItem.append(newChildContainer);
-                        newChildContainer.style.display = 'inline-block';
-                        console.log('Appended new child container:', newChildContainer);
+                        children.forEach(function (child) {
+                            const $childItem = $('<li>', {
+                                class: 'category-item',
+                                'data-category-id': child.id
+                            }).html(`<span class="category-name btn btn-sm btn-primary">${child.name}</span>`);
+
+                            $newChildContainer.append($childItem);
+                        });
+
+                        $categoryItem.append($newChildContainer);
+                        $newChildContainer.addClass('show');
                     } else {
                         window.location.href = `/category/${categoryId}`;
                     }
-                })
-                .catch(error => console.error('Error fetching children:', error));
-        }
+                }).fail(function (error) {
+                    $loader.remove();
+                    alert('Failed to fetch subcategories. Please try again.');
+                });
+            }
+        });
     });
-});
-
-
-
-
 </script>
-<style>
 
-.child-categories {
-    display: none;
-}
-/* .child-categories.show {
-    display: inline-block;
-} */
-
-
-</style>

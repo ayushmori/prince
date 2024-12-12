@@ -23,14 +23,21 @@ class CategoryController extends Controller
 
     public function getChildren($categoryId)
     {
-        $category = Category::with('children.children')->find($categoryId);
-
+        $category = Category::find($categoryId);
 
         if (!$category) {
             return response()->json(['error' => 'Category not found'], 404);
         }
 
-        return response()->json($category->children);
+        $children = $category->children->map(function ($child) {
+            return [
+                'id' => $child->id,
+                'name' => $child->name,
+                'has_children' => $child->children()->exists(),
+            ];
+        });
+
+        return response()->json($children);
     }
 
 
