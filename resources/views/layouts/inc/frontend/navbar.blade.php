@@ -185,7 +185,7 @@
 <script>
     $(document).ready(function () {
         // Toggle visibility for child categories
-        $('#category-list').on('hover', '.category-name', function (e) {
+        $('#category-list').on('click', '.category-name', function (e) {
             e.stopPropagation(); // Prevent click events from bubbling
             const $categoryItem = $(this).closest('.category-item');
             const $childContainer = $categoryItem.find('.child-categories:first');
