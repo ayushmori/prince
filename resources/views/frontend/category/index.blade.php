@@ -1,202 +1,135 @@
-{{-- @extends('layouts.app')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-@section('content')
-    <div class="container">
-        <h3>Categories</h3>
-        <div id="category-list">
-            @foreach ($categories as $category)
-                <div class="category-item" data-category-id="{{ $category->id }}">
-                    <span class="category-name">{{ $category->name }}</span>
-                    @if ($category->children->isNotEmpty())
-                        <div class="child-categories" style="display: none;">
-                            @foreach ($category->children as $child)
-                                <div class="category-item" data-category-id="{{ $child->id }}">
-                                    <span class="category-name">{{ $child->name }}</span>
-                                    @if ($child->children->isNotEmpty())
-                                        <div class="child-categories" style="display: none;">
-                                            @foreach ($child->children as $subchild)
-                                                <div class="category-item" data-category-id="{{ $subchild->id }}">
-                                                    <span class="category-name">{{ $subchild->name }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-    </div>
-
-    <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('#category-list').addEventListener('click', function(e) {
-        if (e.target.classList.contains('category-name')) {
-            const categoryItem = e.target.closest('.category-item');
-            const childContainer = categoryItem.querySelector('.child-categories');
-
-            if (childContainer) {
-                // Toggle visibility of child categories
-                childContainer.style.display =
-                    (childContainer.style.display === 'none' || !childContainer.style.display) ? 'block' : 'none';
-            } else {
-                const categoryId = categoryItem.getAttribute('data-category-id'); // Correct variable name here
-
-                fetch(`/category/${categoryId}/children`)
-                    .then(response => response.json())
-                    .then(children => {
-                        if (children.length > 0) {
-                            const newChildContainer = document.createElement('div');
-                            newChildContainer.classList.add('child-categories');
-
-                            children.forEach(child => {
-                                const childItem = document.createElement('div');
-                                childItem.classList.add('category-item');
-                                childItem.setAttribute('data-category-id', child.id);
-
-                                childItem.innerHTML = `
-                                    <span class="category-name">${child.name}</span>
-                                `;
-
-                                newChildContainer.appendChild(childItem);
-                            });
-
-                            categoryItem.appendChild(newChildContainer);
-                            newChildContainer.style.display = 'block';
-                        } else {
-                            // Redirect to category page if no children
-                            window.location.href = `/category/${categoryId}`; // Use categoryId here
-                        }
-                    })
-                    .catch(error => console.error('Error fetching children:', error));
-            }
-        }
-    });
-});
-
-
-    </script>
-@endsection --}}
-
-{{-- do not delete above code  --}}
 
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <h3 class="my-4 text-center">Categories</h3>
-        <div id="category-list" class="list-group">
-            @foreach ($categories as $category)
-                <div class="category-item list-group-item border-0 p-3 mb-2 bg-light rounded shadow-sm" data-category-id="{{ $category->id }}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="category-name fw-bold" style="cursor: pointer; font-size: 1.2rem;">{{ $category->name }}</span>
-                        <button class="btn btn-sm btn-outline-primary toggle-children">+</button>
-                    </div>
-                    @if ($category->children->isNotEmpty())
-                        <div class="child-categories mt-3 ps-3 border-start border-3" style="display: none;">
-                            @foreach ($category->children as $child)
-                                @include('partials.child-category', ['category' => $child])
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-            @endforeach
+{{-- <div class="container">
+    <div class="row">
+        <!-- Left side: Categories -->
+        <div class="col-md-12">
+            <div class="categories-list bg-light p-3 rounded">
+                <h5>Categories</h5>
+                <ul id="category-list" class="list-unstyled">
+                    @foreach ($categories as $category)
+                        @include('partials.child-category', ['category' => $category])
+                    @endforeach
+                </ul>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('#category-list').addEventListener('click', function(e) {
-                if (e.target.classList.contains('category-name')) {
-                    const categoryItem = e.target.closest('.category-item');
-                    const childContainer = categoryItem.querySelector('.child-categories');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#category-list').addEventListener('click', function (e) {
+            if (e.target.classList.contains('toggle-children')) {
+                const categoryItem = e.target.closest('.category-item');
+                const childContainer = categoryItem.querySelector('.child-categories');
 
-                    if (childContainer) {
-                        childContainer.style.display =
-                            (childContainer.style.display === 'none' || !childContainer.style.display) ? 'block' : 'none';
-                    } else {
-                        const categoryId = categoryItem.getAttribute('data-category-id');
-
-                        fetch(`/category/${categoryId}/children`)
-                            .then(response => response.json())
-                            .then(children => {
-                                if (children.length > 0) {
-                                    const newChildContainer = document.createElement('div');
-                                    newChildContainer.classList.add('child-categories', 'mt-3', 'ps-3', 'border-start', 'border-3');
-
-                                    children.forEach(child => {
-                                        const childItem = document.createElement('div');
-                                        childItem.classList.add('category-item', 'list-group-item', 'border-0', 'p-2', 'mb-1', 'bg-white', 'rounded', 'shadow-sm');
-                                        childItem.setAttribute('data-category-id', child.id);
-
-                                        childItem.innerHTML = `
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="category-name">${child.name}</span>
-                                                <button class="btn btn-sm btn-outline-secondary toggle-children">+</button>
-                                            </div>
-                                        `;
-
-                                        newChildContainer.appendChild(childItem);
-                                    });
-
-                                    categoryItem.appendChild(newChildContainer);
-                                    newChildContainer.style.display = 'block';
-                                } else {
-                                    window.location.href = `/category/${categoryId}`;
-                                }
-                            })
-                            .catch(error => console.error('Error fetching children:', error));
-                    }
+                if (childContainer) {
+                    const isHidden = childContainer.style.display === 'none' || !childContainer.style.display;
+                    childContainer.style.display = isHidden ? 'block' : 'none';
+                    e.target.innerHTML = isHidden ? '&darr;' : '&rarr;'; // Change to down/right arrow
                 }
+            }
 
-                if (e.target.classList.contains('toggle-children')) {
-                    const categoryItem = e.target.closest('.category-item');
-                    const childContainer = categoryItem.querySelector('.child-categories');
-                    if (childContainer) {
-                        childContainer.style.display =
-                            (childContainer.style.display === 'none' || !childContainer.style.display) ? 'block' : 'none';
-                        e.target.textContent = e.target.textContent === '+' ? '-' : '+';
-                    }
-                }
-            });
+            if (e.target.classList.contains('category-name')) {
+                const categoryId = e.target.closest('.category-item, .child-category-item').getAttribute('data-category-id');
+
+                // Fetch category content dynamically
+                fetch(`/category/${categoryId}/content`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const contentContainer = document.querySelector('#category-content');
+                        contentContainer.innerHTML = ''; // Clear previous content
+
+                        if (data.length > 0) {
+                            data.forEach(item => {
+                                const col = document.createElement('div');
+                                col.className = 'col';
+
+                                col.innerHTML = `
+                                    <div class="card shadow-sm">
+                                        <img src="${item.image}" class="card-img-top" alt="${item.title}">
+                                        <div class="card-body">
+                                            <h6 class="card-title">${item.title}</h6>
+                                            <p class="card-text">${item.description}</p>
+                                        </div>
+                                    </div>
+                                `;
+
+                                contentContainer.appendChild(col);
+                            });
+                        } else {
+                            contentContainer.innerHTML = `
+                                <div class="col">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body text-center">
+                                            <p>No content available for this category.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching category content:', error));
+            }
         });
-    </script>
+    });
+</script>
 
-    <style>
-        .category-item {
-            position: relative;
-        }
+<style>
+    .categories-list {
+        max-height: 80vh;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+    }
 
-        .category-name {
-            text-decoration: underline;
-            color: #007bff;
-        }
+    .category-item, .child-category-item {
+        padding: 5px 0;
+    }
 
-        .category-name:hover {
-            color: #0056b3;
-        }
+    .category-name {
+        font-weight: bold;
+        color: #007bff;
+        cursor: pointer;
+    }
 
-        .toggle-children {
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
-            padding: 0;
-        }
+    .category-name:hover {
+        text-decoration: underline;
+    }
 
-        .child-categories {
-            animation: fadeIn 0.3s ease-in-out;
-        }
+    .child-categories {
+        margin-left: 10px;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
+    .toggle-children {
+        cursor: pointer;
+        font-size: 1.2rem; /* Increase size for better visibility */
+    }
+
+    .card {
+        border: none;
+    }
+
+    .card-img-top {
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style> --}}
 @endsection
-

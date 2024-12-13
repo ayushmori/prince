@@ -4,6 +4,11 @@
 <!-- Include Material Design Icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.css" rel="stylesheet">
 
+<!-- Include Bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <!-- Main Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
@@ -24,48 +29,45 @@
     <!-- Admin and Dropdown (Right Side) -->
     <div class="d-flex">
       <!-- Admin -->
-<div class="dropdown me-3">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:#2973B9">
-      <i class="fa-solid fa-user"></i>
-      @guest
-          Log In
-      @else
-          {{ Auth::user()->name }}
-      @endguest
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      @guest
-          <li><a href="{{ route('login') }}" class="dropdown-item">Login</a></li>
-          <li><a href="{{ route('register') }}" class="dropdown-item">Register</a></li>
-      @else
-          <li><a href="#" class="dropdown-item">{{ Auth::user()->name }}</a></li>
-          <li>
+      <div class="dropdown me-3">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:#2973B9">
+          <i class="fa-solid fa-user"></i>
+          @guest
+            Log In
+          @else
+            {{ Auth::user()->name }}
+          @endguest
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          @guest
+            <li><a href="{{ route('login') }}" class="dropdown-item">Login</a></li>
+            <li><a href="{{ route('register') }}" class="dropdown-item">Register</a></li>
+          @else
+            <li><a href="#" class="dropdown-item">{{ Auth::user()->name }}</a></li>
+            <li>
               <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                  Logout
+                Logout
               </a>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                  @csrf
+                @csrf
               </form>
-          </li>
-      @endguest
-  </ul>
-</div>
-
+            </li>
+          @endguest
+        </ul>
       </div>
-
-      <!-- Language Dropdown with Flag Icon -->
-      <div class="dropdown me-3">
-        <button class="btn" type="button" style="background-color:#2973B9; color:white;">
-            <img src="{{ asset('uploads/flag.png') }}" height="20px" width="25px" style="margin-right: 10px" alt=""></i>INDIA
-        </button>
-      </div>
-    
-
-      <!-- Download Button -->
-      <a href="#" class="btn" style="background-color:#2973B9; color:white;">Download</a>
-
 
     </div>
+
+    <!-- Language Dropdown with Flag Icon -->
+    <div class="dropdown me-3">
+      <button class="btn" type="button" style="background-color:#2973B9; color:white;">
+        <img src="{{ asset('uploads/flag.png') }}" height="20px" width="25px" style="margin-right: 10px" alt=""> INDIA
+      </button>
+    </div>
+
+    <!-- Download Button -->
+    <a href="#" class="btn" style="background-color:#2973B9; color:white;">Download</a>
+
   </div>
 </nav>
 
@@ -77,28 +79,115 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav w-100">
-        <!-- Left Group - Space items on the left -->
+      <ul class="navbar-nav">
+        <!-- Left Group - Categories -->
         <div class="left-group">
-          <li class="nav-item">
-            <a class="nav-link" href="{{route('categories.view')}}">Category</a>
-          </li>
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-expanded="false">
+              Categories
+            </button>
+            <ul id="category-list" class="dropdown-menu" aria-labelledby="categoryDropdown">
+              @foreach ($categories as $category)
+                <li class="dropdown-item category-item" data-category-id="{{ $category->id }}">
+                  <span class="category-name">{{ $category->name }}</span>
+                  @if ($category->children->isNotEmpty())
+                    <ul class="child-categories list-unstyled ms-3">
+                      @foreach ($category->children as $child)
+                        <li class="category-item" data-category-id="{{ $child->id }}">
+                          <span class="category-name">{{ $child->name }}</span>
+                          @if ($child->children->isNotEmpty())
+                            <ul class="child-categories list-unstyled ms-3">
+                              @foreach ($child->children as $subchild)
+                                <li class="category-item" data-category-id="{{ $subchild->id }}">
+                                  <span class="category-name">{{ $subchild->name }}</span>
+                                </li>
+                              @endforeach
+                            </ul>
+                          @endif
+                        </li>
+                      @endforeach
+                    </ul>
+                  @endif
+                </li>
+              @endforeach
+            </ul>
+          </div>
+
         </div>
 
         <!-- Right Group - Space items on the right -->
-
         <div class="right-group">
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('news')}}" style="color: white">News</a>
-              </li>
           <li class="nav-item">
-            <a class="nav-link" href="/about-us" style="color: white">About Us</a>
+            <a class="nav-link" href="{{ route('news') }}">News</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/contact-us" style="color: white">Contact Us</a>
+            <a class="nav-link" href="/about-us">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact-us">Contact Us</a>
           </li>
         </div>
       </ul>
     </div>
   </div>
 </nav>
+
+<!-- jQuery Script -->
+<script>
+  $(document).ready(function () {
+    // Toggle visibility for child categories
+    $('#category-list').on('click', '.category-name', function (e) {
+      e.stopPropagation(); // Prevent click events from bubbling
+      const $categoryItem = $(this).closest('.category-item');
+      const $childContainer = $categoryItem.find('.child-categories:first');
+
+      if ($childContainer.length > 0) {
+        // Toggle visibility of already-loaded child categories
+        $childContainer.toggleClass('show');
+      } else {
+        const categoryId = $categoryItem.data('category-id');
+        const $loader = $('<div class="loader">Loading...</div>');
+        $categoryItem.append($loader);
+
+        // Dynamically load child categories
+        $.getJSON(`/category/${categoryId}/children`, function (children) {
+          $loader.remove();
+
+          if (children.length > 0) {
+            const $newChildContainer = $('<ul>', {
+              class: 'child-categories list-unstyled ms-3'
+            });
+
+            children.forEach(function (child) {
+              const $childItem = $('<li>', {
+                class: 'category-item',
+                'data-category-id': child.id
+              }).html(`<span class="category-name">${child.name}</span>`);
+
+              $newChildContainer.append($childItem);
+            });
+
+            $categoryItem.append($newChildContainer);
+            $newChildContainer.addClass('show');
+          } else {
+            window.location.href = `/category/${categoryId}`;
+          }
+        }).fail(function (error) {
+          $loader.remove();
+          alert('Failed to fetch subcategories. Please try again.');
+        });
+      }
+    });
+  });
+</script>
+
+<!-- Additional Styles -->
+<style>
+  /* Ensure the nested dropdowns show up correctly */
+  .child-categories {
+    display: none;
+  }
+  .child-categories.show {
+    display: block;
+  }
+</style>
