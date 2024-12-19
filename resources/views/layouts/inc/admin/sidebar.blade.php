@@ -85,6 +85,17 @@
                 </ul>
             </li>
 
+            <li class="sidebar-list">
+                <a class="sidebar-link sidebar-title" href="#">
+                    <i data-feather="book"></i><span>Product</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{url('admin/products/create')}}">Add Product</a></li>
+                    <li><a href="{{url('/admin/products')}}">View Product</a></li>
+                </ul>
+            </li>
+
+
 
             <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Setting</span></a>
               <ul class="sidebar-submenu">

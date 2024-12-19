@@ -7,42 +7,74 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style>
+
+    nav.navbar {
+        margin: 0 !important;
+    }
+
+    .navbar-default {
+        margin-bottom: 0 !important;
+    }
+
+    .navbar-inverse {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    .dropdown-item {
+        margin: 0;
+    }
+
+    #category-list {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<!-- Your existing HTML remains the same -->
+
 
 
 <style>
-  #category-list {
-    max-height: 400px;
-    overflow-y: auto;
-    max-width: auto;
-}
+    #category-list {
+        max-height: 400px;
+        overflow-y: auto;
+        max-width: auto;
+    }
+    #category-list span {
+       overflow-y: hidden;
+    }
 
-.child-categories {
-    display: none;
-    padding-left: 1rem;
-}
+    .child-categories {
+        display: none;
+        padding-left: 1rem;
+    }
 
-.child-categories.show {
-    display: inline-block !important;
-}
+    .child-categories.show {
+        display: inline-block !important;
+    }
 
-.loader {
-    font-size: 0.9rem;
-    color: #888;
-    margin-top: 0.5rem;
-}
+    .loader {
+        font-size: 0.9rem;
+        color: #888;
+        margin-top: 0.5rem;
+    }
 
-.dropdown-item {
-    cursor: pointer;
-    display: flex;
+    .dropdown-item {
+        cursor: pointer;
+        display: flex;
 
-}
-.dropdown-item span{
+    }
 
-}
+    .dropdown-item span {}
 
-.xyz{
-    display: inline-block;
-}
+    .xyz {
+        display: inline-block;
+    }
+
+    nav {
+        margin-bottom: 200px;
+    }
 </style>
 
 <!-- Main Navbar -->
@@ -129,10 +161,12 @@
             <ul class="navbar-nav">
                 <div class="left-group">
                     <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown"
+                            data-toggle="dropdown" aria-expanded="false">
                             Categories
                         </button>
                         <ul id="category-list" class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <div class="cc">
                             @foreach ($categories as $category)
                                 <li class="dropdown-item category-item" data-category-id="{{ $category->id }}">
                                     <span class="category-name btn btn-sm btn-primary">{{ $category->name }}</span>
@@ -140,18 +174,21 @@
                                         <ul class="child-categories list-unstyled ms-3">
                                             @foreach ($category->children as $child)
                                                 <li class="category-item" data-category-id="{{ $child->id }}">
-                                                    <span class="category-name btn btn-sm btn-primary">{{ $child->name }}</span>
+                                                    <span
+                                                        class="category-name btn btn-sm btn-primary">{{ $child->name }}</span>
                                                     @if ($child->children->isNotEmpty())
-                                                    <div class="xyz">
+                                                        <div class="xyz">
 
-                                                        <ul class="child-categories list-unstyled ms-3">
-                                                            @foreach ($child->children as $subchild)
-                                                            <li class="category-item" data-category-id="{{ $subchild->id }}">
-                                                                <span class="category-name btn btn-sm btn-primary">{{ $subchild->name }}</span>
-                                                            </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
+                                                            <ul class="child-categories list-unstyled ms-3">
+                                                                @foreach ($child->children as $subchild)
+                                                                    <li class="category-item"
+                                                                        data-category-id="{{ $subchild->id }}">
+                                                                        <span
+                                                                            class="category-name btn btn-sm btn-primary">{{ $subchild->name }}</span>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
                                                     @endif
                                                 </li>
                                             @endforeach
@@ -159,6 +196,7 @@
                                     @endif
                                 </li>
                             @endforeach
+                        </div>
                         </ul>
                     </div>
 
@@ -183,9 +221,9 @@
 </nav>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Toggle visibility for child categories
-        $('#category-list').on('click', '.category-name', function (e) {
+        $('#category-list').on('click', '.category-name', function(e) {
             e.stopPropagation(); // Prevent click events from bubbling
             const $categoryItem = $(this).closest('.category-item');
             const $childContainer = $categoryItem.find('.child-categories:first');
@@ -199,7 +237,7 @@
                 $categoryItem.append($loader);
 
                 // Dynamically load child categories
-                $.getJSON(`/category/${categoryId}/children`, function (children) {
+                $.getJSON(`/category/${categoryId}/children`, function(children) {
                     $loader.remove();
 
                     if (children.length > 0) {
@@ -207,11 +245,13 @@
                             class: 'child-categories list-unstyled ms-3'
                         });
 
-                        children.forEach(function (child) {
+                        children.forEach(function(child) {
                             const $childItem = $('<li>', {
                                 class: 'category-item',
                                 'data-category-id': child.id
-                            }).html(`<span class="category-name btn btn-sm btn-primary">${child.name}</span>`);
+                            }).html(
+                                `<span class="category-name btn btn-sm btn-primary">${child.name}</span>`
+                                );
 
                             $newChildContainer.append($childItem);
                         });
@@ -221,7 +261,7 @@
                     } else {
                         window.location.href = `/category/${categoryId}`;
                     }
-                }).fail(function (error) {
+                }).fail(function(error) {
                     $loader.remove();
                     alert('Failed to fetch subcategories. Please try again.');
                 });
@@ -229,4 +269,3 @@
         });
     });
 </script>
-
