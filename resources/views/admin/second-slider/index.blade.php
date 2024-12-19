@@ -4,38 +4,40 @@
 
 <div class="container-fluid">
     <div class="page-title">
-        <div class="row">
-            <div class="col-6">
-                <h3>Second Slider</h3>
-            </div>
-            <div class="col-6">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ url('admin/dashboard') }}" title="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">Second Slider</li>
-                    <li class="breadcrumb-item active">View</li>
-                </ol>
-            </div>
+      <div class="row">
+        <div class="col-6">
+          <h3>Sigle Silder</h3>
         </div>
+        <div class="col-6">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html" data-bs-original-title="" title="">                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></a></li>
+            <li class="breadcrumb-item">Sigle Slider</li>
+            <li class="breadcrumb-item active">View Sigle Slider</li>
+          </ol>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>Second Sliders
+                    <h3>Sigle Slider
                         <a href="{{ route('admin.secondsliders.create') }}" class="btn btn-danger btn-sm float-end">Add New</a>
                     </h3>
                 </div>
+                
                 <div class="card-body">
+                    @if(session('message'))
+                    <div class="alert alert-success">{{session('message')}}</div>
+                @endif   
+        
+                @if(session('error'))
+                <div class="alert alert-danger">{{session('error')}}</div>
+                @endif 
+
                     <div class="table-responsive product-table">
                         <table class="table table-striped">
                             <thead>

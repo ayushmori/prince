@@ -44,10 +44,10 @@
             </li>
 
 
-            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Many Slider</span></a>
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Main Slider</span></a>
               <ul class="sidebar-submenu">
-                <li><a href="{{ url('admin/sliders/create' )}}">Add Many Slider</a></li>
-                <li><a href="{{ url('admin/sliders' )}}">View Many Slider</a></li>
+                <li><a href="{{ url('admin/sliders/create' )}}">Add Main Slider</a></li>
+                <li><a href="{{ url('admin/sliders' )}}">View Main Slider</a></li>
               </ul>
             </li>
 

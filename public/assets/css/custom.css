@@ -202,6 +202,10 @@
   margin-bottom: 10px;
 }
 
+.footer i{
+  color: black;
+}
+
 .footer .list li a {
   text-decoration: none;
   color: black; /* Link color */
@@ -276,7 +280,3 @@
   }
 }
 
-
-
-
-/* social icons */

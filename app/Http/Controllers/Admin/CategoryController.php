@@ -117,6 +117,7 @@ class CategoryController extends Controller
 
 
 
+
     // Update an existing category
     public function update(Request $request, Category $category)
     {

@@ -116,7 +116,7 @@ class SliderController extends Controller
 
             $slider->delete();
 
-            return redirect()->route('admin.sliders.index')->with('message', 'Slider deleted successfully');
+            return redirect()->route('admin.sliders.index')->with('error', 'Slider deleted successfully');
         }
 
         return redirect()->route('admin.sliders.index')->with('error', 'Something went wrong');

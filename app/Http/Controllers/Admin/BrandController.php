@@ -97,14 +97,10 @@ class BrandController extends Controller
         $brand->name = $request->name;
         $brand->description = $request->description;
         $brand->serial_number = $request->serial_number;
-
-        if (!$brand->save()) {
-            return redirect()->route('admin.brands.index')
-                ->with('error', 'Failed to save the brand. Please try again.');
-        }
-
-        return redirect()->route('admin.brands.index')
-            ->with('success', $id ? 'Brand updated successfully!' : 'Brand created successfully!');
+        $brand->save();
+        $existingSerialNumbers = Brand::orderBy('serial_number', 'asc')->pluck('serial_number')->toArray();
+        $nextSerialNumber = $this->getNextAvailableSerialNumber($existingSerialNumbers);
+        return redirect()->route('brands.index')->with('message', $id ? 'Brand updated successfully!' : 'Brand created successfully!');
     }
 
 
@@ -115,7 +111,7 @@ class BrandController extends Controller
             Storage::delete('public/' . $brand->image);
         }
         $brand->delete();
-        return redirect()->route('admin.brands.index')->with('success', 'Brand deleted successfully!');
+        return redirect()->route('brands.index')->with('error', 'Brand deleted successfully!');
     }
 
 

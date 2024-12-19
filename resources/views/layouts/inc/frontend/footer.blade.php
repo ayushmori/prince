@@ -28,7 +28,9 @@
                     @foreach ($categories as $categoryItem)
                     <li>
                         {{-- <a href="{{ url('/category/' . $categoryItem->slug) }}" class="btn btn-primary m-1"> --}}
+                            <a href="">
                             {{ $categoryItem->name }}
+                            </a>
                         {{-- </a> --}}
                     </li>
                 @endforeach
@@ -37,21 +39,19 @@
 
             <!-- Fourth Column (Top Category) -->
             <div class="col-sm-2">
-                <h3>Top Category</h3>
+                <h3>Top Brand</h3>
                 <ul class="list">
 
 
                     @foreach ($brands as $brand)
                         <li>
                             {{-- <a href="{{ url('/brand/' . $brand->slug) }}" class="btn btn-primary m-1"> --}}
+                                <a href="">
                                 {{ $brand->name }}
+                                </a>
                             {{-- </a> --}}
                         </li>
                     @endforeach
-                    {{-- <li><a href="/">Category 1</a></li>
-                    <li><a href="/">Category 2</a></li>
-                    <li><a href="/">Category 3</a></li>
-                    <li><a href="/">Category 4</a></li> --}}
                 </ul>
             </div>
             <div class="col-sm-2">
@@ -81,12 +81,18 @@
 
         <!-- Social Media Links -->
         <div class="float-end mx-5 px-5 py-2">
-            <i class="fab fa-facebook-f fa-2x mx-2"></i>
+            <a href="">
+                <i class="fab fa-facebook-f fa-2x mx-2"></i>
+            </a>
             <!-- Instagram -->
-            <i class="fab fa-instagram fa-2x mx-2"></i>
+            <a href="">
+                <i class="fab fa-instagram fa-2x mx-2"></i>
+            </a>
 
             <!-- Youtube -->
-            <i class="fab fa-youtube fa-2x mx-2"></i>
+            <a href="">
+                <i class="fab fa-youtube fa-2x mx-2"></i>
+            </a>
         </div>
 
     </div>

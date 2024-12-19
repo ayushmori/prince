@@ -37,19 +37,22 @@
 
                     <div class="card-body">
                         @if(session('message'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('message') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
+                            <div class="alert alert-success">{{session('message')}}</div>
+                        @endif   
 
                         @if(session('error'))
+<<<<<<< HEAD
+                        <div class="alert alert-danger">{{session('error')}}</div>
+                        @endif 
+                        
+=======
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         @endif
 
+>>>>>>> 3711bd4b139a31e340e2b62e14e08108c3d1fb20
                         <div class="table-responsive product-table">
                             <table class="display dataTable no-footer">
                                 <thead>

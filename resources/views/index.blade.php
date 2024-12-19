@@ -100,7 +100,7 @@
                                                 <div class="icon-container">
                                                     <img src="{{ asset('uploads/category/' . $category[$categoryIndex]->image) }}"
                                                         alt="{{ $category[$categoryIndex]->name }}"
-                                                        class="img-fluid rounded-circle" style="width: 70px; height: 70px;">
+                                                        class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
                                                 </div>
                                                 <h5>{{ $category[$categoryIndex]->name }}</h5>
                                             </div>
@@ -292,10 +292,11 @@
             <div class="col-md-4 mb-4">
                 <div class="card" style="width: 100%; margin: auto; text-align: center;">
                     <div class="card-body">
-                        <img src="{{ asset('assets/silder/customer.jpg') }}" alt="" style="border-radius: 50%">
+                        <img src="{{ asset('uploads/customer.jpg') }}" alt="" style="border-radius: 50%">
                         <h5 class="card-title mt-3 mt-3">Our Mission</h5>
                         <p class="card-text">
-                            We aim to deliver top-notch solutions tailored to our clients' needs and goals.
+                            Vashi Integrated Solutions (Formerly Vashi Electricals) has 
+                            a very transparent business policy and we have been working with them for our electrical needs.
                         </p>
                         <b>Siddharth Shah - Reliance</b>
                     </div>
@@ -306,12 +307,13 @@
             <div class="col-md-4 mb-4">
                 <div class="card" style="width: 100%; margin: auto; text-align: center;">
                     <div class="card-body">
-                        <img src="{{ asset('assets/silder/customer.jpg') }}" style="border-radius: 50%">
+                        <img src="{{ asset('uploads/c2.jpg') }}" style="border-radius: 50%">
                         <h5 class="card-title mt-3">Our Vision</h5>
                         <p class="card-text">
-                            To be the leading name in the industry by fostering innovation and excellence.
+                            Vashi Integrated Solutions (Formerly Vashi Electricals) is not a just a vendor but a valued business partner. 
+                            We are very happy to associate with Vashi Electricals.
                         </p>
-                        <b>Siddharth Shah - Reliance</b>
+                        <b>Kiran Pawaskar - Sun Pharma</b>
                     </div>
                 </div>
             </div>
@@ -320,12 +322,13 @@
             <div class="col-md-4 mb-4">
                 <div class="card" style="width: 100%; margin: auto; text-align: center;">
                     <div class="card-body">
-                        <img src="{{ asset('assets/silder/customer.jpg') }}"style="border-radius: 50%">
+                        <img src="{{ asset('uploads/c3.jpg') }}"style="border-radius: 50%">
                         <h5 class="card-title mt-3">Our Values</h5>
                         <p class="card-text">
-                            Integrity, creativity, and customer-centric solutions drive everything we do.
+                            We are very much satisfied with Vashi Integrated Solutions (Formerly Vashi Electricals) 
+                            because of their swift service & commissioning of ABB Drives.
                         </p>
-                        <b>Siddharth Shah - Reliance</b>
+                        <b>Pradeep Pancholi - Swastik Techno Pack</b>
                     </div>
                 </div>
             </div>
