@@ -76,7 +76,7 @@
 
 
 <div class="container">
-    <div class="container">
+    {{-- <div class="container">
         <h2 class="text-center mb-4">Categories</h2>
         <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -123,10 +123,10 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-    </div>
+    </div> --}}
 
 
-    <div id="Controls" class="carousel slide mx-auto" style="max-hight: 100px;" data-bs-ride="carousel">
+    <div id="Controls" class="carousel slide mx-auto mt-4" style="max-hight: 100px; " data-bs-ride="carousel">
         <div class="carousel-inner">
             @foreach ($secondSlider as $key => $sliderItem)
                 <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
@@ -351,27 +351,27 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image1.jpg') }}" alt="Image 1" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/a.png') }}" alt="Image 1" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image2.jpg') }}" alt="Image 2" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/b.png') }}" alt="Image 2" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image3.jpg') }}" alt="Image 3" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/c.png') }}" alt="Image 3" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image4.jpg') }}" alt="Image 4" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/d.png') }}" alt="Image 4" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image5.jpg') }}" alt="Image 5" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/e.png') }}" alt="Image 5" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image6.jpg') }}" alt="Image 6" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/f.png') }}" alt="Image 6" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                     </div>
@@ -383,27 +383,27 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image4.jpg') }}" alt="Image 4" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/i.png') }}" alt="Image 4" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image5.jpg') }}" alt="Image 5" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/j.png') }}" alt="Image 5" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image6.jpg') }}" alt="Image 6" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/e.png') }}" alt="Image 6" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image1.jpg') }}" alt="Image 1" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/a.png') }}" alt="Image 1" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image2.jpg') }}" alt="Image 2" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/b.png') }}" alt="Image 2" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                         <div class="col-2">
-                            <img src="{{ asset('assets/silder/image3.jpg') }}" alt="Image 3" class="img-fluid w-100"
+                            <img src="{{ asset('uploads/janral/d.png') }}" alt="Image 3" class="img-fluid w-100"
                                 style="object-fit: cover; height: 100px; border-radius: 5px;">
                         </div>
                     </div>

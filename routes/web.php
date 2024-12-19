@@ -24,8 +24,11 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('news', [NewsController::class, 'index'])->name('news');
 Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
 Route::get('/', [SliderController::class, 'view'])->name('sliders');
+
 Route::get('/about-us', [FrontendController::class, 'aboutpage']);
 Route::get('/contact-us', [FrontendController::class, 'contactpage']);
+
+Route::get('/download', [FrontendController::class, 'download']);
 Route::post('/submit-form', [ContactUsController::class, 'submit']);
 
 Route::get('/category/{categoryId}/children', [CategoryController::class, 'getChildren'])->name('categories.children');

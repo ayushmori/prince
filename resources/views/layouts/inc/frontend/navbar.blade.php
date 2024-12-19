@@ -1,14 +1,3 @@
-<!-- Include Font Awesome (for icons) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-<!-- Include Material Design Icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.css" rel="stylesheet">
-
-<!-- Include Bootstrap -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
 <!-- Main Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
@@ -55,139 +44,296 @@
           @endguest
         </ul>
       </div>
-
     </div>
-
-    <!-- Language Dropdown with Flag Icon -->
-    <div class="dropdown me-3">
-      <button class="btn" type="button" style="background-color:#2973B9; color:white;">
-        <img src="{{ asset('uploads/flag.png') }}" height="20px" width="25px" style="margin-right: 10px" alt=""> INDIA
-      </button>
-    </div>
-
-    <!-- Download Button -->
-    <a href="#" class="btn" style="background-color:#2973B9; color:white;">Download</a>
-
   </div>
 </nav>
 
 <!-- Sub Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2973B9">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Brand</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <!-- Brand on New Line -->
+    <a class="navbar-brand w-100" href="#">Brand</a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <!-- Left Group - Categories -->
+      <ul class="navbar-nav w-100">
         <div class="left-group">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-expanded="false">
-              Categories
-            </button>
-            <ul id="category-list" class="dropdown-menu" aria-labelledby="categoryDropdown">
-              @foreach ($categories as $category)
-                <li class="dropdown-item category-item" data-category-id="{{ $category->id }}">
-                  <span class="category-name">{{ $category->name }}</span>
-                  @if ($category->children->isNotEmpty())
-                    <ul class="child-categories list-unstyled ms-3">
-                      @foreach ($category->children as $child)
-                        <li class="category-item" data-category-id="{{ $child->id }}">
-                          <span class="category-name">{{ $child->name }}</span>
-                          @if ($child->children->isNotEmpty())
-                            <ul class="child-categories list-unstyled ms-3">
-                              @foreach ($child->children as $subchild)
-                                <li class="category-item" data-category-id="{{ $subchild->id }}">
-                                  <span class="category-name">{{ $subchild->name }}</span>
-                                </li>
-                              @endforeach
-                            </ul>
-                          @endif
-                        </li>
-                      @endforeach
-                    </ul>
-                  @endif
-                </li>
-              @endforeach
-            </ul>
-          </div>
-
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#categoryModal">Category</a>
+          </li>
         </div>
-
-        <!-- Right Group - Space items on the right -->
-        <div class="right-group">
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('news') }}">News</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/about-us">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contact-us">Contact Us</a>
-          </li>
+        <div class="right-group d-flex">
+          <li class="nav-item"><a class="nav-link" href="{{ route('news') }}">News</a></li>
+          <li class="nav-item"><a class="nav-link" href="/about-us">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact-us">Contact Us</a></li>
         </div>
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- jQuery Script -->
-<script>
-  $(document).ready(function () {
-    // Toggle visibility for child categories
-    $('#category-list').on('click', '.category-name', function (e) {
-      e.stopPropagation(); // Prevent click events from bubbling
-      const $categoryItem = $(this).closest('.category-item');
-      const $childContainer = $categoryItem.find('.child-categories:first');
+<!-- Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen ">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="categoryModalLabel">Categories</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <!-- Categories Layout -->
+              <div class="row mt-4">
+                  <!-- Parent Categories Section -->
+                  <div class="col-md-3">
+                      <h4>Parent Categories</h4>
+                      <div class="category-container">
+                          @foreach ($categories as $category)
+                              <div id="category-{{ $category->id }}" class="category-box"
+                                  onclick="showSubCategories({{ $category->id }}, '{{ $category->name }}')">
+                                  {{ $category->name }}
+                              </div>
+                          @endforeach
+                      </div>
+                  </div>
 
-      if ($childContainer.length > 0) {
-        // Toggle visibility of already-loaded child categories
-        $childContainer.toggleClass('show');
-      } else {
-        const categoryId = $categoryItem.data('category-id');
-        const $loader = $('<div class="loader">Loading...</div>');
-        $categoryItem.append($loader);
+                  <!-- Subcategories and Deeper Levels -->
+                  {{-- <div class="xyz"> --}}
 
-        // Dynamically load child categories
-        $.getJSON(`/category/${categoryId}/children`, function (children) {
-          $loader.remove();
+                  
+                  <div class="col-md-8">
+                      <div class="d-flex">
+                          <!-- Subcategories Container -->
+                          <div>
+                              <h5 id="subcategory-title"></h5>
+                              <div id="subcategory-container" class="subcategory-container"></div>
+                          </div>
 
-          if (children.length > 0) {
-            const $newChildContainer = $('<ul>', {
-              class: 'child-categories list-unstyled ms-3'
-            });
+                          <!-- Sub-Subcategories Container -->
+                          <div>
+                              <h5 id="subsubcategory-title"></h5>
+                              <div id="subsubcategory-container" class="subcategory-container"></div>
+                          </div>
 
-            children.forEach(function (child) {
-              const $childItem = $('<li>', {
-                class: 'category-item',
-                'data-category-id': child.id
-              }).html(`<span class="category-name">${child.name}</span>`);
+                          <!-- Sub-Sub-Subcategories Container -->
+                          <div>
+                              <h5 id="subsubsubcategory-title"></h5>
+                              <div id="subsubsubcategory-container" class="subcategory-container"></div>
+                          </div>
 
-              $newChildContainer.append($childItem);
-            });
+                          <!-- Sub-Sub-Sub-Subcategories Container -->
+                          <div>
+                              <h5 id="subsubsubsubcategory-title"></h5>
+                              <div id="subsubsubsubcategory-container" class="subcategory-container"></div>
+                          </div>
 
-            $categoryItem.append($newChildContainer);
-            $newChildContainer.addClass('show');
-          } else {
-            window.location.href = `/category/${categoryId}`;
+                          <!-- Sub-Sub-Sub-Sub-Subcategories Container -->
+                          <div>
+                              <h5 id="subsubsubsubsubcategory-title"></h5>
+                              <div id="subsubsubsubsubcategory-container" class="subcategory-container"></div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  {{-- @include('layouts.inc.frontend.footer')  --}}
+</div>
+
+ <script>
+  function showSubCategories(categoryId, categoryName) {
+      document.getElementById("subcategory-title").innerText = categoryName;
+      resetContainers(["subcategory-container", "subsubcategory-container", "subsubsubcategory-container",
+          "subsubsubsubcategory-container", "subsubsubsubsubcategory-container"
+      ]);
+
+      @foreach ($categories as $category)
+          if (categoryId === {{ $category->id }}) {
+              @foreach ($category->children as $child)
+                  appendToContainer("subcategory-container", {{ $child->id }}, "{{ $child->name }}",
+                      "showSubSubCategories");
+              @endforeach
           }
-        }).fail(function (error) {
-          $loader.remove();
-          alert('Failed to fetch subcategories. Please try again.');
-        });
-      }
-    });
-  });
-</script>
-
-<!-- Additional Styles -->
-<style>
-  /* Ensure the nested dropdowns show up correctly */
-  .child-categories {
-    display: none;
+      @endforeach
   }
-  .child-categories.show {
-    display: block;
+
+  function showSubSubCategories(subcategoryId, subcategoryName) {
+      document.getElementById("subsubcategory-title").innerText = subcategoryName;
+      resetContainers(["subsubcategory-container", "subsubsubcategory-container", "subsubsubsubcategory-container",
+          "subsubsubsubsubcategory-container"
+      ]);
+
+      @foreach ($categories as $category)
+          @foreach ($category->children as $child)
+              if (subcategoryId === {{ $child->id }}) {
+                  @foreach ($child->children as $subchild)
+                      appendToContainer("subsubcategory-container", {{ $subchild->id }}, "{{ $subchild->name }}",
+                          "showSubSubSubCategories");
+                  @endforeach
+              }
+          @endforeach
+      @endforeach
+  }
+
+  function showSubSubSubCategories(subSubCategoryId, subSubCategoryName) {
+      document.getElementById("subsubsubcategory-title").innerText = subSubCategoryName;
+      resetContainers(["subsubsubcategory-container", "subsubsubsubcategory-container",
+          "subsubsubsubsubcategory-container"
+      ]);
+
+      @foreach ($categories as $category)
+          @foreach ($category->children as $child)
+              @foreach ($child->children as $subchild)
+                  if (subSubCategoryId === {{ $subchild->id }}) {
+                      @foreach ($subchild->children as $subSubChild)
+                          appendToContainer("subsubsubcategory-container", {{ $subSubChild->id }},
+                              "{{ $subSubChild->name }}", "showSubSubSubSubCategories");
+                      @endforeach
+                  }
+              @endforeach
+          @endforeach
+      @endforeach
+  }
+
+  function showSubSubSubSubCategories(subSubSubCategoryId, subSubSubCategoryName) {
+      document.getElementById("subsubsubsubcategory-title").innerText = subSubSubCategoryName;
+      resetContainers(["subsubsubsubcategory-container", "subsubsubsubsubcategory-container"]);
+
+      @foreach ($categories as $category)
+          @foreach ($category->children as $child)
+              @foreach ($child->children as $subchild)
+                  @foreach ($subchild->children as $subSubChild)
+                      if (subSubSubCategoryId === {{ $subSubChild->id }}) {
+                          @foreach ($subSubChild->children as $subSubSubChild)
+                              appendToContainer("subsubsubsubcategory-container", {{ $subSubSubChild->id }},
+                                  "{{ $subSubSubChild->name }}", "showSubSubSubSubSubCategories");
+                          @endforeach
+                      }
+                  @endforeach
+              @endforeach
+          @endforeach
+      @endforeach
+  }
+
+  function showSubSubSubSubSubCategories(subSubSubSubCategoryId, subSubSubSubCategoryName) {
+      document.getElementById("subsubsubsubsubcategory-title").innerText = subSubSubSubCategoryName;
+      resetContainers(["subsubsubsubsubcategory-container"]);
+
+      @foreach ($categories as $category)
+          @foreach ($category->children as $child)
+              @foreach ($child->children as $subchild)
+                  @foreach ($subchild->children as $subSubChild)
+                      @foreach ($subSubChild->children as $subSubSubChild)
+                          if (subSubSubSubCategoryId === {{ $subSubSubChild->id }}) {
+                              @foreach ($subSubSubChild->children as $subSubSubSubChild)
+                                  appendToContainer("subsubsubsubsubcategory-container", null,
+                                      "{{ $subSubSubSubChild->name }}");
+                              @endforeach
+                          }
+                      @endforeach
+                  @endforeach
+              @endforeach
+          @endforeach
+      @endforeach
+  }
+
+  // Utility Functions
+  function resetContainers(containerIds) {
+      containerIds.forEach(id => document.getElementById(id).innerHTML = "");
+  }
+
+  function appendToContainer(containerId, id, name, clickHandler = "") {
+      const container = document.getElementById(containerId);
+      const clickAction = clickHandler ? `onclick="${clickHandler}(${id}, '${name}')"` : "";
+      container.innerHTML += `<div class="subcategory-box" ${clickAction}">${name}</div>`;
+  }
+</script>
+  
+<style>
+  .col-md-2{
+    width: 400px;
+  }
+  .category-box,
+  .subcategory-box {
+      padding: 15px;
+      margin: 10px 0;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      background-color: #2973B9;
+      white-space: nowrap;
+      overflow: hidden;
+      /* display: none; */
+      /* text-overflow: ellipsis; */
+      
+  }
+
+  .category-box:hover,
+  .subcategory-box:hover {
+      background-color: #f0f0f0;
+  }
+
+  .category-container,
+  .subcategory-container {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 5px;
+      background-color: white;
+  }
+
+  .subcategory-container {
+      min-width: 400px;
+  }
+
+  /* Flexbox for scrollable horizontal layout */
+  .d-flex {
+      gap: 20px;
+      overflow-x: auto;
+      white-space: nowrap;
+  }
+
+  .modal-backdrop.show {
+      background-color: rgba(0, 0, 0, 0.1);
+      /* Black with 50% opacity */
+  }
+  .modal-dialog{
+    /* height: 4//00px; */
+    top: 150px;
+  }
+  /* Modal Content Position and Styling */
+  .modal-content {
+  top: 0; /* Align modal to top */
+  left: 0; /* Align modal to left */
+  position: fixed; /* Ensure it's positioned relative to the viewport */
+  width: 100%; /* Full width of the viewport */
+  /* height: 10vh;/ */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Allow scrolling if content exceeds the height */
+}
+
+      
+      /* Optional shadow for better visibility */
+
+  .modal-body{
+    background-color: #4e7ca7;
+    width: 100%;
+    max-height:50vh;
+  }
+  .modal-header{
+    background-color: #4e7ca7;
+  }
+  .modal{
+    color: white;
+    width: 100%:
+  }
+
+  .modal-content{
+    max-height: 60vh;
+    overflow: hidden;
   }
 </style>

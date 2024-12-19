@@ -10,11 +10,6 @@ use App\Http\Requests\CategoryFormRequest;
 
 class CategoryController extends Controller
 {
-
-    // app/Http/Controllers/Admin/CategoryController.php
-
-
-
     public function view()
     {
         $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
