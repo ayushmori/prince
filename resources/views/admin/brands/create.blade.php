@@ -45,12 +45,15 @@
                         <input class="form-control" id="description"  type="text" name="description" value="{{ old('description', $brand->description ?? '') }}" required>
                         </div>
                     </div>
+
+
                     <div class="mb-3 row">
                         <label class="col-sm-3 col-form-label">Serial Number</label>
                         <div class="col-sm-9">
                         <input type="number" class="form-control" id="serial_number" name="serial_number" value="{{ old('serial_number',$brand->serial_number ?? $nextSerialNumber) }}" required>
                         </div>
                     </div>
+
                     <div class="mb-3 row">
                         <label class="col-sm-3 col-form-label">Brand Image</label>
                         <div class="col-sm-9">

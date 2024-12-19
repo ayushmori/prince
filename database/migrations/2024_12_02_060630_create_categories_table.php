@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('description'); // Detailed description
             $table->unsignedBigInteger('parent_id')->nullable(); // Parent category ID
             $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade'); // Foreign key relationship
+
             $table->string('image')->nullable(); // Optional image field
             $table->timestamps(); // Created_at and Updated_at
         });

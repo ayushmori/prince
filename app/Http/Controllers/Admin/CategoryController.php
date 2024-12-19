@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -18,15 +19,24 @@ class CategoryController extends Controller
 
     public function getChildren($categoryId)
     {
-        $category = Category::with('children.children')->find($categoryId);
-
+        $category = Category::find($categoryId);
 
         if (!$category) {
             return response()->json(['error' => 'Category not found'], 404);
         }
 
-        return response()->json($category->children);
+        $children = $category->children->map(function ($child) {
+            return [
+                'id' => $child->id,
+                'name' => $child->name,
+                'has_children' => $child->children()->exists(),
+            ];
+        });
+
+        return response()->json($children);
     }
+
+
 
 
 
@@ -82,13 +92,24 @@ class CategoryController extends Controller
     }
 
 
-    // Show the category editing form
-    public function edit(Category $category)
-    {
-        $parentCategories = Category::with('children')->whereNull('parent_id')->get();
 
-        return view('admin.category.edit', compact('category', 'parentCategories'));
+    // Show the category editing form
+    public function edit(Product $product)
+{
+    // Get all categories
+    $categories = Category::whereNull('parent_id')->get();  // Get parent categories only
+    $subcategories = [];
+
+    // Get the subcategories for the selected category (if editing an existing product)
+    if ($product->category_id) {
+        $category = Category::find($product->category_id);
+        $subcategories = $category ? $category->children : []; // Get subcategories (children) of the selected category
     }
+
+    return view('admin.product.edit', compact('product', 'categories', 'subcategories'));
+}
+
+
 
 
 

@@ -7,7 +7,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\admin\DocumentController;
+use App\Http\Controllers\admin\AttributeController;
 use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MiniSliderController;
@@ -42,11 +45,16 @@ Route::get('/category/{slug}', [CategoryController::class, 'viewSubcategory'])->
 
 Route::get('/category/{category}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
 Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
+Route::get('/category/{id}/ancestors', [CategoryController::class, 'getAncestors']);
 
 
 
 
+Route::Resource('admin/products', ProductController::class)->middleware([RoleMiddleware::class]);
+Route::Resource('admin/products.attributes', AttributeController::class)->middleware([RoleMiddleware::class]);
+Route::Resource('admin/products.documents', DocumentController::class)->middleware([RoleMiddleware::class]);
 
+Route::get('admin/products/subcategories/{categoryId}', [ProductController::class, 'getSubcategories'])->middleware([RoleMiddleware::class]);
 
 
 
@@ -63,7 +71,10 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
     Route::get('/contact-us', [App\Http\Controllers\Admin\ContactUsController::class, 'adminPanel']);
 
 
-//<---------------------------------------Category Controllers -------------------------------------------------------->//
+
+
+
+    //<---------------------------------------Category Controllers -------------------------------------------------------->//
 
     Route::controller(CategoryController::class)->prefix('categories')->group(function () {
         Route::get('/', 'index')->name('admin.categories.index');
@@ -74,7 +85,7 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
         Route::delete('/{category}', 'destroy')->name('admin.categories.destroy');
     });
 
-//<---------------------------------------News Controllers -------------------------------------------------------->//
+    //<---------------------------------------News Controllers -------------------------------------------------------->//
 
     Route::controller(NewsController::class)->prefix('news')->group(function () {
         Route::get('/', 'Adminindex')->name('admin.news');
@@ -85,7 +96,7 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
         Route::delete('/{id}', 'destroy')->name('admin.news.destroy');
     });
 
-//<---------------------------------------Brand Controllers -------------------------------------------------------->//
+    //<---------------------------------------Brand Controllers -------------------------------------------------------->//
 
 
     Route::controller(BrandController::class)->prefix('brands')->group(function () {
@@ -95,8 +106,7 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
         Route::delete('/delete/{id}', 'delete')->name('admin.brands.delete');
     });
 
-   Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
 

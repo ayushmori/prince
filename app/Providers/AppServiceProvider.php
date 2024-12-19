@@ -32,8 +32,8 @@ class AppServiceProvider extends ServiceProvider
 
 
         View::share('aboutSettings', $aboutSettings); // Share it with all views
-        View::share('aboutSettings', $aboutSettings); // Share it with all 
-        
+        View::share('aboutSettings', $aboutSettings); // Share it with all
+
         // Share categories with all views
         View::share('brands', Brand::orderBy('name', 'asc')->limit(4)->get());
         View::share('categories', Category::orderBy('name', 'asc')->limit(4)->get());
@@ -46,7 +46,5 @@ class AppServiceProvider extends ServiceProvider
 
         View::share('categories',  Category::with('parentCategory')->whereNull('parent_id')->get());
 
-
-       
     }
 }
