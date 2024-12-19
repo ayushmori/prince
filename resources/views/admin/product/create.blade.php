@@ -52,6 +52,14 @@
                         </div>
                     </div>
 
+                    <div class="mb-3 row">
+                        <label for="price" class="col-sm-3 col-form-label">Product price</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="price" id="price" class="form-control" required
+                                   value="{{ old('price', $product->price ?? '') }}">
+                        </div>
+                    </div>
+
                     <!-- Brand Dropdown -->
                     <div class="mb-3 row">
                         <label for="brand_id" class="col-sm-3 col-form-label">Brand</label>
@@ -134,12 +142,13 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="attribute mb-3" id="attribute-0">
-                                <label for="attributes[0][title]" class="form-label">Title</label>
-                                <input type="text" name="attributes[0][title]" class="form-control" required>
-                                <label for="attributes[0][description]" class="form-label">Description</label>
-                                <textarea name="attributes[0][description]" class="form-control" required></textarea>
+                        <div id="attributes">
+                            <div class="attribute">
+                                <label for="attributes[]">Attribute</label>
+                                <input type="text" name="attributes[]" class="form-control">
                             </div>
+                        </div>
+                        <button type="button" id="add-attribute" class="btn btn-primary">Add Attribute</button>
                         @endif
                     </div>
 
@@ -180,7 +189,14 @@
                                     <option value="Driver">Driver</option>
                                 </select>
                                 <label for="documents[0][file_path]" class="form-label">File</label>
-                                <input type="file" name="documents[]" id="documents" class="form-control" multiple>
+                                <div id="documents">
+                                    <div class="document">
+                                        <label for="documents[]">Document</label>
+                                        <input type="file" name="documents[]" class="form-control">
+                                    </div>
+                                </div>
+                                <button type="button" id="add-document" class="btn btn-primary">Add Document</button>
+
                             </div>
                         @endif
                     </div>
@@ -206,6 +222,22 @@
 </div>
 
 @section('scripts')
+
+<script>
+    document.getElementById('add-document').addEventListener('click', function() {
+        var newDocument = document.createElement('div');
+        newDocument.classList.add('document');
+        newDocument.innerHTML = '<label for="documents[]">Document</label><input type="file" name="documents[]" class="form-control">';
+        document.getElementById('documents').appendChild(newDocument);
+    });
+
+    document.getElementById('add-attribute').addEventListener('click', function() {
+        var newAttribute = document.createElement('div');
+        newAttribute.classList.add('attribute');
+        newAttribute.innerHTML = '<label for="attributes[]">Attribute</label><input type="text" name="attributes[]" class="form-control">';
+        document.getElementById('attributes').appendChild(newAttribute);
+    });
+</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

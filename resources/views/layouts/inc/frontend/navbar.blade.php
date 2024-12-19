@@ -99,61 +99,6 @@
             </form>
         </div>
 
-<<<<<<< HEAD
-        <!-- Admin and Dropdown (Right Side) -->
-        <div class="d-flex">
-            <!-- Admin -->
-            <div class="dropdown me-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-user"></i>
-                    @guest
-                        Log In
-                    @else
-                        {{ Auth::user()->name }}
-                    @endguest
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @guest
-                        <li><a href="{{ route('login') }}" class="dropdown-item">Login</a></li>
-                        <li><a href="{{ route('register') }}" class="dropdown-item">Register</a></li>
-                    @else
-                        <li><a href="#" class="dropdown-item">{{ Auth::user()->name }}</a></li>
-                        <li>
-                            <a href="{{ route('logout') }}" class="dropdown-item"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </li>
-                    @endguest
-                </ul>
-            </div>
-
-        </div>
-
-        <!-- Language Dropdown with Flag Icon -->
-        <div class="dropdown me-3">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-flag"></i> Language
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#">English</a></li>
-                <li><a class="dropdown-item" href="#">Spanish</a></li>
-                <li><a class="dropdown-item" href="#">French</a></li>
-            </ul>
-        </div>
-
-        <!-- Download Button -->
-        <a href="#" class="btn btn-primary">Download</a>
-
-
-    </div>
-    </div>
-=======
     <!-- Admin and Dropdown (Right Side) -->
     <div class="d-flex">
       <!-- Admin -->
@@ -197,78 +142,10 @@
     <a href="#" class="btn" style="background-color:#2973B9; color:white;">Download</a>
 
   </div>
->>>>>>> 97ec65e9cb568cf453ba0e936cb2ca0d2d1d9e33
 </nav>
 
 <!-- Sub Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2973B9">
-<<<<<<< HEAD
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Brand</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <div class="left-group">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="categoryDropdown"
-                            data-toggle="dropdown" aria-expanded="false">
-                            Categories
-                        </button>
-                        <ul id="category-list" class="dropdown-menu" aria-labelledby="categoryDropdown">
-                            <div class="cc">
-                            @foreach ($categories as $category)
-                                <li class="dropdown-item category-item" data-category-id="{{ $category->id }}">
-                                    <span class="category-name btn btn-sm btn-primary">{{ $category->name }}</span>
-                                    @if ($category->children->isNotEmpty())
-                                        <ul class="child-categories list-unstyled ms-3">
-                                            @foreach ($category->children as $child)
-                                                <li class="category-item" data-category-id="{{ $child->id }}">
-                                                    <span
-                                                        class="category-name btn btn-sm btn-primary">{{ $child->name }}</span>
-                                                    @if ($child->children->isNotEmpty())
-                                                        <div class="xyz">
-
-                                                            <ul class="child-categories list-unstyled ms-3">
-                                                                @foreach ($child->children as $subchild)
-                                                                    <li class="category-item"
-                                                                        data-category-id="{{ $subchild->id }}">
-                                                                        <span
-                                                                            class="category-name btn btn-sm btn-primary">{{ $subchild->name }}</span>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
-                                                    @endif
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </div>
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- Right Group - Space items on the right -->
-
-                <div class="right-group">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('news') }}">News</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about-us">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/contact-us">Contact Us</a>
-                    </li>
-                </div>
-            </ul>
-=======
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Brand</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -322,62 +199,10 @@
           <li class="nav-item">
             <a class="nav-link" href="/contact-us">Contact Us</a>
           </li>
->>>>>>> 97ec65e9cb568cf453ba0e936cb2ca0d2d1d9e33
         </div>
     </div>
 </nav>
 
-<<<<<<< HEAD
-<script>
-    $(document).ready(function() {
-        // Toggle visibility for child categories
-        $('#category-list').on('click', '.category-name', function(e) {
-            e.stopPropagation(); // Prevent click events from bubbling
-            const $categoryItem = $(this).closest('.category-item');
-            const $childContainer = $categoryItem.find('.child-categories:first');
-
-            if ($childContainer.length > 0) {
-                // Toggle visibility of already-loaded child categories
-                $childContainer.toggleClass('show');
-            } else {
-                const categoryId = $categoryItem.data('category-id');
-                const $loader = $('<div class="loader">Loading...</div>');
-                $categoryItem.append($loader);
-
-                // Dynamically load child categories
-                $.getJSON(`/category/${categoryId}/children`, function(children) {
-                    $loader.remove();
-
-                    if (children.length > 0) {
-                        const $newChildContainer = $('<ul>', {
-                            class: 'child-categories list-unstyled ms-3'
-                        });
-
-                        children.forEach(function(child) {
-                            const $childItem = $('<li>', {
-                                class: 'category-item',
-                                'data-category-id': child.id
-                            }).html(
-                                `<span class="category-name btn btn-sm btn-primary">${child.name}</span>`
-                                );
-
-                            $newChildContainer.append($childItem);
-                        });
-
-                        $categoryItem.append($newChildContainer);
-                        $newChildContainer.addClass('show');
-                    } else {
-                        window.location.href = `/category/${categoryId}`;
-                    }
-                }).fail(function(error) {
-                    $loader.remove();
-                    alert('Failed to fetch subcategories. Please try again.');
-                });
-            }
-        });
-    });
-</script>
-=======
 <!-- jQuery Script -->
 <script>
   $(document).ready(function () {
@@ -437,4 +262,3 @@
     display: block;
   }
 </style>
->>>>>>> 97ec65e9cb568cf453ba0e936cb2ca0d2d1d9e33
