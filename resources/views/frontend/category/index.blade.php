@@ -1,225 +1,247 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-
- {{-- @extends('layouts.app')
-
-@section('content')
-{{-- <div class="container">
-    <div class="row">
-        <!-- Left side: Categories -->
-        <div class="col-md-12">
-            <div class="categories-list bg-light p-3 rounded">
-                <h5>Categories</h5>
-                <ul id="category-list" class="list-unstyled">
-                    @foreach ($categories as $category)
-                        @include('partials.child-category', ['category' => $category])
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelector('#category-list').addEventListener('click', function (e) {
-            if (e.target.classList.contains('toggle-children')) {
-                const categoryItem = e.target.closest('.category-item');
-                const childContainer = categoryItem.querySelector('.child-categories');
-
-                if (childContainer) {
-                    const isHidden = childContainer.style.display === 'none' || !childContainer.style.display;
-                    childContainer.style.display = isHidden ? 'block' : 'none';
-                    e.target.innerHTML = isHidden ? '&darr;' : '&rarr;'; // Change to down/right arrow
-                }
-            }
-
-            if (e.target.classList.contains('category-name')) {
-                const categoryId = e.target.closest('.category-item, .child-category-item').getAttribute('data-category-id');
-
-                // Fetch category content dynamically
-                fetch(`/category/${categoryId}/content`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const contentContainer = document.querySelector('#category-content');
-                        contentContainer.innerHTML = ''; // Clear previous content
-
-                        if (data.length > 0) {
-                            data.forEach(item => {
-                                const col = document.createElement('div');
-                                col.className = 'col';
-
-                                col.innerHTML = `
-                                    <div class="card shadow-sm">
-                                        <img src="${item.image}" class="card-img-top" alt="${item.title}">
-                                        <div class="card-body">
-                                            <h6 class="card-title">${item.title}</h6>
-                                            <p class="card-text">${item.description}</p>
-                                        </div>
-                                    </div>
-                                `;
-
-                                contentContainer.appendChild(col);
-                            });
-                        } else {
-                            contentContainer.innerHTML = `
-                                <div class="col">
-                                    <div class="card shadow-sm">
-                                        <div class="card-body text-center">
-                                            <p>No content available for this category.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    })
-                    .catch(error => console.error('Error fetching category content:', error));
-            }
-        });
-    });
-</script>
-
-<style>
-    .categories-list {
-        max-height: 80vh;
-        overflow-y: auto;
-        border: 1px solid #ddd;
-    }
-
-    .category-item, .child-category-item {
-        padding: 5px 0;
-    }
-
-    .category-name {
-        font-weight: bold;
-        color: #007bff;
-        cursor: pointer;
-    }
-
-    .category-name:hover {
-        text-decoration: underline;
-    }
-
-    .child-categories {
-        margin-left: 10px;
-    }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
-@endsection --}}
-
-
 @extends('layouts.app')
 
 @section('content')
     <div class="container">
-        <h3>Categories</h3>
-        <ul id="category-list" class="list-unstyled">
-            @foreach ($categories as $category)
-                <li class="category-item" data-category-id="{{ $category->id }}">
-                    <span class="category-name">&rarr;{{ $category->name }}</span>
-                    @if ($category->children->isNotEmpty())
-                        <ul class="child-categories list-unstyled ms-3" style="display: none;">
-                            @foreach ($category->children as $child)
-                                <li class="category-item" data-category-id="{{ $child->id }}">
-                                    <span class="category-name">&rarr;{{ $child->name }}</span>
-                                    @if ($child->children->isNotEmpty())
-                                        <ul class="child-categories list-unstyled ms-3" style="display: none;">
-                                            @foreach ($child->children as $subchild)
-                                                <li class="category-item" data-category-id="{{ $subchild->id }}">
-                                                    <span class="category-name">&rarr;{{ $subchild->name }}</span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </li>
-            @endforeach
-        </ul>
-    </div>
+        <h3 class="my-4 text-center">Categories</h3>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelector('#category-list').addEventListener('click', function(e) {
-                if (e.target.classList.contains('category-name')) {
-                    const categoryItem = e.target.closest('.category-item');
-                    const childContainer = categoryItem.querySelector('.child-categories');
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-                    if (childContainer) {
-                        // Toggle visibility of child categories
-                        childContainer.style.display =
-                            (childContainer.style.display === 'none' || !childContainer.style.display) ? 'inline-block' : 'none';
-                    } else {
-                        const categoryId = categoryItem.getAttribute('data-category-id');
+        <style>
+            .category-box,
+            .subcategory-box {
+                padding: 15px;
+                margin: 10px 0;
+                cursor: pointer;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-                        // Fetch children dynamically if not already loaded
-                        fetch(`/category/${categoryId}/children`)
-                            .then(response => response.json())
-                            .then(children => {
-                                if (children.length > 0) {
-                                    const newChildContainer = document.createElement('ul');
-                                    newChildContainer.classList.add('child-categories', 'list-unstyled', 'ms-3');
+            .category-box:hover,
+            .subcategory-box:hover {
+                background-color: #f0f0f0;
+            }
 
-                                    children.forEach(child => {
-                                        const childItem = document.createElement('li');
-                                        childItem.classList.add('category-item');
-                                        childItem.setAttribute('data-category-id', child.id);
+            .category-container,
+            .subcategory-container {
+                height: 300px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 10px;
+                background-color: #f9f9f9;
+            }
 
-                                        childItem.innerHTML = `
-                                            <span class="category-name">${child.name}</span>
-                                        `;
+            .subcategory-container {
+                min-width: 200px;
+            }
 
-                                        newChildContainer.appendChild(childItem);
-                                    });
+            /* Flexbox for scrollable horizontal layout */
+            .d-flex {
+                gap: 20px;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
 
-                                    categoryItem.appendChild(newChildContainer);
-                                    newChildContainer.style.display = 'inline-block';
-                                } else {
-                                    // Redirect if no children
-                                    window.location.href = `/category/${categoryId}`;
-                                }
-                            })
-                            .catch(error => console.error('Error fetching children:', error));
+            .modal-backdrop.show {
+                background-color: rgba(0, 0, 0, 0.5);
+                /* Black with 50% opacity */
+            }
+
+            /* Modal Content Position and Styling */
+            .modal-content {
+                top: 120px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                /* Optional shadow for better visibility */
+            }
+        </style>
+
+        <!-- Button to Open Modal -->
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
+            Open Categories
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="categoryModalLabel">Categories</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Categories Layout -->
+                        <div class="row mt-4">
+                            <!-- Parent Categories Section -->
+                            <div class="col-md-2">
+                                <h4>Parent Categories</h4>
+                                <div class="category-container">
+                                    @foreach ($categories as $category)
+                                        <div id="category-{{ $category->id }}" class="category-box"
+                                            onclick="showSubCategories({{ $category->id }}, '{{ $category->name }}')">
+                                            {{ $category->name }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Subcategories and Deeper Levels -->
+                            <div class="col-md-10">
+                                <div class="d-flex">
+                                    <!-- Subcategories Container -->
+                                    <div>
+                                        <h5 id="subcategory-title"></h5>
+                                        <div id="subcategory-container" class="subcategory-container"></div>
+                                    </div>
+
+                                    <!-- Sub-Subcategories Container -->
+                                    <div>
+                                        <h5 id="subsubcategory-title"></h5>
+                                        <div id="subsubcategory-container" class="subcategory-container"></div>
+                                    </div>
+
+                                    <!-- Sub-Sub-Subcategories Container -->
+                                    <div>
+                                        <h5 id="subsubsubcategory-title"></h5>
+                                        <div id="subsubsubcategory-container" class="subcategory-container"></div>
+                                    </div>
+
+                                    <!-- Sub-Sub-Sub-Subcategories Container -->
+                                    <div>
+                                        <h5 id="subsubsubsubcategory-title"></h5>
+                                        <div id="subsubsubsubcategory-container" class="subcategory-container"></div>
+                                    </div>
+
+                                    <!-- Sub-Sub-Sub-Sub-Subcategories Container -->
+                                    <div>
+                                        <h5 id="subsubsubsubsubcategory-title"></h5>
+                                        <div id="subsubsubsubsubcategory-container" class="subcategory-container"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- JavaScript for Dynamic Rendering -->
+        <script>
+            function showSubCategories(categoryId, categoryName) {
+                document.getElementById("subcategory-title").innerText = categoryName;
+                resetContainers(["subcategory-container", "subsubcategory-container", "subsubsubcategory-container",
+                    "subsubsubsubcategory-container", "subsubsubsubsubcategory-container"
+                ]);
+
+                @foreach ($categories as $category)
+                    if (categoryId === {{ $category->id }}) {
+                        @foreach ($category->children as $child)
+                            appendToContainer("subcategory-container", {{ $child->id }}, "{{ $child->name }}",
+                                "showSubSubCategories");
+                        @endforeach
                     }
-                }
-            });
-        });
-    </script>
+                @endforeach
+            }
 
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #eaeaea;
-        }
+            function showSubSubCategories(subcategoryId, subcategoryName) {
+                document.getElementById("subsubcategory-title").innerText = subcategoryName;
+                resetContainers(["subsubcategory-container", "subsubsubcategory-container", "subsubsubsubcategory-container",
+                    "subsubsubsubsubcategory-container"
+                ]);
 
-        .category-name {
-            cursor: pointer;
-            color: #00aced;
-            text-decoration: none;
-        }
+                @foreach ($categories as $category)
+                    @foreach ($category->children as $child)
+                        if (subcategoryId === {{ $child->id }}) {
+                            @foreach ($child->children as $subchild)
+                                appendToContainer("subsubcategory-container", {{ $subchild->id }}, "{{ $subchild->name }}",
+                                    "showSubSubSubCategories");
+                            @endforeach
+                        }
+                    @endforeach
+                @endforeach
+            }
 
-        .category-name:hover {
-            color: #007bff;
-        }
-/*
-        .child-categories {
-            border-left: 2px solid #555;
-            padding-left: 15px;
-            margin-top: 5px;
-        } */
+            function showSubSubSubCategories(subSubCategoryId, subSubCategoryName) {
+                document.getElementById("subsubsubcategory-title").innerText = subSubCategoryName;
+                resetContainers(["subsubsubcategory-container", "subsubsubsubcategory-container",
+                    "subsubsubsubsubcategory-container"
+                ]);
 
-        ul#category-list {
-            padding-left: 0;
-        }
-    </style>
+                @foreach ($categories as $category)
+                    @foreach ($category->children as $child)
+                        @foreach ($child->children as $subchild)
+                            if (subSubCategoryId === {{ $subchild->id }}) {
+                                @foreach ($subchild->children as $subSubChild)
+                                    appendToContainer("subsubsubcategory-container", {{ $subSubChild->id }},
+                                        "{{ $subSubChild->name }}", "showSubSubSubSubCategories");
+                                @endforeach
+                            }
+                        @endforeach
+                    @endforeach
+                @endforeach
+            }
+
+            function showSubSubSubSubCategories(subSubSubCategoryId, subSubSubCategoryName) {
+                document.getElementById("subsubsubsubcategory-title").innerText = subSubSubCategoryName;
+                resetContainers(["subsubsubsubcategory-container", "subsubsubsubsubcategory-container"]);
+
+                @foreach ($categories as $category)
+                    @foreach ($category->children as $child)
+                        @foreach ($child->children as $subchild)
+                            @foreach ($subchild->children as $subSubChild)
+                                if (subSubSubCategoryId === {{ $subSubChild->id }}) {
+                                    @foreach ($subSubChild->children as $subSubSubChild)
+                                        appendToContainer("subsubsubsubcategory-container", {{ $subSubSubChild->id }},
+                                            "{{ $subSubSubChild->name }}", "showSubSubSubSubSubCategories");
+                                    @endforeach
+                                }
+                            @endforeach
+                        @endforeach
+                    @endforeach
+                @endforeach
+            }
+
+            function showSubSubSubSubSubCategories(subSubSubSubCategoryId, subSubSubSubCategoryName) {
+                document.getElementById("subsubsubsubsubcategory-title").innerText = subSubSubSubCategoryName;
+                resetContainers(["subsubsubsubsubcategory-container"]);
+
+                @foreach ($categories as $category)
+                    @foreach ($category->children as $child)
+                        @foreach ($child->children as $subchild)
+                            @foreach ($subchild->children as $subSubChild)
+                                @foreach ($subSubChild->children as $subSubSubChild)
+                                    if (subSubSubSubCategoryId === {{ $subSubSubChild->id }}) {
+                                        @foreach ($subSubSubChild->children as $subSubSubSubChild)
+                                            appendToContainer("subsubsubsubsubcategory-container", null,
+                                                "{{ $subSubSubSubChild->name }}");
+                                        @endforeach
+                                    }
+                                @endforeach
+                            @endforeach
+                        @endforeach
+                    @endforeach
+                @endforeach
+            }
+
+            // Utility Functions
+            function resetContainers(containerIds) {
+                containerIds.forEach(id => document.getElementById(id).innerHTML = "");
+            }
+
+            function appendToContainer(containerId, id, name, clickHandler = "") {
+                const container = document.getElementById(containerId);
+                const clickAction = clickHandler ? `onclick="${clickHandler}(${id}, '${name}')"` : "";
+                container.innerHTML += `<div class="subcategory-box" ${clickAction}">${name}</div>`;
+            }
+        </script>
+
+
+    </div>
 @endsection
