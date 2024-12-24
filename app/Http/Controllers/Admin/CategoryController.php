@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryFormRequest;
 
@@ -17,24 +18,45 @@ class CategoryController extends Controller
         return view('frontend.category.index', compact('categories'));
     }
 
-    public function getChildren($categoryId)
-    {
-        $category = Category::find($categoryId);
+    public function getCategories()
+{
+    // Fetch parent categories
+    $categories = Category::whereNull('parent_id')->get(); // Parent categories where parent_id is null
 
-        if (!$category) {
-            return response()->json(['error' => 'Category not found'], 404);
-        }
+    // Structure categories with information about whether they have children
+    $categories = $categories->map(function ($category) {
+        return [
+            'id' => $category->id,
+            'name' => $category->name,
+            'has_children' => $category->children()->exists(),
+        ];
+    });
 
-        $children = $category->children->map(function ($child) {
-            return [
-                'id' => $child->id,
-                'name' => $child->name,
-                'has_children' => $child->children()->exists(),
-            ];
-        });
+    return response()->json(['categories' => $categories]);
+}
 
-        return response()->json($children);
+public function getChildren($categoryId)
+{
+    // Find the category
+    $category = Category::find($categoryId);
+
+    if (!$category) {
+        return response()->json(['error' => 'Category not found'], 404);
     }
+
+    // Fetch children of the category
+    $children = $category->children->map(function ($child) {
+        return [
+            'id' => $child->id,
+            'name' => $child->name,
+            'has_children' => $child->children()->exists(),
+        ];
+    });
+
+    return response()->json(['children' => $children]);
+}
+
+
 
 
 
@@ -91,8 +113,6 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('message', 'Category added successfully!');
     }
 
-
-
     // Show the category editing form
     public function edit(Product $product)
 {
@@ -108,6 +128,8 @@ class CategoryController extends Controller
 
     return view('admin.product.edit', compact('product', 'categories', 'subcategories'));
 }
+
+
 
 
 

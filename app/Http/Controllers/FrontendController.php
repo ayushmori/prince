@@ -11,11 +11,14 @@ class FrontendController extends Controller
     //     return view('frontend.pages.contact-us');
     // }
 
-    public function aboutpage(){
-        return view('frontend.pages.about-us');
-    }
+    // // public function aboutpage(){
+    // //     return view('frontend.pages.about-us');
+    // // }
 
-    public function contactpage(){
-        return view('frontend.pages.contact-us');
-    }
+    // public function contactpage(){
+    //     return view('frontend..pages.contact-us');
+    // }
+    
+  
+    
 }
