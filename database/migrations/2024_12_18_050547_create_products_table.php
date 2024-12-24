@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('price')->default(0);
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('subcategory_id')->nullable();  // This can be nullable if subcategories are optional
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('subcategory_id')->references('id')->on('categories')->onDelete('set null');
+            // $table->integer('subcategory_ids')->nullable();
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
             $table->json('images')->nullable(); // To store image URLs or paths
             $table->text('description')->nullable();

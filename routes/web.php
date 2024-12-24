@@ -27,6 +27,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('news', [NewsController::class, 'index'])->name('news');
 Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
 Route::get('/', [SliderController::class, 'view'])->name('sliders');
+Route::get('/api/categories', [CategoryController::class, 'getCategories']);
+Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 'getChildren']);
+
 
 Route::get('/about-us', [FrontendController::class, 'aboutpage']);
 Route::get('/contact-us', [FrontendController::class, 'contactpage']);
@@ -46,6 +49,8 @@ Route::get('/category/{slug}', [CategoryController::class, 'viewSubcategory'])->
 Route::get('/category/{category}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
 Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/category/{id}/ancestors', [CategoryController::class, 'getAncestors']);
+Route::get('/admin/products/subcategories/{categoryId}', [CategoryController::class, 'getSubcategories']);
+
 
 
 

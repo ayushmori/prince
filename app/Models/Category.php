@@ -19,11 +19,16 @@ class Category extends Model
         'parent_id',
         'image',
     ];
+    // public function children()
+    // {
+    //     return $this->hasMany(Category::class, 'parent_id');
+    // }
+
+    // Relationship for child categories
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id')->with('children');
     }
-
     // Optionally, define the parent relationship (if needed)
     public function parent()
     {

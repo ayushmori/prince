@@ -17,24 +17,6 @@ class CategoryController extends Controller
         return view('frontend.category.index', compact('categories'));
     }
 
-    public function getChildren($categoryId)
-    {
-        $category = Category::find($categoryId);
-
-        if (!$category) {
-            return response()->json(['error' => 'Category not found'], 404);
-        }
-
-        $children = $category->children->map(function ($child) {
-            return [
-                'id' => $child->id,
-                'name' => $child->name,
-                'has_children' => $child->children()->exists(),
-            ];
-        });
-
-        return response()->json($children);
-    }
 
 
 
@@ -95,19 +77,19 @@ class CategoryController extends Controller
 
     // Show the category editing form
     public function edit(Product $product)
-{
-    // Get all categories
-    $categories = Category::whereNull('parent_id')->get();  // Get parent categories only
-    $subcategories = [];
+    {
+        // Get all categories
+        $categories = Category::whereNull('parent_id')->get();  // Get parent categories only
+        $subcategories = [];
 
-    // Get the subcategories for the selected category (if editing an existing product)
-    if ($product->category_id) {
-        $category = Category::find($product->category_id);
-        $subcategories = $category ? $category->children : []; // Get subcategories (children) of the selected category
+        // Get the subcategories for the selected category (if editing an existing product)
+        if ($product->category_id) {
+            $category = Category::find($product->category_id);
+            $subcategories = $category ? $category->children : []; // Get subcategories (children) of the selected category
+        }
+
+        return view('admin.product.edit', compact('product', 'categories', 'subcategories'));
     }
-
-    return view('admin.product.edit', compact('product', 'categories', 'subcategories'));
-}
 
 
 
@@ -168,4 +150,44 @@ class CategoryController extends Controller
         // Redirect with success message
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
+
+    public function getCategories()
+{
+    // Fetch parent categories
+    $categories = Category::whereNull('parent_id')->get(); // Parent categories where parent_id is null
+
+    // Structure categories with information about whether they have children
+    $categories = $categories->map(function ($category) {
+        return [
+            'id' => $category->id,
+            'name' => $category->name,
+            'has_children' => $category->children()->exists(),
+        ];
+    });
+
+    return response()->json(['categories' => $categories]);
+}
+
+public function getChildren($categoryId)
+{
+    // Find the category
+    $category = Category::find($categoryId);
+
+    if (!$category) {
+        return response()->json(['error' => 'Category not found'], 404);
+    }
+
+    // Fetch children of the category
+    $children = $category->children->map(function ($child) {
+        return [
+            'id' => $child->id,
+            'name' => $child->name,
+            'has_children' => $child->children()->exists(),
+        ];
+    });
+
+    return response()->json(['children' => $children]);
+}
+
+
 }

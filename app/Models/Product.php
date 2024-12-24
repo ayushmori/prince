@@ -16,12 +16,13 @@ class Product extends Model
         'serial_number',
         'brand_id',
         'category_id',
-        'subcategory_id', // foreign keys, not 'category' and 'subcategory'
+        'subcategory_ids', // foreign keys, not 'category' and 'subcategory'
     ];
 
 
     protected $casts = [
         'images' => 'array',
+        'subcategory_ids' => 'array'
     ];
 
     public function attributes()
