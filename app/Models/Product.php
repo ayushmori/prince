@@ -5,22 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+
 class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'price',
         'description',
         'serial_number',
         'brand_id',
         'category_id',
-        'subcategory_id', // foreign keys, not 'category' and 'subcategory'
+        'subcategory_ids', // foreign keys, not 'category' and 'subcategory'
     ];
 
 
     protected $casts = [
         'images' => 'array',
+        'subcategory_ids' => 'array'
     ];
 
     public function attributes()

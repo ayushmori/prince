@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->enum('type', ['Software', 'PDF', 'Driver']);
+            $table->string('type');
             $table->string('file_path')->nullable();
             $table->timestamps();
         });

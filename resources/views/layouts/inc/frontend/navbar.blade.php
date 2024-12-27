@@ -1,3 +1,10 @@
+<!-- Include Font Awesome (for icons) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<!-- Include Material Design Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.css"
+    rel="stylesheet">
+
 <!-- Main Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
@@ -46,9 +53,26 @@
                     @endguest
                 </ul>
             </div>
+
         </div>
+
+        <!-- Language Dropdown with Flag Icon -->
+        <div class="dropdown me-3">
+            <button class="btn" type="button" style="background-color:#2973B9; color:white;">
+                <img src="{{ asset('uploads/flag.png') }}" height="20px" width="25px" style="margin-right: 10px"
+                    alt=""></i>INDIA
+            </button>
+        </div>
+
+
+        <!-- Download Button -->
+        <a href="#" class="btn" style="background-color:#2973B9; color:white;">Download</a>
+
+
+    </div>
     </div>
 </nav>
+
 
 <!-- Sub Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2973B9">
@@ -79,319 +103,358 @@
     </div>
 </nav>
 
-<!-- Category Modal -->
+<!-- Categories Modal -->
 <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen ">
+    <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="categoryModalLabel">NeXT SOLUTION</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- Categories Layout -->
                 <div class="row mt-4">
                     <!-- Parent Categories Section -->
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <h4>Categories</h4>
-                        <div class="category-container">
-                            @foreach ($categories as $category)
-                                <div id="category-{{ $category->id }}" class="category-box"
-                                    onclick="showSubCategories({{ $category->id }}, '{{ $category->name }}')">
-                                    {{ $category->name }}
-                                </div>
-                            @endforeach
-                        </div>
+                        <div class="category-container" id="parent-container"></div>
                     </div>
-
-                    <!-- Subcategories and Deeper Levels -->
-                    {{-- <div class="xyz"> --}}
-
-
+                    <!-- Dynamic Subcategories Section -->
                     <div class="col-md-8">
-                        <div class="d-flex">
-                            <!-- Subcategories Container -->
-                            <div>
-                                <h5 id="subcategory-title"></h5>
-                                <div id="subcategory-container" class="subcategory-container"></div>
-                            </div>
-
-                            <!-- Sub-Subcategories Container -->
-                            <div>
-                                <h5 id="subsubcategory-title"></h5>
-                                <div id="subsubcategory-container" class="subcategory-container"></div>
-                            </div>
-
-                            <!-- Sub-Sub-Subcategories Container -->
-                            <div>
-                                <h5 id="subsubsubcategory-title"></h5>
-                                <div id="subsubsubcategory-container" class="subcategory-container"></div>
-                            </div>
-
-                            <!-- Sub-Sub-Sub-Subcategories Container -->
-                            <div>
-                                <h5 id="subsubsubsubcategory-title"></h5>
-                                <div id="subsubsubsubcategory-container" class="subcategory-container"></div>
-                            </div>
-
-                            <!-- Sub-Sub-Sub-Sub-Subcategories Container -->
-                            <div>
-                                <h5 id="subsubsubsubsubcategory-title"></h5>
-                                <div id="subsubsubsubsubcategory-container" class="subcategory-container"></div>
-                            </div>
-                        </div>
+                        <h4 id="dynamic-category-heading"></h4>
+                        <div id="dynamic-category-sections" class="d-flex"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{-- @include('layouts.inc.frontend.footer')  --}}
-</div>
 
 <script>
-  
-    function showSubCategories(categoryId, categoryName) {
-    document.getElementById("subcategory-title").innerText = categoryName;
+    async function initializeCategories() {
+        const response = await fetch('/api/categories');
+        const data = await response.json();
+        const categories = data.categories;
 
-    // Show the subcategory section
-    const subcategoryContainer = document.querySelector(".col-md-8");
-    subcategoryContainer.style.display = "inline-block";
+        const parentContainer = document.getElementById('parent-container');
+        parentContainer.innerHTML = ''; // Clear previous data
 
-    // Reset all containers and hide deeper levels
-    resetContainers(["subcategory-container", "subsubcategory-container", "subsubsubcategory-container", 
-        "subsubsubsubcategory-container", "subsubsubsubsubcategory-container"]);
+        categories.forEach(category => {
+            appendToContainer(
+                parentContainer,
+                category.id,
+                category.name,
+                () => handleCategoryClick(category, 0), // Level 0 for top-level categories
+                category.has_children
+            );
+        });
+    }
 
-    // Load subcategories for the clicked category
-    @foreach ($categories as $category)
-        if (categoryId === {{ $category->id }}) {
-            @foreach ($category->children as $child)
-                appendToContainer("subcategory-container", {{ $child->id }}, "{{ $child->name }}", 
-                    "showSubSubCategories");
-            @endforeach
+    async function handleCategoryClick(category, level) {
+        const dynamicSections = document.getElementById('dynamic-category-sections');
+
+        const existingSection = document.getElementById(`subcategory-section-${category.id}`);
+        if (existingSection) {
+            removeChildSections(level);
+            return;
         }
-    @endforeach
-}
 
-// Adjust similar logic for deeper levels
-function showSubSubCategories(subcategoryId, subcategoryName) {
-    document.getElementById("subsubcategory-title").innerText = subcategoryName;
+        removeChildSections(level + 1);
 
-    // Hide all deeper levels and reset their content
-    resetContainers(["subsubcategory-container", "subsubsubcategory-container", 
-        "subsubsubsubcategory-container", "subsubsubsubsubcategory-container"]);
+        renderSubcategories(category, level + 1);
+    }
 
-    @foreach ($categories as $category)
-        @foreach ($category->children as $child)
-            if (subcategoryId === {{ $child->id }}) {
-                @foreach ($child->children as $subchild)
-                    appendToContainer("subsubcategory-container", {{ $subchild->id }}, "{{ $subchild->name }}", 
-                        "showSubSubSubCategories");
-                @endforeach
+    async function renderSubcategories(category, level) {
+        const dynamicSections = document.getElementById('dynamic-category-sections');
+
+        const newSection = document.createElement('div');
+        newSection.className = 'subcategory-container';
+        newSection.id = `subcategory-section-${category.id}`;
+        newSection.dataset.level = level;
+
+        const title = document.createElement('h5');
+        title.innerText = `${category.name}`;
+
+        const container = document.createElement('div');
+        container.className = 'subcategory-items';
+
+        newSection.appendChild(title);
+        newSection.appendChild(container);
+        dynamicSections.appendChild(newSection);
+
+        const response = await fetch(`/api/categories/${category.id}/children`);
+        const data = await response.json();
+
+        data.children.forEach(subcategory => {
+            appendToContainer(
+                container,
+                subcategory.id,
+                subcategory.name,
+                () => handleCategoryClick(subcategory, level),
+                subcategory.has_children
+            );
+        });
+    }
+
+    function removeChildSections(level) {
+        const dynamicSections = document.getElementById('dynamic-category-sections');
+        Array.from(dynamicSections.children).forEach(section => {
+            if (parseInt(section.dataset.level) >= level) {
+                section.remove();
             }
-        @endforeach
-    @endforeach
-}
-
-// Similar functions for deeper levels...
-
-    function showSubSubSubCategories(subSubCategoryId, subSubCategoryName) {
-        document.getElementById("subsubsubcategory-title").innerText = subSubCategoryName;
-        resetContainers(["subsubsubcategory-container", "subsubsubsubcategory-container",
-            "subsubsubsubsubcategory-container"
-        ]);
-
-        @foreach ($categories as $category)
-            @foreach ($category->children as $child)
-                @foreach ($child->children as $subchild)
-                    if (subSubCategoryId === {{ $subchild->id }}) {
-                        @foreach ($subchild->children as $subSubChild)
-                            appendToContainer("subsubsubcategory-container", {{ $subSubChild->id }},
-                                "{{ $subSubChild->name }}", "showSubSubSubSubCategories");
-                        @endforeach
-                    }
-                @endforeach
-            @endforeach
-        @endforeach
+        });
     }
 
-    function showSubSubSubSubCategories(subSubSubCategoryId, subSubSubCategoryName) {
-        document.getElementById("subsubsubsubcategory-title").innerText = subSubSubCategoryName;
-        resetContainers(["subsubsubsubcategory-container", "subsubsubsubsubcategory-container"]);
+    function appendToContainer(container, id, name, clickHandler, hasChildren) {
+        const box = document.createElement('div');
+        box.className = 'subcategory-box d-flex align-items-center justify-content-between';
 
-        @foreach ($categories as $category)
-            @foreach ($category->children as $child)
-                @foreach ($child->children as $subchild)
-                    @foreach ($subchild->children as $subSubChild)
-                        if (subSubSubCategoryId === {{ $subSubChild->id }}) {
-                            @foreach ($subSubChild->children as $subSubSubChild)
-                                appendToContainer("subsubsubsubcategory-container", {{ $subSubSubChild->id }},
-                                    "{{ $subSubSubChild->name }}", "showSubSubSubSubSubCategories");
-                            @endforeach
-                        }
-                    @endforeach
-                @endforeach
-            @endforeach
-        @endforeach
+        if (!hasChildren) {
+            const link = document.createElement('a');
+            link.href = `/category/${id}`;
+            link.innerText = name;
+            box.appendChild(link);
+        } else {
+            const textNode = document.createTextNode(name);
+            box.appendChild(textNode);
+
+            const icon = document.createElement('i');
+            icon.className = 'fa fa-angle-right ms-2';
+            box.appendChild(icon);
+
+            box.onclick = clickHandler;
+        }
+
+        container.appendChild(box);
     }
 
-    function showSubSubSubSubSubCategories(subSubSubSubCategoryId, subSubSubSubCategoryName) {
-        document.getElementById("subsubsubsubsubcategory-title").innerText = subSubSubSubCategoryName;
-        resetContainers(["subsubsubsubsubcategory-container"]);
-
-        @foreach ($categories as $category)
-            @foreach ($category->children as $child)
-                @foreach ($child->children as $subchild)
-                    @foreach ($subchild->children as $subSubChild)
-                        @foreach ($subSubChild->children as $subSubSubChild)
-                            if (subSubSubSubCategoryId === {{ $subSubSubChild->id }}) {
-                                @foreach ($subSubSubChild->children as $subSubSubSubChild)
-                                    appendToContainer("subsubsubsubsubcategory-container", null,
-                                        "{{ $subSubSubSubChild->name }}");
-                                @endforeach
-                            }
-                        @endforeach
-                    @endforeach
-                @endforeach
-            @endforeach
-        @endforeach
-    }
-
-    // Utility Functions  
-    function resetContainers(containerIds) {
-    containerIds.forEach(id => {
-        document.getElementById(id).innerHTML = ""; // Clear content
-        document.getElementById(id).classList.remove("active"); // Hide container
-    });
-}
-
-function appendToContainer(containerId, id, name, clickHandler = "") {
-    const container = document.getElementById(containerId);
-    const clickAction = clickHandler ? `onclick="${clickHandler}(${id}, '${name}')"` : "";
-    container.innerHTML += `<div class="subcategory-box" ${clickAction}>${name}</div>`;
-    container.classList.add("active"); // Show the current container
-}
-
+    document.addEventListener('DOMContentLoaded', () => initializeCategories());
 </script>
+{{-- 
+    <style>
+        
+        .subcategory-box {
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            /* border: 1px solid #ddd;  */
+            background-color: #2973B9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-<style>
-  .subcategory-container {
-    display: none; /* Hide all initially */
-}
+        .category-container {
+            margin-top: 18px
+        }
 
-.subcategory-container.active {
-    display: block; /* Only show active container */
-}
+        .subcategory-box:hover {
+            background-color: #f0f0f0;
+        }
 
-    .col-md-2 {
-        width: 400px;
-    }
-    .col-md-8{
-      display: none;
-    }
- 
+        .subcategory-box i {
+            color: white;
+            font-size: 1rem;
+            transition: transform 0.2s ease-in-out;
+        }
 
-    .category-box,
-    .subcategory-box {
-        padding: 15px;
-        margin: 10px 0;
+        .subcategory-box:hover i {
+            transform: translateX(5px);
+        }
+
+        .category-box,
+        {
         cursor: pointer;
         border: 1px solid #ddd;
-        background-color: #5195d0;
-        white-space: nowrap;
+        background-color: #2973B9;
         overflow: hidden;
-        /* display: none; */
-        /* text-overflow: ellipsis; */
+        }
 
-    }
+        .h4,
+        h4,
+        .h5,
+        h5 {
+            text-align: center;
+        }
+
+        .category-box:hover,
+        .subcategory-box:hover {
+            background-color: #2973B9;
+        }
+
+        .col-md-4 {
+            height: 50vh;
+            overflow-x: scroll;
+        }
+        .col-md-8{
+            overflow-x: scroll;
+        }
+
+        .subcategory-container {
+            min-width: 500px;
+            max-height: 300px;
+            padding: 5px;
+            overflow-y: scroll;
+        }
+
+        /* Flexbox for horizontal layout */
+        .d-flex {
+            display: flex;
+            /* gap: 20px; */
+            overflow: hidden;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+        }
+
+        .modal-backdrop.show {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-dialog {
+            top: 150px;
+        }
+
+
+
+        /* Modal Content Position and Styling */
+        .modal-content {
+            top: 0;
+            left: 0;
+            position: fixed;
+            width: 100%;
+            background-color: #2973B9 !important;
+            overflow: hidden;
+        }
+
+        .modal-body {
+            background-color: #2973B9 !important;
+            width: 100%;
+            max-height: 50vh;
+            overflow: hidden !important;
+            overflow-x:scroll; 
+        }
+
+        .modal-header {
+            background-color: #2973B9;
+        }
+
+        .modal {
+            color: white;
+            width: 100%;
+        }
+
+        .modal-content {
+            max-height: 60vh;
+            overflow: hidden;
+        }
+
+        .modal a {
+            text-decoration: none;
+            color: white;
+        }
+    </style> --}}
+    <style>
+        .subcategory-box {
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            background-color: #2973B9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
     
-
-    .category-box:hover,
-    .subcategory-box:hover {
-        background-color: #1e71c0;
-    }
-
-    #subcategory-title,
-    #subsubcategory-title,
-    #subsubsubcategory-title,
-    #subsubsubsubcategory-title,
-    #subsubsubsubsubcategory-title {
-        text-align: center;
-        text-decoration: underline;
-    }
-
-    .category-container,
-    .subcategory-container {
-        height: 300px;
-        overflow-y: auto;
-        border: 1px solid #ccc;
-        padding: 5px;
-        background-color: white;
-    }
-
-    .subcategory-container {
-        min-width: 400px;
-    }
-
-    /* Flexbox for scrollable horizontal layout */
-    .d-flex {
-        gap: 20px;
-        /* overflow-x: auto; */
-        white-space: nowrap;
+        .subcategory-box:hover {
+            background-color: #f0f0f0;
+        }
+    
+        .subcategory-box i {
+            color: white;
+            font-size: 1rem;
+            transition: transform 0.2s ease-in-out;
+        }
+    
+        .subcategory-box:hover i {
+            transform: translateX(5px);
+        }
+    
+        .category-container {
+            margin-top: 18px;
+        }
+    
+        .category-box {
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background-color: #2973B9;
+            overflow: hidden;
+        }
+    
+        h4,
+        h5 {
+            text-align: center;
+        }
+    
+        .category-box:hover,
+        .subcategory-box:hover {
+            background-color: #609fd9;
+        }
+    
+        .col-md-4 {
+            height: 50vh;
+            overflow-x: auto;
+        }
+    
+        .col-md-8 {
+            overflow-x: auto;
+        }
+    
+        .subcategory-container {
+            min-width: 500px;
+            max-height: 300px;
+            padding: 5px;
+            overflow-y: auto;
+        }
+    
+        .d-flex {
+            display: flex;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+        }
+    
+        .modal-backdrop.show {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    
+        .modal-dialog {
+            top: 150px;
+        }
+    
+        .modal-content {
+            position: fixed;
+            width: 100%;
+            background-color: #2973B9 !important;
+            overflow: hidden;
+            max-height: 60vh;
+        }
+    
+        .modal-body {
+            background-color: #2973B9 !important;
+            width: 100%;
         
-    }
-
-    .modal-backdrop.show {
-        background-color: rgba(0, 0, 0, 0.1);
-        /* Black with 50% opacity */
-    }
-
-    .modal-dialog {
-        /* height: 4//00px; */
-        top: 150px;
-    }
-
-    /* Modal Content Position and Styling */
-    .modal-content {
-        top: 0;
-        /* Align modal to top */
-        left: 0;
-        /* Align modal to left */
-        position: fixed;
-        /* Ensure it's positioned relative to the viewport */
-        width: 100%;
-        /* Full width of the viewport */
-        /* height: 10vh;/ */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        overflow-y: auto;
-        /* Allow scrolling if content exceeds the height */
-    }
-
-
-    /* Optional shadow for better visibility */
-
-    .modal-body {
-        background-color: #4e7ca7;
-        width: 100%;
-        max-height: 50vh;
-    }
-
-    .modal-header {
-        background-color: #4e7ca7;
-    }
-
-    .modal-title {
-        margin-left: 700px;
-    }
-
-    .modal {
-        color: white;
-        /* width: 100%;
-        */
-    }
-
-    .modal-content {
-        max-height: 60vh;
-        overflow: hidden;
-        /* position: fixed;  */
-    }
-</style>
+            overflow-x: auto;
+        }
+    
+        .modal-header {
+            background-color: #2973B9;
+        }
+    
+        .modal {
+            color: white;
+            width: 100%;
+        }
+    
+        .modal a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+    
