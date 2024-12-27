@@ -20,168 +20,232 @@
                 </div>
             @endif
 
-            <!-- Product Name -->
-            <div class="form-group mb-4">
-                <label for="name">Product Name</label>
-                <input type="text" name="name" id="name" class="form-control"
-                    value="{{ old('name', $product->name ?? '') }}" required>
-            </div>
-
-            <!-- Product Price -->
-            <div class="form-group mb-4">
-                <label for="price">Price</label>
-                <input type="number" name="price" id="price" class="form-control"
-                    value="{{ old('price', $product->price ?? '') }}" required>
-            </div>
-
-            <!-- Category -->
-            {{-- <div class="form-group mb-4">
-                <label for="category_id">Category</label>
-                <select name="category_id" id="category_id" class="form-control" required>
-                    <option value="">Select Category</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Subcategory -->
-            <div class="form-group mb-4">
-                <label for="subcategory_id">Subcategory</label>
-                <select name="subcategory_id" id="subcategory_id" class="form-control">
-                    <option value="">Select Subcategory</option>
-                    <!-- Subcategories will be populated dynamically here -->
-                </select>
-            </div> --}}
-
-            <div class="form-group mb-4">
-                <label for="category_id">Category</label>
-                <select name="category_id" id="category_id" class="form-control" required>
-                    <option value="">Select Category</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}"
-                            {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                        @if ($category->children)
-                            @foreach ($category->children as $childCategory)
-                                @include('admin.product.partials.category-options', [
-                                    'category' => $childCategory,
-                                    'level' => 1,
-                                ])
-                            @endforeach
-                        @endif
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Brand -->
-            <div class="form-group mb-4">
-                <label for="brand_id">Brand</label>
-                <select name="brand_id" id="brand_id" class="form-control">
-                    <option value="">Select Brand</option>
-                    @foreach ($brands as $brand)
-                        <option value="{{ $brand->id }}"
-                            {{ old('brand_id', $product->brand_id ?? '') == $brand->id ? 'selected' : '' }}>
-                            {{ $brand->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Description -->
-            <div class="form-group mb-4">
-                <label for="description">Description</label>
-                <textarea name="description" id="description" class="form-control">{{ old('description', $product->description ?? '') }}</textarea>
-            </div>
-
-            <!-- Serial Number -->
-            <div class="form-group mb-4">
-                <label for="serial_number">Serial Number</label>
-                <input type="text" name="serial_number" id="serial_number" class="form-control"
-                    value="{{ old('serial_number', $product->serial_number ?? '') }}" required>
-            </div>
-
-            <!-- Product Images -->
-            <div class="form-group mb-4">
-                <label for="images">Product Images</label>
-                <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
-                @if (isset($product) && $product->images)
-                    <div class="mt-3">
-                        <h5>Existing Images</h5>
-                        <div class="d-flex flex-wrap">
-                            @foreach (json_decode($product->images) as $image)
-                                <img src="{{ asset('storage/' . $image) }}" alt="Product Image"
-                                    class="img-thumbnail me-2 mb-2" width="100" height="100">
-                            @endforeach
-                        </div>
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="card-title">Product Details</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Product Name -->
+                    <div class="form-group mb-4">
+                        <label for="name">Product Name</label>
+                        <input type="text" name="name" id="name" class="form-control"
+                            value="{{ old('name', $product->name ?? '') }}" required>
                     </div>
-                @endif
-            </div>
 
-            <!-- Documents -->
-            <h3 class="mt-5 mb-3">Documents</h3>
-            <div id="documents-container" class="mb-4">
-                @if (isset($product) && $product->documents->count() > 0)
-                    @foreach ($product->documents as $index => $document)
-                        <div class="document mb-3" id="document-{{ $index }}">
-                            <label for="documents[{{ $index }}][type]" class="form-label">Type</label>
-                            <select name="documents[{{ $index }}][type]" class="form-control" required>
-                                <option value="Software"
-                                    {{ old('documents.' . $index . '.type', $document->type) == 'Software' ? 'selected' : '' }}>
-                                    Software</option>
-                                <option value="PDF"
-                                    {{ old('documents.' . $index . '.type', $document->type) == 'PDF' ? 'selected' : '' }}>
-                                    PDF</option>
-                                <option value="Driver"
-                                    {{ old('documents.' . $index . '.type', $document->type) == 'Driver' ? 'selected' : '' }}>
-                                    Driver</option>
-                            </select>
-                            <label for="documents[{{ $index }}][file_path]" class="form-label">File</label>
-                            <input type="file" name="documents[{{ $index }}][file_path]" class="form-control">
-                            @if ($document->file_path)
-                                <div class="mt-2">
-                                    <h5>Existing Document:</h5>
-                                    <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank">View
-                                        Document</a>
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
-                @else
-                    <div class="document mb-3" id="document-0">
-                        <label for="documents[0][type]" class="form-label">Type</label>
-                        <select name="documents[0][type]" class="form-control" required>
-                            <option value="Software">Software</option>
-                            <option value="PDF">PDF</option>
-                            <option value="Driver">Driver</option>
+                    <!-- Product Price -->
+                    <div class="form-group mb-4">
+                        <label for="price">Price</label>
+                        <input type="number" name="price" id="price" class="form-control"
+                            value="{{ old('price', $product->price ?? '') }}" required>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-group mb-4">
+                        <label for="category_id">Category</label>
+                        <select name="category_id" id="category_id" class="form-control" required>
+                            <option value="">Select Category</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                                @if ($category->children)
+                                    @foreach ($category->children as $childCategory)
+                                        @include('admin.product.partials.category-options', [
+                                            'category' => $childCategory,
+                                            'level' => 1,
+                                        ])
+                                    @endforeach
+                                @endif
+                            @endforeach
                         </select>
-                        <label for="documents[0][file_path]" class="form-label">File</label>
-                        <input type="file" name="documents[0][file_path]" class="form-control">
                     </div>
-                @endif
-            </div>
-            <button type="button" class="btn btn-success btn-sm text-white float-end" id="add-document">+ Add
-                Document</button>
 
-            <!-- Attributes -->
-            <h3 class="mt-5 mb-3">Attributes</h3>
-            <div id="attributes" class="mb-4">
-                @foreach ($product->attributes ?? [] as $index => $attribute)
-                    <div class="attribute-row mb-3">
-                        <input type="text" name="attributes[{{ $index }}][title]" class="form-control mb-2"
-                            placeholder="Attribute Title"
-                            value="{{ old('attributes.' . $index . '.title', $attribute->title) }}" required>
-                        <textarea name="attributes[{{ $index }}][description]" class="form-control mb-2"
-                            placeholder="Attribute Description" required>{{ old('attributes.' . $index . '.description', $attribute->description) }}</textarea>
-                        <button type="button" class="btn btn-danger remove-attribute">Remove</button>
+                    <!-- Brand -->
+                    <div class="form-group mb-4">
+                        <label for="brand_id">Brand</label>
+                        <select name="brand_id" id="brand_id" class="form-control">
+                            <option value="">Select Brand</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}"
+                                    {{ old('brand_id', $product->brand_id ?? '') == $brand->id ? 'selected' : '' }}>
+                                    {{ $brand->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                @endforeach
+
+                    <!-- Description -->
+                    <div class="form-group mb-4">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" class="form-control">{{ old('description', $product->description ?? '') }}</textarea>
+                    </div>
+
+                    <!-- Serial Number -->
+                    <div class="form-group mb-4">
+                        <label for="serial_number">Serial Number</label>
+                        <input type="text" name="serial_number" id="serial_number" class="form-control"
+                            value="{{ old('serial_number', $product->serial_number ?? '') }}" required>
+                    </div>
+
+                    <!-- Product Images -->
+                    <div class="form-group mb-4">
+                        <label for="images">Product Images</label>
+                        <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
+                        @if (isset($product) && $product->images)
+                            <div class="mt-3">
+                                <h5>Existing Images</h5>
+                                <div class="d-flex flex-wrap">
+                                    @foreach (json_decode($product->images) as $image)
+                                        <img src="{{ asset('storage/' . $image) }}" alt="Product Image"
+                                            class="img-thumbnail me-2 mb-2" width="100" height="100">
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
-            <button type="button" class="btn btn-success btn-sm text-white float-end" id="add-attribute">+ Add
-                Attribute</button>
+
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="card-title">Documents</h4>
+                </div>
+                <div class="card-body">
+                    <div id="documents-container" class="mb-4">
+                        @if (isset($product) && $product->documents->count() > 0)
+                            @foreach ($product->documents as $index => $document)
+                                <div class="document mb-3" id="document-{{ $index }}">
+                                    <label for="documents[{{ $index }}][type]" class="form-label">Type</label>
+                                    <select name="documents[{{ $index }}][type]" class="form-control" required>
+                                        <option value="Software"
+                                            {{ old('documents.' . $index . '.type', $document->type) == 'Software' ? 'selected' : '' }}>
+                                            Software</option>
+                                        <option value="PDF"
+                                            {{ old('documents.' . $index . '.type', $document->type) == 'PDF' ? 'selected' : '' }}>
+                                            PDF</option>
+                                        <option value="Driver"
+                                            {{ old('documents.' . $index . '.type', $document->type) == 'Driver' ? 'selected' : '' }}>
+                                            Driver</option>
+                                    </select>
+                                    <label for="documents[{{ $index }}][file_path]" class="form-label">File</label>
+                                    <input type="file" name="documents[{{ $index }}][file_path]" class="form-control">
+                                    @if ($document->file_path)
+                                        <div class="mt-2">
+                                            <h5>Existing Document:</h5>
+                                            <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank">View Document</a>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="document mb-3" id="document-0">
+                                <label for="documents[0][type]" class="form-label">Type</label>
+                                <select name="documents[0][type]" class="form-control" required>
+                                    <option value="Software">Software</option>
+                                    <option value="PDF">PDF</option>
+                                    <option value="Driver">Driver</option>
+                                </select>
+                                <label for="documents[0][file_path]" class="form-label">File</label>
+                                <input type="file" name="documents[0][file_path]" class="form-control">
+                            </div>
+                        @endif
+                    </div>
+                    <button type="button" class="btn btn-success btn-sm text-white float-end" id="add-document">+ Add Document</button>
+                </div>
+            </div>
+
+
+
+            <div class="container mt-5">
+                <h3 class="mb-4">Attributes</h3>
+                <div id="attributes" class="mb-4">
+                    @if (!empty($product->attributes))
+                        @foreach ($product->attributes as $index => $attribute)
+                            <div class="card attribute-row mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Attribute {{ $index + 1 }}</h5>
+                                    <!-- Main Attribute Inputs -->
+                                    <input type="text" name="attributes[{{ $index }}][title]"
+                                        class="form-control mb-2" placeholder="Attribute Title"
+                                        value="{{ old('attributes.' . $index . '.title', $attribute->title) }}" required>
+                                    <textarea name="attributes[{{ $index }}][description]" class="form-control mb-3"
+                                        placeholder="Attribute Description" required>{{ old('attributes.' . $index . '.description', $attribute->description) }}</textarea>
+
+                                    <!-- Short Attributes Section -->
+                                    <div class="card p-3 mb-3">
+                                        <h6>Short Attributes</h6>
+                                        <div class="short-attributes-container">
+                                            @foreach ($attribute->shortAttributes as $shortIndex => $shortAttribute)
+                                                <div class="row short-attribute-row mb-2">
+                                                    <div class="col-md-5">
+                                                        <input type="text"
+                                                            name="attributes[{{ $index }}][short_attributes][{{ $shortIndex }}][key]"
+                                                            class="form-control" placeholder="Key"
+                                                            value="{{ old('attributes.' . $index . '.short_attributes.' . $shortIndex . '.key', $shortAttribute->key) }}"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <input type="text"
+                                                            name="attributes[{{ $index }}][short_attributes][{{ $shortIndex }}][value]"
+                                                            class="form-control" placeholder="Value"
+                                                            value="{{ old('attributes.' . $index . '.short_attributes.' . $shortIndex . '.value', $shortAttribute->value) }}"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-2 text-end">
+                                                        <button type="button"
+                                                            class="btn btn-danger remove-short-attribute">Remove</button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <button type="button" class="btn btn-primary btn-sm add-short-attribute">+ Add
+                                            Short Attribute</button>
+                                    </div>
+                                    <button type="button" class="btn btn-danger remove-attribute">Remove
+                                        Attribute</button>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <!-- Default empty row if no attributes exist -->
+                        <div class="card attribute-row mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Attribute 1</h5>
+                                <input type="text" name="attributes[0][title]" class="form-control mb-2"
+                                    placeholder="Attribute Title" required>
+                                <textarea name="attributes[0][description]" class="form-control mb-3" placeholder="Attribute Description" required></textarea>
+                                <div class="card bg-white p-3 mb-3 border border-dark">
+                                    <h6>Short Attributes</h6>
+                                    <div class="short-attributes-container">
+                                        <div class="row short-attribute-row mb-2">
+                                            <div class="col-md-5">
+                                                <input type="text" name="attributes[0][short_attributes][0][key]"
+                                                    class="form-control" placeholder="Key" required>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text" name="attributes[0][short_attributes][0][value]"
+                                                    class="form-control" placeholder="Value" required>
+                                            </div>
+                                            <div class="col-md-2 text-end">
+                                                <button type="button"
+                                                    class="btn btn-danger remove-short-attribute">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm add-short-attribute">+ Add Short
+                                        Attribute</button>
+                                </div>
+                                <button type="button" class="btn btn-danger remove-attribute">Remove Attribute</button>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                <button type="button" class="btn btn-success text-white float-end" id="add-attribute">+ Add
+                    Attribute</button>
+            </div>
+
 
             <button type="submit"
                 class="btn btn-primary mt-4">{{ isset($product) ? 'Update Product' : 'Create Product' }}</button>
@@ -217,54 +281,80 @@
             }
         });
 
-        // Add attribute input fields dynamically
-        document.getElementById('add-attribute').addEventListener('click', function() {
-            const attributeRow = document.createElement('div');
-            attributeRow.classList.add('attribute-row', 'mb-3');
-            const index = document.querySelectorAll('.attribute-row').length;
-            attributeRow.innerHTML = `
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add new attribute row
+            document.getElementById('add-attribute').addEventListener('click', function() {
+                const index = document.querySelectorAll('.attribute-row').length;
+                const attributeRow = document.createElement('div');
+                attributeRow.classList.add('card', 'attribute-row', 'mb-3');
+                attributeRow.innerHTML = `
+            <div class="card-body">
+                <h5 class="card-title">Attribute ${index + 1}</h5>
                 <input type="text" name="attributes[${index}][title]" class="form-control mb-2" placeholder="Attribute Title" required>
-                <textarea name="attributes[${index}][description]" class="form-control mb-2" placeholder="Attribute Description" required></textarea>
-                <button type="button" class="btn btn-danger remove-attribute">Remove</button>
+                <textarea name="attributes[${index}][description]" class="form-control mb-3" placeholder="Attribute Description" required></textarea>
+
+                <div class="card bg-white p-3 mb-3 border border-dark">
+                    <h6>Short Attributes</h6>
+                    <div class="short-attributes-container">
+                        <div class="row short-attribute-row mb-2">
+                            <div class="col-md-5">
+                                <input type="text" name="attributes[${index}][short_attributes][0][key]" class="form-control" placeholder="Key" required>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="attributes[${index}][short_attributes][0][value]" class="form-control" placeholder="Value" required>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button type="button" class="btn btn-danger remove-short-attribute">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm add-short-attribute">+ Add Short Attribute</button>
+                </div>
+
+                <button type="button" class="btn btn-danger remove-attribute">Remove Attribute</button>
+            </div>
+        `;
+                document.getElementById('attributes').appendChild(attributeRow);
+            });
+
+            // Delegate events to dynamically manage short attributes and attributes
+            document.getElementById('attributes').addEventListener('click', function(e) {
+                // Remove an attribute row
+                if (e.target.classList.contains('remove-attribute')) {
+                    e.target.closest('.attribute-row').remove();
+                }
+
+                // Add short attribute row dynamically
+                if (e.target.classList.contains('add-short-attribute')) {
+                    const shortAttributesContainer = e.target.previousElementSibling;
+                    const attributeIndex = [...document.querySelectorAll('.attribute-row')].indexOf(e.target
+                        .closest('.attribute-row'));
+                    const shortIndex = shortAttributesContainer.querySelectorAll('.short-attribute-row')
+                        .length;
+
+                    const shortAttributeRow = document.createElement('div');
+                    shortAttributeRow.classList.add('row', 'short-attribute-row', 'mb-2');
+                    shortAttributeRow.innerHTML = `
+                <div class="col-md-5">
+                    <input type="text" name="attributes[${attributeIndex}][short_attributes][${shortIndex}][key]" class="form-control" placeholder="Key" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="attributes[${attributeIndex}][short_attributes][${shortIndex}][value]" class="form-control" placeholder="Value" required>
+                </div>
+                <div class="col-md-2 text-end">
+                    <button type="button" class="btn btn-danger remove-short-attribute">Remove</button>
+                </div>
             `;
-            document.getElementById('attributes').appendChild(attributeRow);
+                    shortAttributesContainer.appendChild(shortAttributeRow);
+                }
+
+                // Remove a short attribute row
+                if (e.target.classList.contains('remove-short-attribute')) {
+                    e.target.closest('.short-attribute-row').remove();
+                }
+            });
         });
 
-        // Remove attribute input fields
-        document.getElementById('attributes').addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-attribute')) {
-                e.target.closest('.attribute-row').remove();
-            }
-        });
-
-        // Load subcategories based on category selection
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var categorySelect = document.getElementById('category_id');
-        //     var subcategorySelect = document.getElementById('subcategory_id');
-
-        //     categorySelect.addEventListener('change', function() {
-        //         var categoryId = this.value;
-        //         subcategorySelect.innerHTML = '<option value="">Select a Subcategory</option>';
-
-        //         if (categoryId) {
-        //             fetch(`/admin/products/subcategories/${categoryId}`)
-        //                 .then(response => response.json())
-        //                 .then(data => {
-        //                     if (data.subcategories) {
-        //                         data.subcategories.forEach(function(subcategory) {
-        //                             var option = document.createElement('option');
-        //                             option.value = subcategory.id;
-        //                             option.textContent = subcategory.name;
-        //                             subcategorySelect.appendChild(option);
-        //                         });
-        //                     }
-        //                 })
-        //                 .catch(error => {
-        //                     console.error('Error fetching subcategories:', error);
-        //                 });
-        //         }
-        //     });
-        // });
 
         document.addEventListener('DOMContentLoaded', function() {
             const categorySelect = document.getElementById('category_id');

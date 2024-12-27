@@ -15,4 +15,9 @@ class Attribute extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function shortAttributes()
+    {
+        return $this->hasMany(ShortAttribute::class);
+    }
 }

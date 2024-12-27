@@ -9,6 +9,7 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use App\Http\Controllers\Controller;
+use App\Models\ShortAttribute;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
@@ -18,23 +19,6 @@ class ProductController extends Controller
         $products = Product::with(['attributes', 'documents'])->get();
         return view('admin.product.index', compact('products'));
     }
-
-    // public function create($id = null)
-    // {
-    //     $brands = Brand::all();
-    //     $categories = Category::whereNull('parent_id')->with('children')->get(); // Get top-level categories
-
-    //     $existingSerialNumbers = Product::orderBy('serial_number', 'asc')->pluck('serial_number')->toArray();
-
-    //     $nextSerialNumber = $this->getNextAvailableSerialNumber($existingSerialNumbers);
-    //     if ($nextSerialNumber === null) {
-    //         $lastSerialNumber = Product::max('serial_number') ?? 0;
-    //         $nextSerialNumber = $lastSerialNumber + 1;
-    //     }
-    //     $product = $id ? Product::findOrFail($id) : null;
-
-    //     return view('admin.product.create', compact('brands', 'categories', 'nextSerialNumber', 'product'));
-    // }
 
     public function create($id = null)
     {
@@ -67,116 +51,14 @@ class ProductController extends Controller
         ]);
     }
 
-    // public function store(Request $request)
-    // {
-    //     // Validate the request
-    //     $validated = $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'price' => 'required|numeric',
-    //         'brand_id' => 'required|exists:brands,id',
-    //         'category_id' => 'required|exists:categories,id',
-    //         'subcategory_id' => 'required|exists:categories,id',
-    //         'serial_number' => 'required|unique:products,serial_number',
-    //         'description' => 'nullable|string',
-    //         'images' => 'nullable|array',
-    //         'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'attributes' => 'nullable|array',
-    //         'attributes.*.title' => 'nullable|string|max:255',
-    //         'attributes.*.description' => 'nullable|string',
-    //         'documents' => 'nullable|array',
-    //         'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:10240',
-    //         'documents.*.type' => 'nullable|string|max:255', // Validate document type
-    //     ]);
-
-    //     // Create the product
-    //     $product = Product::create([
-    //         'name' => $validated['name'],
-    //         'brand_id' => $validated['brand_id'],
-    //         'category_id' => $validated['category_id'],
-    //         'subcategory_id' => $validated['subcategory_id'],
-    //         'serial_number' => $validated['serial_number'],
-    //         'description' => $validated['description'] ?? null,
-    //     ]);
-
-    //     // Handle images
-    //     if ($request->hasFile('images')) {
-    //         $images = [];
-    //         foreach ($request->file('images') as $image) {
-    //             $imageName = time() . '-' . $image->getClientOriginalName();
-    //             $image->move(public_path('product_images'), $imageName);
-    //             $images[] = 'product_images/' . $imageName;
-    //         }
-    //         $product->images = json_encode($images);
-    //         $product->save();
-    //     }
-
-    //     // Handle attributes
-    //     if (isset($validated['attributes']) && !empty($validated['attributes'])) {
-    //         foreach ($validated['attributes'] as $attribute) {
-    //             if (!empty($attribute['title']) && !empty($attribute['description'])) {
-    //                 $product->attributes()->create([
-    //                     'title' => $attribute['title'],
-    //                     'description' => $attribute['description'],
-    //                 ]);
-    //             }
-    //         }
-    //     }
-
-    //     // Handle documents
-    //     if ($request->hasFile('documents')) {
-    //         foreach ($request->file('documents') as $index => $documentFile) {
-    //             $fileName = time() . '-' . $documentFile->getClientOriginalName();
-    //             $documentFile->move(public_path('product_documents'), $fileName);
-
-    //             $type = $request->input("documents.{$index}.type", 'PDF');
-    //             $product->documents()->create([
-    //                 'file_path' => 'product_documents/' . $fileName,
-    //                 'type' => $type,
-    //             ]);
-    //         }
-    //     }
-
-    //     return redirect()->route('products.index')->with('success', 'Product created successfully!');
-    // }
-
     public function store(Request $request)
     {
-        // Validate the request
-        // $validated = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'price' => 'required|numeric',
-        //     'brand_id' => 'required|exists:brands,id',
-        //     'category_id' => 'required|exists:categories,id',
-        //     'subcategory_id' => 'required|exists:categories,id',
-        //     'serial_number' => 'required|unique:products,serial_number',
-        //     'description' => 'nullable|string',
-        //     'images' => 'nullable|array',
-        //     'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        //     'attributes' => 'nullable|array',
-        //     'attributes.*.title' => 'nullable|string|max:255',
-        //     'attributes.*.description' => 'nullable|string',
-        //     'documents' => 'nullable|array',
-        //     'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:10240',
-        //     'documents.*.type' => 'nullable|string|max:255', // Validate document type
-        // ]);
-
-        // // Create the product
-        // $product = Product::create([
-        //     'name' => $validated['name'],
-        //     'brand_id' => $validated['brand_id'],
-        //     'category_id' => $validated['category_id'],
-        //     'subcategory_id' => $validated['subcategory_id'],
-        //     'serial_number' => $validated['serial_number'],
-        //     'description' => $validated['description'] ?? null,
-        // ]);
-
-        // Validate the request
+        // Validation
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
             'brand_id' => 'required|exists:brands,id',
             'category_id' => 'required|exists:categories,id',
-            // 'subcategory_ids' => 'nullable|array', // Array of subcategory ids
             'serial_number' => 'required|unique:products,serial_number',
             'description' => 'nullable|string',
             'images' => 'nullable|array',
@@ -184,24 +66,25 @@ class ProductController extends Controller
             'attributes' => 'nullable|array',
             'attributes.*.title' => 'nullable|string|max:255',
             'attributes.*.description' => 'nullable|string',
+            'attributes.*.short_attributes' => 'nullable|array',
+            'attributes.*.short_attributes.*.key' => 'nullable|string|max:255',
+            'attributes.*.short_attributes.*.value' => 'nullable|string|max:255',
             'documents' => 'nullable|array',
             'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:10240',
             'documents.*.type' => 'nullable|string|max:255',
         ]);
-        // dd($validated['category_id']);
 
         // Create the product
         $product = Product::create([
             'name' => $validated['name'],
-             'price' => $validated['price'],
+            'price' => $validated['price'],
             'brand_id' => $validated['brand_id'],
             'category_id' => $validated['category_id'],
             'serial_number' => $validated['serial_number'],
             'description' => $validated['description'] ?? null,
-            // 'subcategory_ids' => json_encode($validated['subcategory_ids']), // Store subcategory IDs as JSON
         ]);
 
-        // Handle images
+        // Handle images (if any)
         if ($request->hasFile('images')) {
             $images = [];
             foreach ($request->file('images') as $image) {
@@ -213,47 +96,53 @@ class ProductController extends Controller
             $product->save();
         }
 
-        // Handle attributes
+        // Handle attributes and short attributes
         if (isset($validated['attributes']) && !empty($validated['attributes'])) {
             foreach ($validated['attributes'] as $attribute) {
                 if (!empty($attribute['title']) && !empty($attribute['description'])) {
-                    $product->attributes()->create([
+                    // Save the attribute
+                    $createdAttribute = $product->attributes()->create([
                         'title' => $attribute['title'],
                         'description' => $attribute['description'],
                     ]);
+
+                    // Save short attributes for this attribute
+                    if (isset($attribute['short_attributes']) && !empty($attribute['short_attributes'])) {
+                        foreach ($attribute['short_attributes'] as $shortAttribute) {
+                            if (!empty($shortAttribute['key']) && !empty($shortAttribute['value'])) {
+                                $createdAttribute->shortAttributes()->create([
+                                    'key' => $shortAttribute['key'],
+                                    'value' => $shortAttribute['value'],
+                                ]);
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        foreach ($validated['documents'] as $detail) {
-            $shortImagePath = null;
-            if (isset($detail['file_path']) && $detail['file_path']) {
-                $shortImage = $detail['file_path'];
-                $shortImagePath = 'documents/' . uniqid() . '.' . $shortImage->getClientOriginalExtension();
-                $shortImage->move(public_path('documents'), $shortImagePath);
-            }
+        // Handle documents (if any)
+        if (isset($validated['documents']) && !empty($validated['documents'])) {
+            foreach ($validated['documents'] as $document) {
+                $documentPath = null;
+                if (isset($document['file_path']) && $document['file_path']) {
+                    $file = $document['file_path'];
+                    $documentPath = 'documents/' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('documents'), $documentPath);
+                }
 
-            Document::create([
-                'product_id' => $product->id,
-                'file_path' => $shortImagePath,
-                'type' => $detail['type'],
-            ]);
+                Document::create([
+                    'product_id' => $product->id,
+                    'file_path' => $documentPath,
+                    'type' => $document['type'],
+                ]);
+            }
         }
 
-        // if ($request->hasFile('documents')) {
-        //     foreach ($request->file('documents') as $documentFile) {
-        //         $fileName = time() . '-' . $documentFile->getClientOriginalName();
-        //         $documentFile->move(public_path('product_documents'), $fileName);
-        //         $product->documents()->create([
-        //             'file_path' => 'product_documents/' . $fileName,
-        //             'type' => 'PDF', // Adjust as needed
-        //         ]);
-        //     }
-        // }
-
-
+        // Return response
         return redirect()->route('products.index')->with('success', 'Product created successfully!');
     }
+
 
 
     public function edit($id)
@@ -261,6 +150,7 @@ class ProductController extends Controller
         $product = Product::with('attributes', 'documents')->find($id);
         $brands = Brand::all();
         $categories = Category::whereNull('parent_id')->with('children')->get();
+        $short = ShortAttribute::all();
 
         $existingSerialNumbers = Product::orderBy('serial_number', 'asc')->pluck('serial_number')->toArray();
 
@@ -270,149 +160,10 @@ class ProductController extends Controller
             $nextSerialNumber = $lastSerialNumber + 1;
         }
 
-        return view('admin.product.edit', compact('product', 'brands', 'categories', 'nextSerialNumber'));
+        return view('admin.product.edit', compact('product', 'brands', 'categories', 'nextSerialNumber', 'short'));
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     // Validate the request
-    //     $validated = $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'price' => 'required|numeric',
-    //         'brand_id' => 'required|exists:brands,id',
-    //         'category_id' => 'required|exists:categories,id',
-    //         'subcategory_id' => 'required|exists:categories,id',
-    //         'serial_number' => "required|unique:products,serial_number,{$id}",
-    //         'description' => 'nullable|string',
-    //         'images' => 'nullable|array',
-    //         'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'attributes' => 'nullable|array',
-    //         'attributes.*.title' => 'nullable|string|max:255',
-    //         'attributes.*.description' => 'nullable|string',
-    //         'documents' => 'nullable|array',
-    //         'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:10240',
-    //         'documents.*.type' => 'nullable|string|max:255',
-    //     ]);
 
-    //     // Find the product
-    //     $product = Product::findOrFail($id);
-
-    //     // Update the product
-    //     $product->update([
-    //         'name' => $validated['name'],
-    //         'brand_id' => $validated['brand_id'],
-    //         'category_id' => $validated['category_id'],
-    //         'subcategory_id' => $validated['subcategory_id'],
-    //         'serial_number' => $validated['serial_number'],
-    //         'description' => $validated['description'] ?? null,
-    //     ]);
-
-    //     // Handle documents
-    //     if ($request->hasFile('documents')) {
-    //         // Delete old documents if needed
-    //         foreach ($product->documents as $document) {
-    //             if (file_exists(public_path($document->file_path))) {
-    //                 unlink(public_path($document->file_path));
-    //             }
-    //             $document->delete();
-    //         }
-
-    //         // Save new documents
-    //         foreach ($request->file('documents') as $index => $documentFile) {
-    //             $fileName = time() . '-' . $documentFile->getClientOriginalName();
-    //             $documentFile->move(public_path('product_documents'), $fileName);
-
-    //             $type = $request->input("documents.{$index}.type", 'PDF');
-    //             $product->documents()->create([
-    //                 'file_path' => 'product_documents/' . $fileName,
-    //                 'type' => $type,
-    //             ]);
-    //         }
-    //     }
-
-    //     return redirect()->route('products.index')->with('success', 'Product updated successfully!');
-    // }
-
-    // public function update(Request $request, $id)
-    // {
-    //     // Validate the request
-    //     $validated = $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'price' => 'required|numeric',
-    //         'brand_id' => 'required|exists:brands,id',
-    //         'category_id' => 'required|exists:categories,id',
-    //         'subcategory_id' => 'required|exists:categories,id',
-    //         'serial_number' => "required|unique:products,serial_number,{$id}",
-    //         'description' => 'nullable|string',
-    //         'images' => 'nullable|array',
-    //         'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-    //         'attributes' => 'nullable|array',
-    //         'attributes.*.title' => 'nullable|string|max:255',
-    //         'attributes.*.description' => 'nullable|string',
-    //         'documents' => 'nullable|array',
-    //         'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:10240',
-    //         'documents.*.type' => 'nullable|string|max:255',
-    //     ]);
-
-    //     // Find the product
-    //     $product = Product::findOrFail($id);
-
-    //     // Update the product
-    //     $product->update([
-    //         'name' => $validated['name'],
-    //         'brand_id' => $validated['brand_id'],
-    //         'category_id' => $validated['category_id'],
-    //         'subcategory_id' => $validated['subcategory_id'],
-    //         'serial_number' => $validated['serial_number'],
-    //         'description' => $validated['description'] ?? null,
-    //     ]);
-
-    //     // Handle images
-    //     if ($request->hasFile('images')) {
-    //         $images = [];
-    //         foreach ($request->file('images') as $image) {
-    //             $imageName = time() . '-' . $image->getClientOriginalName();
-    //             $image->move(public_path('product_images'), $imageName);
-    //             $images[] = 'product_images/' . $imageName;
-    //         }
-    //         $product->images = json_encode($images);
-    //         $product->save();
-    //     }
-
-    //     // Handle documents
-    //     if ($request->hasFile('documents')) {
-    //         // Delete old documents if needed
-    //         foreach ($product->documents as $document) {
-    //             if (file_exists(public_path($document->file_path))) {
-    //                 unlink(public_path($document->file_path)); // Remove old document files
-    //             }
-    //             $document->delete(); // Delete document record from DB
-    //         }
-
-    //         // Check if the document directory exists
-    //         $documentPath = public_path('product_documents');
-    //         if (!is_dir($documentPath)) {
-    //             mkdir($documentPath, 0755, true);
-    //         }
-
-    //         // Handle new documents
-    //         foreach ($request->file('documents') as $index => $documentFile) {
-    //             $fileName = time() . '-' . $documentFile->getClientOriginalName();
-    //             $documentFile->move($documentPath, $fileName);
-
-    //             // Set the document type (default to PDF if not provided)
-    //             $type = $request->input("documents.{$index}.type", 'PDF');
-
-    //             // Create document entry in the database
-    //             $product->documents()->create([
-    //                 'file_path' => 'product_documents/' . $fileName,
-    //                 'type' => $type,
-    //             ]);
-    //         }
-    //     }
-
-    //     return redirect()->route('products.index')->with('success', 'Product updated successfully!');
-    // }
 
     public function update(Request $request, $id)
     {
@@ -432,11 +183,16 @@ class ProductController extends Controller
             'attributes' => 'nullable|array',
             'attributes.*.title' => 'nullable|string|max:255',
             'attributes.*.description' => 'nullable|string',
+            'attributes.*.short_attributes' => 'nullable|array',
+            'attributes.*.short_attributes.*.id' => 'integer',
+            'attributes.*.short_attributes.*.key' => 'nullable|string|max:255',
+            'attributes.*.short_attributes.*.value' => 'nullable|string|max:255',
+            // 'attributes.*.id' => 'integer',
             'documents' => 'nullable|array',
             'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip|max:10240',
             'documents.*.type' => 'nullable|string|max:255',
-            'documents.*.existing_file' => 'nullable|string', // Add this to your validation rules
-            'documents.*.id' => 'integer', // Add this to your validation rules
+            'documents.*.existing_file' => 'nullable|string',
+            'documents.*.id' => 'integer',
         ]);
 
         // Update the product details
@@ -449,7 +205,7 @@ class ProductController extends Controller
             'description' => $validated['description'] ?? $product->description,
         ]);
 
-        // Handle images
+        // Handle images (similar to before)
         if ($request->hasFile('images')) {
             $newImages = [];
             foreach ($request->file('images') as $image) {
@@ -462,25 +218,46 @@ class ProductController extends Controller
             $product->save();
         }
 
-        // Preserve existing images if no new images are uploaded
-        if (!$request->hasFile('images') && $product->images) {
-            $product->images = $product->images;
-        }
-
-        // Handle attributes
+        // Handle attributes and short attributes
         if (isset($validated['attributes']) && !empty($validated['attributes'])) {
-            $product->attributes()->delete(); // Remove old attributes
             foreach ($validated['attributes'] as $attribute) {
+                // Check if the title and description are provided for the attribute
                 if (!empty($attribute['title']) && !empty($attribute['description'])) {
-                    $product->attributes()->create([
-                        'title' => $attribute['title'],
-                        'description' => $attribute['description'],
-                    ]);
+                    // Find the existing attribute by title or create a new one
+                    $createdAttribute = $product->attributes()->updateOrCreate(
+                        [
+                            'title' => $attribute['title'],
+                        ],
+                        [
+                            'description' => $attribute['description'],
+                        ]
+                    );
+
+                    if (isset($attribute['short_attributes']) && !empty($attribute['short_attributes'])) {
+                        foreach ($attribute['short_attributes'] as $shortAttribute) {
+                            if (!empty($shortAttribute['key']) && !empty($shortAttribute['value'])) {
+                                // Ensure we include the ID to uniquely identify the record if it exists
+                                $createdAttribute->shortAttributes()->updateOrCreate(
+                                    [
+                                        'id' => $shortAttribute['id'] ?? null, // Match on the ID if provided
+                                    ],
+                                    [
+                                        'key' => $shortAttribute['key'],
+                                        'value' => $shortAttribute['value'],
+                                    ]
+                                );
+                            }
+                        }
+                    }
+
                 }
             }
-        } else {
-            // Do nothing if no new attributes are provided
         }
+
+
+
+
+
 
         foreach ($validated['documents'] as $detail) {
             // Check if the document already exists in the database
@@ -514,6 +291,7 @@ class ProductController extends Controller
 
 
 
+        // return dd($existingAttribute);
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }

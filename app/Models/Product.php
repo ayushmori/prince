@@ -30,6 +30,7 @@ class Product extends Model
         return $this->hasMany(Attribute::class);
     }
 
+
     // Relationship with documents
     public function documents()
     {
@@ -49,4 +50,6 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'subcategory_id');
     }
+
+
 }
