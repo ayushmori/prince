@@ -33,6 +33,7 @@ Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 
 
 Route::get('/about-us', [FrontendController::class, 'aboutpage']);
 Route::get('/contact-us', [FrontendController::class, 'contactpage']);
+Route::get('/products', [FrontendController::class, 'products']);
 
 Route::get('/download', [FrontendController::class, 'download']);
 Route::post('/submit-form', [ContactUsController::class, 'submit']);

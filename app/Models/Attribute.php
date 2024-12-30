@@ -20,4 +20,8 @@ class Attribute extends Model
     {
         return $this->hasMany(ShortAttribute::class);
     }
+    public function short_attributes()
+{
+    return $this->hasMany(ShortAttribute::class);
+}
 }

@@ -144,7 +144,6 @@ class ProductController extends Controller
     }
 
 
-
     public function edit($id)
     {
         $product = Product::with('attributes', 'documents')->find($id);
@@ -249,7 +248,6 @@ class ProductController extends Controller
                             }
                         }
                     }
-
                 }
             }
         }
@@ -327,6 +325,7 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::with(['attributes', 'documents'])->findOrFail($id);
+
         return view('admin.product.show', compact('product'));
     }
 }

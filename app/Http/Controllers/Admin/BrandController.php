@@ -16,7 +16,7 @@ class BrandController extends Controller
         return view('admin.brands.index', compact('brands'));
 
     }
-    
+
 
     public function form($id = null)
     {
@@ -100,7 +100,7 @@ class BrandController extends Controller
         $brand->save();
         $existingSerialNumbers = Brand::orderBy('serial_number', 'asc')->pluck('serial_number')->toArray();
         $nextSerialNumber = $this->getNextAvailableSerialNumber($existingSerialNumbers);
-        return redirect()->route('brands.index')->with('message', $id ? 'Brand updated successfully!' : 'Brand created successfully!');
+        return redirect()->route('admin.brands.index')->with('message', $id ? 'Brand updated successfully!' : 'Brand created successfully!');
     }
 
 
@@ -111,7 +111,7 @@ class BrandController extends Controller
             Storage::delete('public/' . $brand->image);
         }
         $brand->delete();
-        return redirect()->route('brands.index')->with('error', 'Brand deleted successfully!');
+        return redirect()->route('admin.brands.index')->with('error', 'Brand deleted successfully!');
     }
 
 
