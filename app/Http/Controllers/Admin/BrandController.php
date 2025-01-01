@@ -65,7 +65,7 @@ class BrandController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Accepts only image files
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Accepts only image files
             'description' => 'nullable|string',
             'serial_number' => 'required|integer|unique:brands,serial_number,' . $id, // Ensure uniqueness, except for the current record (if editing)
         ]);

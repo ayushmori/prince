@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\MainDocumentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\DocumentController;
@@ -31,16 +32,21 @@ Route::get('/api/categories', [CategoryController::class, 'getCategories']);
 Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 'getChildren']);
 
 
+// Route::apiResource('main-documents', MainDocumentController::class);
+
+
 Route::get('/about-us', [FrontendController::class, 'aboutpage']);
 Route::get('/contact-us', [FrontendController::class, 'contactpage']);
 Route::get('/products', [FrontendController::class, 'products']);
 
-Route::get('/download', [FrontendController::class, 'download']);
+Route::get('/download', [FrontendController::class, 'download'])->name('dwld');
 Route::post('/submit-form', [ContactUsController::class, 'submit']);
 
 Route::get('/category/{categoryId}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
 Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/category/{id}/ancestors', [CategoryController::class, 'getAncestors']);
+
+
 
 
 Route::get('categories', [CategoryController::class, 'view'])->name('categories.view');
@@ -68,13 +74,40 @@ Route::get('admin/products/subcategories/{categoryId}', [ProductController::clas
 
 // <------------------------------------------Admin Middleware and Controllers-------------------------------------------------->//
 
+Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+    Route::get('/main-documents', [MainDocumentController::class, 'index'])->name('main-documents.index');  // To display the list or form
+    Route::get('/main-documents/create', [MainDocumentController::class, 'create'])->name('main-documents.create'); // For creating a new document form
+    Route::post('/main-documents', [MainDocumentController::class, 'store'])->name('main-documents.store');  // For storing the new document
+    Route::get('/main-documents/edit/{id}', [MainDocumentController::class, 'edit'])->name('main-documents.edit');
+    Route::put('/main-documents/update/{id}', [MainDocumentController::class, 'update'])->name('main-documents.update');
+    Route::delete('/main-documents/{id}', [MainDocumentController::class, 'destroy'])->name('admin.main-documents.destroy');
+
+    // Route::put('/main-documents/update/{id}', [MainDocumentController::class, 'update'])->name('main-documents.update');
+
+
+
+});
 
 
 Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+
+
+
+
+
+
     Route::get('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'about']);
     Route::post('settings/about-us', [App\Http\Controllers\Admin\AboutUsController::class, 'store']);
 
     Route::get('/contact-us', [App\Http\Controllers\Admin\ContactUsController::class, 'adminPanel']);
+
+
+
+
+
+
+    // main-document
+
 
 
 

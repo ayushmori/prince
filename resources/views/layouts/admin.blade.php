@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>@yield('title'){{ config('app.name', 'Laravel') }}</title>
 
     <!-- Google font-->
@@ -31,6 +31,7 @@
 
     <!-- Plugins CSS Start -->
     <link href="{{ asset('admin/css/vendors/scrollbar.css') }}" rel="stylesheet">
+    <link href="{{ asset('admin/css/vendors/datatables.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/vendors/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/vendors/chartist.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/css/vendors/date-picker.css') }}" rel="stylesheet">
@@ -88,9 +89,10 @@
 
 <!-- Sidebar JS -->
 <script src="{{ asset('admin/js/config.js') }}"></script>
-
 <!-- Plugins JS Start -->
 <script src="{{ asset('admin/js/sidebar-menu.js') }}"></script>
+<script src="{{ asset('admin/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
+
 <script src="{{ asset('admin/js/chart/chartist/chartist.js') }}"></script>
 <script src="{{ asset('admin/js/chart/chartist/chartist-plugin-tooltip.js') }}"></script>
 <script src="{{ asset('admin/js/chart/knob/knob.min.js') }}"></script>
@@ -108,6 +110,8 @@
 <script src="{{ asset('admin/js/typeahead/typeahead.custom.js') }}"></script>
 <script src="{{ asset('admin/js/typeahead-search/handlebars.js') }}"></script>
 <script src="{{ asset('admin/js/typeahead-search/typeahead-custom.js') }}"></script>
+<script src="{{ asset('admin/js/product-list-custom.js') }}"></script>
+
 <script src="{{ asset('admin/js/tooltip-init.js') }}"></script>
 <!-- Plugins JS End -->
 

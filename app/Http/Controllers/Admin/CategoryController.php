@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryFormRequest;
 
@@ -16,6 +17,45 @@ class CategoryController extends Controller
         $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
         return view('frontend.category.index', compact('categories'));
     }
+
+    public function getCategories()
+    {
+        // Fetch parent categories
+        $categories = Category::whereNull('parent_id')->get(); // Parent categories where parent_id is null
+
+        // Structure categories with information about whether they have children
+        $categories = $categories->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'has_children' => $category->children()->exists(),
+            ];
+        });
+
+        return response()->json(['categories' => $categories]);
+    }
+
+    public function getChildren($categoryId)
+    {
+        // Find the category
+        $category = Category::find($categoryId);
+
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        // Fetch children of the category
+        $children = $category->children->map(function ($child) {
+            return [
+                'id' => $child->id,
+                'name' => $child->name,
+                'has_children' => $child->children()->exists(),
+            ];
+        });
+
+        return response()->json(['children' => $children]);
+    }
+
 
 
 
@@ -73,23 +113,22 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('message', 'Category added successfully!');
     }
 
-
-
     // Show the category editing form
-    public function edit(Product $product)
+    public function edit(Category $category)
     {
-        // Get all categories
-        $categories = Category::whereNull('parent_id')->get();  // Get parent categories only
-        $subcategories = [];
+        // Retrieve the parent categories, including their children
+        $parentCategories = Category::with('children')->whereNull('parent_id')->get();
 
-        // Get the subcategories for the selected category (if editing an existing product)
-        if ($product->category_id) {
-            $category = Category::find($product->category_id);
-            $subcategories = $category ? $category->children : []; // Get subcategories (children) of the selected category
+        if ($parentCategories->isEmpty()) {
+            // Handle case where no parent categories are found
+            return redirect()->route('admin.categories.index')->with('error', 'No parent categories found.');
         }
 
-        return view('admin.product.edit', compact('product', 'categories', 'subcategories'));
+        // Return the edit view with the category and parentCategories data
+        return view('admin.category.edit', compact('category', 'parentCategories'));
     }
+
+
 
 
 
@@ -103,7 +142,7 @@ class CategoryController extends Controller
             'slug' => 'required|string|max:255',
             'description' => 'required|string',
             'serial_number' => 'required|unique:categories,serial_number,' . $category->id,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,avif|max:2048',
             'parent_id' => 'nullable|exists:categories,id',
         ]);
 
@@ -150,44 +189,4 @@ class CategoryController extends Controller
         // Redirect with success message
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
-
-    public function getCategories()
-{
-    // Fetch parent categories
-    $categories = Category::whereNull('parent_id')->get(); // Parent categories where parent_id is null
-
-    // Structure categories with information about whether they have children
-    $categories = $categories->map(function ($category) {
-        return [
-            'id' => $category->id,
-            'name' => $category->name,
-            'has_children' => $category->children()->exists(),
-        ];
-    });
-
-    return response()->json(['categories' => $categories]);
-}
-
-public function getChildren($categoryId)
-{
-    // Find the category
-    $category = Category::find($categoryId);
-
-    if (!$category) {
-        return response()->json(['error' => 'Category not found'], 404);
-    }
-
-    // Fetch children of the category
-    $children = $category->children->map(function ($child) {
-        return [
-            'id' => $child->id,
-            'name' => $child->name,
-            'has_children' => $child->children()->exists(),
-        ];
-    });
-
-    return response()->json(['children' => $children]);
-}
-
-
 }

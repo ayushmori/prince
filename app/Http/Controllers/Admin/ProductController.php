@@ -16,7 +16,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['attributes', 'documents'])->get();
+        $products = Product::with(['attributes', 'documents'])->paginate(10);
         return view('admin.product.index', compact('products'));
     }
 
@@ -161,7 +161,6 @@ class ProductController extends Controller
 
         return view('admin.product.edit', compact('product', 'brands', 'categories', 'nextSerialNumber', 'short'));
     }
-
 
 
     public function update(Request $request, $id)

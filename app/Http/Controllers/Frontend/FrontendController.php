@@ -22,6 +22,9 @@ class FrontendController extends Controller
         $children = $category->children()->with('children')->get();
         return response()->json($children);
     }
+    public function download(){
+        return view('frontend.pages.download');
+    }
 
     public function products()
     {

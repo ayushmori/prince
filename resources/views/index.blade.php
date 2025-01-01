@@ -76,7 +76,7 @@
 
 
 <div class="container">
-    {{-- <div class="container">
+    <div class="container">
         <h2 class="text-center mb-4">Categories</h2>
         <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -100,7 +100,7 @@
                                                 <div class="icon-container">
                                                     <img src="{{ asset('uploads/category/' . $category[$categoryIndex]->image) }}"
                                                         alt="{{ $category[$categoryIndex]->name }}"
-                                                        class="img-fluid rounded-circle" style="width: 100px; height: 100px;">
+                                                        class="img-fluid rounded-circle mx-2" style="width: 800px;border:8px dotted #000">
                                                 </div>
                                                 <h5>{{ $category[$categoryIndex]->name }}</h5>
                                             </div>
@@ -123,7 +123,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-    </div> --}}
+    </div>
 
 
     <div id="Controls" class="carousel slide mx-auto mt-4" style="max-hight: 100px; " data-bs-ride="carousel">
@@ -295,7 +295,7 @@
                         <img src="{{ asset('uploads/customer.jpg') }}" alt="" style="border-radius: 50%">
                         <h5 class="card-title mt-3 mt-3">Our Mission</h5>
                         <p class="card-text">
-                            Vashi Integrated Solutions (Formerly Vashi Electricals) has 
+                            Vashi Integrated Solutions (Formerly Vashi Electricals) has
                             a very transparent business policy and we have been working with them for our electrical needs.
                         </p>
                         <b>Siddharth Shah - Reliance</b>
@@ -310,7 +310,7 @@
                         <img src="{{ asset('uploads/c2.jpg') }}" style="border-radius: 50%">
                         <h5 class="card-title mt-3">Our Vision</h5>
                         <p class="card-text">
-                            Vashi Integrated Solutions (Formerly Vashi Electricals) is not a just a vendor but a valued business partner. 
+                            Vashi Integrated Solutions (Formerly Vashi Electricals) is not a just a vendor but a valued business partner.
                             We are very happy to associate with Vashi Electricals.
                         </p>
                         <b>Kiran Pawaskar - Sun Pharma</b>
@@ -325,7 +325,7 @@
                         <img src="{{ asset('uploads/c3.jpg') }}"style="border-radius: 50%">
                         <h5 class="card-title mt-3">Our Values</h5>
                         <p class="card-text">
-                            We are very much satisfied with Vashi Integrated Solutions (Formerly Vashi Electricals) 
+                            We are very much satisfied with Vashi Integrated Solutions (Formerly Vashi Electricals)
                             because of their swift service & commissioning of ABB Drives.
                         </p>
                         <b>Pradeep Pancholi - Swastik Techno Pack</b>

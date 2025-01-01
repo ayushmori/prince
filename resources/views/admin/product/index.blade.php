@@ -31,6 +31,11 @@
 
         <!-- Product Table -->
         <div class="card">
+            <div class="card-header">
+                <h5>Individual column searching (text inputs) </h5><span>The searching functionality provided by DataTables
+                    is useful for quickly search through the information in the table - however the search is global, and
+                    you may wish to present controls that search on specific columns.</span>
+            </div>
             <div class="card-body">
                 <!-- Success/Error Message -->
                 @if (session('message'))
@@ -46,82 +51,80 @@
                     </div>
                 @endif
 
-                <!-- Product Table -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Brand</th>
-                                <th>Serial Number</th>
-                                <th>Images</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($products as $product)
+                <div class="table-responsive product-table">
+                    <div id="basic-1_wrapper" class="dataTables_wrapper no-footer">
+                        <table class="display dataTable no-footer" id="basic-1" role="grid"
+                            aria-describedby="basic-1_info">
+                            <thead>
                                 <tr>
-                                    <td>{{ $product->id }}</td>
-                                    <td>{{ $product->name }}</td>
-                                    <td>${{ number_format($product->price, 2) }}</td>
-                                    <td>{{ $product->category->name ?? 'N/A' }}</td>
-                                    <td>{{ $product->brand->name ?? 'N/A' }}</td>
-                                    <td>{{ $product->serial_number }}</td>
-                                    <td>
-                                        @php
-                                            $images = json_decode(str_replace('\\', '/', $product->images), true);
-                                        @endphp
-
-                                        @if (!empty($images) && is_array($images))
-                                            @foreach ($images as $image)
-                                                @if (!empty($image))
-                                                    <img src="{{ url($image) }}" alt="Product Image"
-                                                        class="img-thumbnail" width="50" height="50">
-                                                @else
-                                                    <p>No image available for this entry.</p>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <p>No images available</p>
-                                        @endif
-
-
-
-
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm"
-                                            data-bs-toggle="tooltip" title="View">
-                                            <i class="bi bi-eye"></i> View
-                                        </a>
-                                        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm"
-                                            data-bs-toggle="tooltip" title="Edit">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </a>
-                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                            style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" data-bs-toggle="tooltip"
-                                                title="Delete"
-                                                onclick="return confirm('Are you sure you want to delete this product?')">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Brand</th>
+                                    <th>Serial Number</th>
+                                    <th>Images</th>
+                                    <th>Actions</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($products as $product)
+                                    <tr>
+                                        <td>{{ $product->id }}</td>
+                                        <td>{{ $product->name }}</td>
+                                        <td>${{ number_format($product->price, 2) }}</td>
+                                        <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                        <td>{{ $product->brand->name ?? 'N/A' }}</td>
+                                        <td>{{ $product->serial_number }}</td>
+                                        <td>
+                                            @php
+                                                $images = json_decode(str_replace('\\', '/', $product->images), true);
+                                            @endphp
+
+                                            @if (!empty($images) && is_array($images))
+                                                @foreach ($images as $image)
+                                                    @if (!empty($image))
+                                                        <img src="{{ url($image) }}" alt="Product Image"
+                                                            class="img-thumbnail" width="50" height="50">
+                                                    @else
+                                                        <p>No image available for this entry.</p>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <p>No images available</p>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                class="btn btn-info btn-sm" data-bs-toggle="tooltip" title="View">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                            <a href="{{ route('products.edit', $product->id) }}"
+                                                class="btn btn-warning btn-sm" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                style="display:inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="tooltip" title="Delete"
+                                                    onclick="return confirm('Are you sure you want to delete this product?')">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <div class="dataTables_paginate paging_simple_numbers">
+                            {{ $products->links() }}
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="mt-4">
-                    {{-- {{ $products->links() }} --}}
-                </div>
             </div>
         </div>
     </div>

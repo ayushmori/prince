@@ -104,6 +104,14 @@
               </ul>
             </li>
 
+
+            <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Documents</span></a>
+              <ul class="sidebar-submenu">
+                <li><a href="{{ url('admin/main-documents/create' )}}">Document-Add</a></li>
+                <li><a href="{{ url('admin/main-documents' )}}">Document-View</a></li>
+              </ul>
+            </li>
+
           </ul>
         </div>
         <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>

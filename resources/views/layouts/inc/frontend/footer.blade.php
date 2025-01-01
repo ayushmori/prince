@@ -3,17 +3,16 @@
         <div class="row">
             <!-- First Column -->
             <div class="col-sm-3">
-                <img src="{{ asset('assets/logoF.jpg') }}" class="img-responsive" alt="NeXT Solution">
+                <img src="{{ asset('assets/logoF.jpg') }}" class="img-fluid" alt="NeXT Solution">
                 <p>
-                    Founded in the year 2013. we "NeXT SOLUTION" is an ISO certified company in Rajkot,
-                    Gujarat.
+                    Founded in 2013, "NeXT SOLUTION" is an ISO certified company based in Rajkot, Gujarat.
                 </p>
             </div>
 
             <!-- Second Column -->
             <div class="col-sm-2">
-                <h3>Quick Link</h3>
-                <ul class="list">
+                <h3>Quick Links</h3>
+                <ul class="list-unstyled">
                     <li><a href="/">Home</a></li>
                     <li><a href="/about-us">About Us</a></li>
                     <li><a href="/contact-us">Contact Us</a></li>
@@ -21,42 +20,38 @@
                 </ul>
             </div>
 
-            <!-- Third Column (Top Brands) -->
+            <!-- Third Column (Categories) -->
             <div class="col-sm-2">
-                <h3>Top Category</h3>
-                <ul class="list">
+                <h3>Top Categories</h3>
+                <ul class="list-unstyled">
                     @foreach ($categories as $categoryItem)
                     <li>
-                        {{-- <a href="{{ url('/category/' . $categoryItem->slug) }}" class="btn btn-primary m-1"> --}}
-                            <a href="">
+                        <a href="{{ url('/category/' . $categoryItem->slug) }}">
                             {{ $categoryItem->name }}
-                            </a>
-                        {{-- </a> --}}
+                        </a>
                     </li>
-                @endforeach
-                </ul>
-            </div>
-
-            <!-- Fourth Column (Top Category) -->
-            <div class="col-sm-2">
-                <h3>Top Brand</h3>
-                <ul class="list">
-
-
-                    @foreach ($brands as $brand)
-                        <li>
-                            {{-- <a href="{{ url('/brand/' . $brand->slug) }}" class="btn btn-primary m-1"> --}}
-                                <a href="">
-                                {{ $brand->name }}
-                                </a>
-                            {{-- </a> --}}
-                        </li>
                     @endforeach
                 </ul>
             </div>
+
+            <!-- Fourth Column (Brands) -->
+            <div class="col-sm-2">
+                <h3>Top Brands</h3>
+                <ul class="list-unstyled">
+                    @foreach ($brands as $brand)
+                    <li>
+                        <a href="{{ url('/brand/' . $brand->slug) }}">
+                            {{ $brand->name }}
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <!-- Fifth Column (Contact Information) -->
             <div class="col-sm-2">
                 <h3>Contact Us</h3>
-                <ul class="address">
+                <ul class="address list-unstyled">
                     <li><i class="fas fa-mobile-alt"></i>
                         <p>+91 82005 01951</p>
                     </li>
@@ -66,35 +61,29 @@
 
                     <li>
                         <p>
-                            <i class="fas fa-map-marker"></i>
+                            <i class="fas fa-map-marker-alt"></i>
                             <span>Maruti Industrial Area,</span>
                             <span>Ramwadi 2, Rolex Road,</span>
                             <span>Near Maldhari Railway Crossing,</span>
                             <span>Rajkot-4, (Guj.-India)</span>
                         </p>
                     </li>
-
                 </ul>
             </div>
         </div>
 
-
         <!-- Social Media Links -->
-        <div class="float-end mx-5 px-5 py-2">
-            <a href="">
-                <i class="fab fa-facebook-f fa-2x mx-2"></i>
+        <div class="social-media-links text-end mt-4">
+            <a href="#" class="mx-2">
+                <i class="fab fa-facebook-f fa-2x"></i>
             </a>
-            <!-- Instagram -->
-            <a href="">
-                <i class="fab fa-instagram fa-2x mx-2"></i>
+            <a href="#" class="mx-2">
+                <i class="fab fa-instagram fa-2x"></i>
             </a>
-
-            <!-- Youtube -->
-            <a href="">
-                <i class="fab fa-youtube fa-2x mx-2"></i>
+            <a href="#" class="mx-2">
+                <i class="fab fa-youtube fa-2x"></i>
             </a>
         </div>
-
     </div>
 
     <div class="copyrights mt-4">
@@ -106,3 +95,30 @@
         </div>
     </div>
 </div>
+
+<style>
+    .footer {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.footer .container {
+    padding-left: 0;
+    padding-right: 0; /* Ensure the container fits within the viewport */
+}
+
+.footer .social-media-links {
+    margin-top: 15px;
+}
+
+.footer .list-unstyled {
+    padding-left: 0; /* Remove default padding */
+}
+
+@media (max-width: 768px) {
+    .footer .col-sm-3,
+    .footer .col-sm-2 {
+        margin-bottom: 20px; /* Add spacing between columns on smaller screens */
+    }
+}
+
+</style>
