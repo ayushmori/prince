@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Slider;
+use App\Models\MiniSlider;
+use App\Models\SecondSlider;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,5 +24,18 @@ class DashboardController extends Controller
     {
         // Admin dashboard view
         return view('admin.dashboard');
+    }
+
+    public function slider(){
+        $sliders = Slider::all();
+        $secondSlider = SecondSlider::all();
+        $minisiders = MiniSlider::all();
+
+        return view('admin.all-slider.all-slider',compact('sliders', 'minisiders','secondSlider'));
+    }
+
+    public function create()
+    {
+        return view('admin.all-slider.all-slider-create');
     }
 }

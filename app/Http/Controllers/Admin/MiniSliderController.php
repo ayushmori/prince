@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Models\Brand;
+use App\Models\Slider;
+use App\Models\Category;
 use App\Models\MiniSlider;
+use App\Models\SecondSlider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\SliderFormRequest;
-use App\Models\Brand;
-use App\Models\Category;
 
 class MiniSliderController extends Controller
 {
@@ -19,14 +21,20 @@ class MiniSliderController extends Controller
 
     public function view()
     {
-        // // Retrieve all sliders from the database
-        // $sliders = MiniSlider::all();
-        // $brand = Brand::all();
-        // $category = Category::all();
+        // Retrieve all sliders from the database
+        $sliders = Slider::all();
+        $brand = Brand::all();
+        $category =  Category::with('parentCategory')->whereNull('parent_id')->get();;
+        $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
+        $secondSlider = SecondSlider::all();
+        $minislider = MiniSlider::all();
 
-        // // Pass the sliders data to the view
-        // return view('index',compact('sliders','brand','category'));
+        // Pass the sliders data to the view
+        return view('index', compact('sliders', 'brand', 'category', 'secondSlider','minislider','categories'));
+
     }
+
+
 
 
 
@@ -57,7 +65,7 @@ class MiniSliderController extends Controller
             'status' => $validatedData['status'],
         ]);
 
-        return redirect('admin/minisiders')->with('message','Slider added Successfuly');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
 
@@ -91,7 +99,7 @@ class MiniSliderController extends Controller
             'status' => $validatedData['status'],
         ]);
 
-        return redirect('admin/minisiders')->with('message','Slider updated Successfuly');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
     public function destroy(MiniSlider $minisiders)
@@ -105,7 +113,7 @@ class MiniSliderController extends Controller
 
             $minisiders->delete();
 
-            return redirect()->route('admin.minisiders.index')->with('message', 'Slider deleted successfully');
+            return redirect('admin/all-slider')->with('message','Slider delete Successfuly');
         }
 
         return redirect()->route('admin.minisiders.index')->with('error', 'Something went wrong');

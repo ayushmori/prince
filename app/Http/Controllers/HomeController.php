@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Slider;
 use App\Models\Category;
+use App\Models\MiniSlider;
+use App\Models\SecondSlider;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,12 +28,20 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Retrieve all sliders from the database
         $sliders = Slider::all();
+        $brand = Brand::all();
+        $category =  Category::with('parentCategory')->whereNull('parent_id')->get();;
         $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
+        $secondSlider = SecondSlider::all();
+        $minislider = MiniSlider::all();
 
         // Pass the sliders data to the view
-        return view('index', compact('sliders', 'categories'));
+        return view('index', compact('sliders', 'brand', 'category', 'secondSlider','minislider','categories'));
+
     }
+
+
     public function show($id)
     {
 

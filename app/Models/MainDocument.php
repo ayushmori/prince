@@ -9,6 +9,8 @@ class MainDocument extends Model
 {
     use HasFactory;
 
+    protected $table = 'main_documents';
+
     protected $fillable = [
         'product_id',
         'type',
@@ -18,8 +20,8 @@ class MainDocument extends Model
     ];
 
     public function product()
-{
-    return $this->belongsTo(Product::class, 'product_id');
-}
+    {
+        return $this->hasMany(Product::class, 'product_id');
+    }
 
 }

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Brand;
+use App\Models\Slider;
+use App\Models\Category;
+use App\Models\MiniSlider;
 use App\Models\SecondSlider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\SliderFormRequest;
-use App\Models\Brand;
-use App\Models\Category;
 
 class SecondSliderController extends Controller
 {
@@ -20,14 +22,20 @@ class SecondSliderController extends Controller
 
     public function view()
     {
-        // // Retrieve all sliders from the database
-        // $sliders = SecondSlider::all();
-        // $brand = Brand::all();
-        // $category = Category::all();
+        // Retrieve all sliders from the database
+        $sliders = Slider::all();
+        $brand = Brand::all();
+        $category =  Category::with('parentCategory')->whereNull('parent_id')->get();;
+        $categories = Category::with('parentCategory')->whereNull('parent_id')->get();
+        $secondSlider = SecondSlider::all();
+        $minislider = MiniSlider::all();
 
-        // // Pass the sliders data to the view
-        // return view('index',compact('sliders','brand','category'));
+        // Pass the sliders data to the view
+        return view('index', compact('sliders', 'brand', 'category', 'secondSlider','minislider','categories'));
+
     }
+
+
 
 
 
@@ -58,7 +66,7 @@ class SecondSliderController extends Controller
             'status' => $validatedData['status'],
         ]);
 
-        return redirect('admin/secondsliders')->with('message','Slider added Successfuly');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
 
@@ -92,7 +100,7 @@ class SecondSliderController extends Controller
             'status' => $validatedData['status'],
         ]);
 
-        return redirect('admin/secondsliders')->with('message','Slider updated Successfuly');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
     public function destroy(SecondSlider $secondSlider)
@@ -106,10 +114,10 @@ class SecondSliderController extends Controller
 
             $secondSlider->delete();
 
-            return redirect()->route('admin.secondsliders.index')->with('error', 'Slider deleted successfully');
+            return redirect('admin/all-slider')->with('message','Slider delete Successfuly');
         }
 
-        return redirect()->route('admin.secondsliders.index')->with('error', 'Something went wrong');
+
     }
 
 }

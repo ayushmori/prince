@@ -68,7 +68,7 @@ class SliderController extends Controller
             'status' => $validatedData['status'],
         ]);
 
-        return redirect('admin/sliders')->with('message','Slider added Successfuly');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
 
@@ -102,7 +102,7 @@ class SliderController extends Controller
             'status' => $validatedData['status'],
         ]);
 
-        return redirect('admin/sliders')->with('message','Slider updated Successfuly');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
     public function destroy(Slider $slider)
@@ -116,10 +116,10 @@ class SliderController extends Controller
 
             $slider->delete();
 
-            return redirect()->route('admin.sliders.index')->with('error', 'Slider deleted successfully');
+            return redirect('admin/all-slider')->with('message','Slider delete Successfuly');
         }
 
-        return redirect()->route('admin.sliders.index')->with('error', 'Something went wrong');
+        return redirect('admin/all-slider')->with('message','Slider added Successfuly');
     }
 
 

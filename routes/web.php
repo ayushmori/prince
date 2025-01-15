@@ -41,6 +41,11 @@ Route::get('/products', [FrontendController::class, 'products']);
 
 Route::get('/download', [FrontendController::class, 'download'])->name('dwld');
 Route::post('/submit-form', [ContactUsController::class, 'submit']);
+Route::get('/subcategory/{category_id}', [FrontendController::class, 'show'])->name('subcategory');
+Route::get('/categories', [FrontendController::class, 'view'])->name('categories.index');
+Route::get('/category/{id}', [FrontendController::class, 'show'])->name('category.show');
+Route::get('/get-children/{categoryId}', [FrontendController::class, 'getChildren']);
+
 
 Route::get('/category/{categoryId}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
 Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
@@ -146,6 +151,8 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
     });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/all-slider', [DashboardController::class, 'slider']);
+    Route::get('/all-slider/create', [DashboardController::class, 'create']);
 });
 
 

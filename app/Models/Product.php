@@ -31,7 +31,10 @@ class Product extends Model
     {
         return $this->hasMany(Attribute::class);
     }
-
+    public function mainDocuments()
+    {
+        return $this->hasMany(MainDocument::class, 'product_id');
+    }
 
     // Relationship with documents
     public function documents()
