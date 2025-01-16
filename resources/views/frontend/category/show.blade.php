@@ -59,32 +59,77 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div>  
             </div>
+            
         @else
-            <div class="container my-5">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card mb-4">
-                            <div class="card-header bg-primary text-white">
-                                <h5>Products</h5>
-                            </div>
-                            <div class="card-body">
-                                <h6>Category Products</h6>
-                                <ul class="list-unstyled">
-                                    @forelse($category->products as $product)
-                                        <li>
-                                            <strong>{{ $product->name }}</strong> -
-                                            ${{ number_format($product->price, 2) }}
-                                        </li>
-                                    @empty
-                                        <li class="text-muted">No products available in this category.</li>
-                                    @endforelse
-                                </ul>
-                            </div>
+
+       
+       
+
+        <div class="color">
+<div class="card-header text-white">
+  <h5 style="font-size:30px; padding-top:10px; padding-bottom:10px;">Products</h5>
+</div>
+</div>
+
+  <div class="row">
+    
+  <div class="container my-5">
+        <div class="row">
+        <div class="col-md-3">
+        <h1 class="">{{ $category->name }}</h1>
+        <div class="card">
+                        <div class="card-header">
+                            <h5>Filters</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6> Category Product</h6>
+                           
+                            <ul class="list-unstyled">
+                                @foreach ($category->products as $product)
+                                    <li><input type="checkbox" id="filter1"> <label
+                                            for="filter1">{{ $product->name }}</label></li>
+                                @endforeach
+                            </ul>
+                
                         </div>
                     </div>
                 </div>
+             
+  
+      @forelse($category->products as $product)
+          <div class="col-md-3 mb-4">
+              <div class="card">
+                  @php
+                  $images = json_decode(str_replace('\\', '/', $product->images), true);
+              @endphp
+
+              @if (!empty($images) && is_array($images))
+                  @foreach ($images as $image)
+                      @if (!empty($image))
+                          <img src="{{ url($image) }}" alt="Product Image" class="img-thumbnail">
+                      @else
+                          <p>No image available for this entry.</p>
+                      @endif
+                  @endforeach
+              @else
+                  <p>No images available</p>
+              @endif
+                  <div class="card-body">
+                      <h5 class="card-title">{{ $product->name }}</h5>
+                      <p class="card-text">
+                          <strong>Price:</strong>
+                          <span class="text-danger">${{ number_format($product->price, 2) }}</span>
+                         
+                      </p>
+                      <a href="#" class="btn btn-primary">View Products</a>
+                  </div>
+              </div>
+          </div>
+      @endforeach
+  </div>
+</div>
 
                 <div class="row align-items-center">
                     <div class="col-md-6">
@@ -93,7 +138,7 @@
                         <p class="text-muted mb-1"><strong>Slug:</strong> {{ $category->slug }}</p>
                         <p>{{ $category->description }}</p>
                         <div class="d-flex mt-3">
-                            <a href="#" class="btn btn-sm btn-primary mx-1">Contact Support</a>
+                            <a href="#" class="btn btn-sm mx-1 text-white" style="background-color: #2561a8;">Contact Support</a>
                             <a href="#" class="btn btn-sm btn-secondary">Contact Sales</a>
                         </div>
                     </div>
