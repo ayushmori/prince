@@ -79,16 +79,17 @@
 
 
 <!-- Sub Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="nav-link text-white fw-bold px-3 py-2 rounded d-flex align-items-center justify-content-center bg-primary"
+        <a class="nav-link text-white fw-bold px-3 py-2 rounded d-flex align-items-center justify-content-center"
             href="#" data-bs-toggle="modal" data-bs-target="#categoryModal"
             style="transition: background-color 0.3s ease;">
             Category <i class="bi bi-chevron-down ms-2"></i>
         </a>
+       
         <div class="container-fluid">
             <!-- Brand on New Line -->
-            <a class="nav-link text-white fw-bold px-3 py-2 rounded bg-primary" href="#"
+            <a class="nav-link text-white fw-bold px-3 py-2 rounded" href="#"
                 style="transition: background-color 0.3s ease;">
                 Brand
             </a>
@@ -304,6 +305,11 @@
     document.addEventListener('DOMContentLoaded', () => initializeCategories());
 </script>
 <style>
+
+    .navbar {
+        background-color:#2561a8;
+    }
+
     #breadcrumb-p {
         font-size: 16px;
         font-weight: bold;
@@ -351,7 +357,7 @@
     .modal-body {
         scrollbar-width: thin;
         /* Thinner scrollbar */
-        scrollbar-color: red #333;
+        scrollbar-color: #2561a8 #333;
         /* Red thumb and dark track */
     }
 
@@ -488,7 +494,7 @@
 
     /* Ensure modal header stays at the top */
     .modal-header {
-        background-color: #2973B9;
+        background-color: #2561a8;
         position: sticky;
         top: 0;
         z-index: 10;
