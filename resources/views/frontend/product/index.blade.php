@@ -11,7 +11,7 @@
                             <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text">
                                 <strong>Price:</strong> ${{ number_format($product->price, 2) }}<br>
-                                <strong>Brand:</strong> {{ $product->brand->name }}<br>
+                                
                                 <strong>Category:</strong> {{ $product->category->name }}
                             </p>
                         </div>
@@ -33,7 +33,7 @@
                         @endif
 
                         <div class="card-footer text-center">
-                            <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary">View Details</a>
+                            <a href="{{ url('/product', $product->id) }}" class="btn btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>

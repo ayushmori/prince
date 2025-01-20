@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+
+    
     public function index()
     {
         $products = Product::with(['attributes', 'documents'])->paginate(10);

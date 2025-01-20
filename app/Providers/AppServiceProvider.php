@@ -7,7 +7,7 @@ use App\Models\Category;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-
+use Livewire\Livewire;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -43,5 +43,9 @@ class AppServiceProvider extends ServiceProvider
         // If you need to share all categories with all views, this can be done
         // directly as we already shared a limited set of categories above.
         View::share('allCategories', Category::with('parentCategory')->whereNull('parent_id')->get());
+
+        Livewire::component('products', \App\Http\Livewire\Products::class);
     }
+
+   
 }

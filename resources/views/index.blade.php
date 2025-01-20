@@ -10,86 +10,214 @@
         @foreach ($sliders as $key => $sliderItem)
             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                 @if ($sliderItem->image)
-                    <img src="{{ asset('/uploads/slider/' . $sliderItem->image) }}" class="d-block w-100" alt="Image">
+                    <img src="{{ asset('/uploads/slider/' . $sliderItem->image) }}" class="d-block w-100" alt="Image" height="600px;">
                 @endif
             </div>
         @endforeach
     </div>
 </div>
 
-@if (isset($brand) && $brand->count() > 0)
-    <div id="imageCarousel" class="carousel slide mx-auto" data-bs-ride="carousel" data-bs-interval="2000" data-bs-wrap="true">
-        <div class="carousel-inner">
-            @php
-                $totalImages = $brand->count();
-                $slidesToShow = ceil($totalImages / 2);
-            @endphp
 
-            @for ($i = 0; $i < $slidesToShow; $i++)
-                <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            @for ($j = 0; $j < 2; $j++)
-                                @php
-                                    $imageIndex = $i * 2 + $j;
-                                @endphp
-                                @if ($imageIndex < $totalImages)
-                                    <div class="col-6">
-                                        <img src="{{ asset($brand[$imageIndex]->image) }}" alt="Image {{ $imageIndex + 1 }}" class="img-fluid w-100" style="object-fit: contain; height:350px; border-radius: 5px;">
-                                    </div>
-                                @endif
-                            @endfor
+
+
+
+
+@if (isset($brand) && $brand->count() > 0)
+    <div class="container brand-container my-5">
+        <div id="animated-brands">
+            @foreach($brand->chunk(2) as $key => $pair)
+                <div class="row image-pair {{ $key == 0 ? 'active' : '' }}">
+                    @foreach($pair as $index => $item)
+                        <div class="col-6">
+                            <img src="{{ asset($item->image) }}"
+                                 alt="Brand Image"
+                                 class="img-fluid w-100 brand-image {{ $index % 2 == 0 ? 'slide-left' : 'slide-right' }}"
+                                 style="object-fit: contain; height:350px; border-radius: 5px;">
                         </div>
-                    </div>
+                    @endforeach
                 </div>
-            @endfor
+            @endforeach
         </div>
     </div>
+
+    <style>
+        .brand-container {
+            overflow: hidden;
+        }
+        .image-pair {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .image-pair.active {
+            display: flex;
+            opacity: 1;
+        }
+        .brand-image {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        .brand-image.slide-right {
+            transform: translateX(100%);
+        }
+        .image-pair.active .brand-image {
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+        .image-pair.active .slide-left {
+            animation-name: slideFromLeft;
+        }
+        .image-pair.active .slide-right {
+            animation-name: slideFromRight;
+        }
+        @keyframes slideFromLeft {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideFromRight {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imagePairs = document.querySelectorAll('.image-pair');
+            let currentIndex = 0;
+
+            function showNextPair() {
+                // Hide current pair
+                imagePairs[currentIndex].classList.remove('active');
+
+                // Reset animations for current pair
+                const currentImages = imagePairs[currentIndex].querySelectorAll('.brand-image');
+                currentImages.forEach(img => {
+                    img.style.opacity = '0';
+                    img.style.transform = img.classList.contains('slide-left') ? 'translateX(-100%)' : 'translateX(100%)';
+                });
+
+                // Move to next pair
+                currentIndex = (currentIndex + 1) % imagePairs.length;
+
+                // Show new pair
+                imagePairs[currentIndex].classList.add('active');
+            }
+
+            // Start the loop
+            setInterval(showNextPair, 4000);
+        });
+    </script>
 @else
     <div class="text-center py-5">
         <h5 class="text-muted">No images available</h5>
     </div>
 @endif
 
+
+
+
 <div class="container">
     <h2 class="text-center mb-4">Categories</h2>
-    <div id="categoryCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @php
-                $totalCategories = $category->count();
-                $slidesToShow = ceil($totalCategories / 6);
-            @endphp
-
-            @for ($i = 0; $i < $slidesToShow; $i++)
-                <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-                    <div class="container">
-                        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-4">
-                            @for ($j = 0; $j < 6; $j++)
-                                @php
-                                    $categoryIndex = $i * 6 + $j;
-                                @endphp
-                                @if (isset($category[$categoryIndex]))
-                                    <div class="col">
-                                        <div class="category-item text-center">
-                                            <div class="icon-container">
-                                                <a href="{{ route('subcategory', ['category_id' => $category[$categoryIndex]->id]) }}">
-                                                    <img src="{{ asset('uploads/category/' . $category[$categoryIndex]->image) }}" alt="{{ $category[$categoryIndex]->name }}" class="img-fluid rounded-circle mx-2" style="width: 800px; border:8px dotted #000">
-                                                </a>
-                                            </div>
-                                            <h5>{{ $category[$categoryIndex]->name }}</h5>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endfor
-                        </div>
+    <div class="categories-slider">
+        <div class="categories-track">
+            @foreach($category as $cat)
+                <div class="category-item text-center">
+                    <div class="icon-container">
+                        <a href="{{ route('subcategory', ['category_id' => $cat->id]) }}">
+                            <img src="{{ asset('uploads/category/' . $cat->image) }}"
+                                 alt="{{ $cat->name }}"
+                                 class="img-fluid rounded-circle mx-2"
+                                 style="width: 150px; height: 150px;">
+                        </a>
                     </div>
+                    <h5 style="word-wrap:wrap;width:200px">{{ $cat->name }}</h5>
                 </div>
-            @endfor
+            @endforeach
+            
         </div>
     </div>
 </div>
 
-<div id="Controls" class="carousel slide mx-auto mt-4" style="max-hight: 100px;" data-bs-ride="carousel" data-bs-interval="3000">
+<style>
+    .brand-container {
+        overflow: hidden;
+    }
+    .image-pair {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+    .image-pair.active {
+        display: flex;
+        opacity: 1;
+    }
+    .brand-image {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    .brand-image.slide-right {
+        transform: translateX(100%);
+    }
+    .image-pair.active .brand-image {
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+    .image-pair.active .slide-left {
+        animation-name: slideFromLeft;
+    }
+    .image-pair.active .slide-right {
+        animation-name: slideFromRight;
+    }
+    @keyframes slideFromLeft {
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideFromRight {
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    .categories-slider {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0;
+    }
+
+    .categories-track {
+        display: flex;
+        width: fit-content;
+        animation: scroll 40s linear infinite;
+    }
+
+    .category-item {
+        flex: 0 0 auto;
+        padding: 0 20px;
+    }
+
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* Pause animation on hover */
+    .categories-track:hover {
+        animation-play-state: paused;
+    }
+</style>
+
+<div id="Controls" class="carousel slide mx-auto mt-4" style="hight: 100px;" data-bs-ride="carousel" data-bs-interval="3000">
     <div class="carousel-inner">
         @foreach ($secondSlider as $key => $sliderItem)
             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
@@ -270,7 +398,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
+
+          
 
             <div id="silder" class="carousel slide mx-auto" data-bs-ride="carousel" data-bs-interval="5000">
 

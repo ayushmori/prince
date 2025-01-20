@@ -19,6 +19,10 @@ use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Admin\SecondSliderController;
 
 Auth::routes();
+use App\Http\Livewire\Products;
+
+Route::get('/products', Products::class);
+ 
 
 
 
@@ -34,6 +38,7 @@ Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 
 
 // Route::apiResource('main-documents', MainDocumentController::class);
 
+Route::get('/product/{id}', [FrontendController::class, 'showProduct']);
 
 Route::get('/about-us', [FrontendController::class, 'aboutpage']);
 Route::get('/contact-us', [FrontendController::class, 'contactpage']);

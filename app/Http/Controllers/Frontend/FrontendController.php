@@ -9,6 +9,13 @@ use App\Http\Controllers\Controller;
 
 class FrontendController extends Controller
 {
+
+    public function showProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('frontend.product.show', compact('product'));
+    }
+
     public function aboutpage()
     {
         return view('frontend.pages.about-us');

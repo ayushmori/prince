@@ -7,70 +7,15 @@
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <style>
-            .category-box,
-            .subcategory-box {
-                padding: 15px;
-                margin: 10px 0;
-                cursor: pointer;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .category-box:hover,
-            .subcategory-box:hover {
-                background-color: #f0f0f0;
-            }
-
-            .category-container,
-            .subcategory-container {
-                height: 300px;
-                overflow-y: auto;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                padding: 10px;
-                background-color: #f9f9f9;
-            }
-
-            .subcategory-container {
-                min-width: 200px;
-            }
-
-            /* Flexbox for scrollable horizontal layout */
-            .d-flex {
-                gap: 20px;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
-            .modal-backdrop.show {
-                background-color: rgba(0, 0, 0, 0.5);
-                /* Black with 50% opacity */
-            }
-
-            /* Modal Content Position and Styling */
-            .modal-content {
-                top: 120px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                /* Optional shadow for better visibility */
-            }
-        </style>
-
-        <!-- Button to Open Modal -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
-            Open Categories
-        </button>
+       
 
         <!-- Modal -->
-        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="categoryModalLabel">Categories</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                       
                     </div>
                     <div class="modal-body">
                         <!-- Categories Layout -->
