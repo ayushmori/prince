@@ -24,6 +24,8 @@
 
     <!-- Include Bootstrap Bundle (includes Popper.js) -->
 
+    <!-- jQuery must be loaded first -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Owl Carousel -->
     <link href="<?php echo e(asset('assets/css/owl.carousel.min.css')); ?>" rel="stylesheet">
@@ -31,6 +33,7 @@
 
     <!-- exzoom product image -->
     <link href="<?php echo e(asset('assets/exzoom/jquery.exzoom.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/exzoom/product-zoom.css')); ?>" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="<?php echo e(asset('assets/css/custom.css')); ?>" rel="stylesheet">
@@ -124,6 +127,7 @@
 
 
     <?php echo $__env->yieldPushContent('script'); ?>
+
 
 </body>
 
