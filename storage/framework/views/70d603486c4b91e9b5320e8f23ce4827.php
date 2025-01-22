@@ -3,7 +3,7 @@
         <div class="row">
             <!-- First Column: About Us -->
             <div class="col-md-3">
-                <img src="{{ asset('assets/logoF.jpg') }}" class="img-fluid logo-img" alt="NeXT Solution">
+                <img src="<?php echo e(asset('assets/logoF.jpg')); ?>" class="img-fluid logo-img" alt="NeXT Solution">
                 <p>
                     Founded in 2013, "NeXT SOLUTION" is an ISO-certified company based in Rajkot, Gujarat.
                 </p>
@@ -24,17 +24,18 @@
             <div class="col-md-2 text-center">
                 <h5 class="text-white">Top Categories</h5>
                 <ul class="list-unstyled">
-                    @if ($categories->isEmpty())
+                    <?php if($categories->isEmpty()): ?>
                         <li>No categories available.</li>
-                    @else
-                        @foreach ($categories as $categoryItem)
+                    <?php else: ?>
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $categoryItem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <li>
-                                <a href="{{ url('/category/' . $categoryItem->slug) }}" class="text-light">
-                                    {{ $categoryItem->name }}
+                                <a href="<?php echo e(url('/category/' . $categoryItem->slug)); ?>" class="text-light">
+                                    <?php echo e($categoryItem->name); ?>
+
                                 </a>
                             </li>
-                        @endforeach
-                    @endif
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endif; ?>
                 </ul>
             </div>
 
@@ -42,17 +43,18 @@
             <div class="col-md-2 text-center">
                 <h5 class="text-white">Top Brands</h5>
                 <ul class="list-unstyled">
-                    @if ($brands->isEmpty())
+                    <?php if($brands->isEmpty()): ?>
                         <li>No brands available.</li>
-                    @else
-                        @foreach ($brands as $brand)
+                    <?php else: ?>
+                        <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <li>
-                                <a href="{{ url('/brand/' . $brand->slug) }}" class="text-light">
-                                    {{ $brand->name }}
+                                <a href="<?php echo e(url('/brand/' . $brand->slug)); ?>" class="text-light">
+                                    <?php echo e($brand->name); ?>
+
                                 </a>
                             </li>
-                        @endforeach
-                    @endif
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endif; ?>
                 </ul>
             </div>
 
@@ -89,3 +91,4 @@
         </p>
     </div>
 </div>
+<?php /**PATH D:\kaushik\project\group-project-main\resources\views/layouts/inc/frontend/footer.blade.php ENDPATH**/ ?>

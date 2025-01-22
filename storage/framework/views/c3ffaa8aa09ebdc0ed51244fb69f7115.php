@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'About Us'); ?>
 
-@section('title', 'About Us')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container my-5">
         <div class="row ">
             <!-- Map Section -->
@@ -22,8 +20,8 @@
                     <h1 class="title text-center text-primary">Contact Us</h1>
                     <h2 class="subtitle text-center text-muted">We are here to assist you.</h2>
 
-                    <form action="{{ url('/submit-form') }}" method="POST">
-                        @csrf
+                    <form action="<?php echo e(url('/submit-form')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
                         <!-- Name Input -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Your Name</label>
@@ -51,4 +49,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\kaushik\project\group-project-main\resources\views/frontend/pages/contact-us.blade.php ENDPATH**/ ?>
