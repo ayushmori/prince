@@ -2,17 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Product;
-
-
-
 
 
 class Products extends Component
 {
-    
+
     use WithFileUploads;
 
     public $name, $price, $image, $products;

@@ -7,15 +7,15 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Document;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use App\Http\Controllers\Controller;
 use App\Models\ShortAttribute;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
 
-    
+
     public function index()
     {
         $products = Product::with(['attributes', 'documents'])->paginate(10);
@@ -94,7 +94,7 @@ class ProductController extends Controller
                 $image->move(public_path('product_images'), $imageName);
                 $images[] = 'product_images/' . $imageName;
             }
-            $product->images = json_encode($images);
+            $product->images;
             $product->save();
         }
 
