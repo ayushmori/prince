@@ -1,13 +1,12 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', $product->name); ?>
 
-@section('title', $product->name)
-
-@section('content')
-<link href="{{ asset('assets/css/product.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/exzoom/jquery.exzoom.css') }}" rel="stylesheet">
+<?php $__env->startSection('content'); ?>
+<link href="<?php echo e(asset('assets/css/product.css')); ?>" rel="stylesheet">
+<link href="<?php echo e(asset('assets/exzoom/jquery.exzoom.css')); ?>" rel="stylesheet">
 
 <p class="product-path text-muted mt-3 ms-3">
-    Home / {{$product->category->name}} / {{$product->name}}
+    Home / <?php echo e($product->category->name); ?> / <?php echo e($product->name); ?>
+
 </p>
 
 <main class="product-page">
@@ -18,18 +17,18 @@
                 <!-- Product Image Section -->
                 <div class="col-md-5 mt-3">
                     <div class="product-images bg-white border">
-                        @if($product->images)
+                        <?php if($product->images): ?>
                             <div class="exzoom" id="exzoom">
                                 <div class="exzoom_img_box">
                                     <ul class='exzoom_img_ul'>
-                                        @php
+                                        <?php
                                             $images = json_decode(str_replace('\\', '/', $product->images), true);
-                                        @endphp
-                                        @foreach ($images ?? [] as $image)
-                                            @if (!empty($image))
-                                                <li><img class="w-100 h-100" src="{{ asset($image) }}" alt="Product Image" /></li>
-                                            @endif
-                                        @endforeach
+                                        ?>
+                                        <?php $__currentLoopData = $images ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if(!empty($image)): ?>
+                                                <li><img class="w-100 h-100" src="<?php echo e(asset($image)); ?>" alt="Product Image" /></li>
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 </div>
                                 <div class="exzoom_nav"></div>
@@ -38,59 +37,59 @@
                                     <a href="javascript:void(0);" class="exzoom_next_btn">&gt;</a>
                                 </p>
                             </div>
-                        @else
+                        <?php else: ?>
                             <div class="text-center p-4">
                                 No Image Available
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- Product Details Section -->
                 <div class="col-md-7 mt-3">
                     <div class="product-details">
-                        <h2 class="product-name">{{ $product->name }}</h2>
+                        <h2 class="product-name"><?php echo e($product->name); ?></h2>
                         <hr>
 
                         <!-- Breadcrumb Navigation -->
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ url('/category/'.$product->category->slug) }}">{{ $product->category->name }}</a></li>
-                                <li class="breadcrumb-item active">{{ $product->name }}</li>
+                                <li class="breadcrumb-item"><a href="<?php echo e(url('/category/'.$product->category->slug)); ?>"><?php echo e($product->category->name); ?></a></li>
+                                <li class="breadcrumb-item active"><?php echo e($product->name); ?></li>
                             </ol>
                         </nav>
 
                         <!-- Pricing Section -->
                         <div class="mb-3">
-                            <span class="selling-price h4 text-success">${{ number_format($product->selling_price, 2) }}</span>
-                            @if($product->original_price > $product->selling_price)
-                                <span class="original-price text-muted text-decoration-line-through">${{ number_format($product->original_price, 2) }}</span>
+                            <span class="selling-price h4 text-success">$<?php echo e(number_format($product->selling_price, 2)); ?></span>
+                            <?php if($product->original_price > $product->selling_price): ?>
+                                <span class="original-price text-muted text-decoration-line-through">$<?php echo e(number_format($product->original_price, 2)); ?></span>
                                 <span class="discount text-danger">
-                                    ({{ round((($product->original_price - $product->selling_price) / $product->original_price) * 100) }}% OFF)
+                                    (<?php echo e(round((($product->original_price - $product->selling_price) / $product->original_price) * 100)); ?>% OFF)
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </div>
 
                         <!-- Stock Status -->
                         <div class="mb-3">
-                            @if($product->quantity > 0)
+                            <?php if($product->quantity > 0): ?>
                                 <span class="badge bg-success">In Stock</span>
-                            @else
+                            <?php else: ?>
                                 <span class="badge bg-danger">Out of Stock</span>
-                            @endif
+                            <?php endif; ?>
                         </div>
 
                         <!-- Product Description -->
                         <div class="mb-4">
                             <h5 class="mb-2">Description</h5>
-                            <p>{!! $product->description !!}</p>
+                            <p><?php echo $product->description; ?></p>
                         </div>
 
                         <!-- Product Serial Number -->
                         <div class="mb-3">
                             <h6>Serial Number</h6>
-                            <p>{{ $product->serial_number }}</p>
+                            <p><?php echo e($product->serial_number); ?></p>
                         </div>
 
                         <!-- Actions -->
@@ -109,11 +108,11 @@
         </div>
     </div>
 </main>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ asset('assets/exzoom/jquery.exzoom.js') }}"></script>
+<script src="<?php echo e(asset('assets/exzoom/jquery.exzoom.js')); ?>"></script>
 <style>
 ul {
     list-style-type: none;
@@ -134,4 +133,6 @@ ul {
         }
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\kaushik\project\group-project-main\resources\views/frontend/product/show.blade.php ENDPATH**/ ?>

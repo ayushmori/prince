@@ -22,8 +22,6 @@
     <!-- Include Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Include Bootstrap Bundle (includes Popper.js) -->
-
     <!-- jQuery must be loaded first -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -33,7 +31,6 @@
 
     <!-- exzoom product image -->
     <link href="{{ asset('assets/exzoom/jquery.exzoom.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/exzoom/product-zoom.css') }}" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="{{ asset('assets/css/custom.css') }}" rel="stylesheet">
@@ -107,7 +104,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-
     <!-- Glider.js -->
     <script src="https://cdn.jsdelivr.net/npm/glider-js@1.7.4/glider.min.js"></script>
 
@@ -119,14 +115,14 @@
     </script>
 
     @yield('scripts')
+    <script src="{{ asset('assets/exzoom/jquery.exzoom.js') }}"></script>
+
     @livewireScripts
     <livewire:styles />
     <livewire:scripts />
 
     @stack('script')
 
-
 </body>
-
 
 </html>
