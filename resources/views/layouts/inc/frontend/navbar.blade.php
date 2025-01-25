@@ -268,34 +268,27 @@
         });
     }
 
-
     function appendToContainer(container, id, name, clickHandler, hasChildren) {
         const box = document.createElement('div');
         box.className = 'subcategory-box d-flex align-items-center justify-content-between';
 
-        // Make the entire box clickable
-        box.onclick = () => {
-            if (!hasChildren) {
-                // If no children, navigate to the category link
-                window.location.href = `/category/${id}`;
-            } else {
-                // If there are children, execute the clickHandler (for subcategory expansion or similar)
-                clickHandler();
-            }
+        const nameElement = document.createElement('span');
+        nameElement.innerText = name;
+        nameElement.style.cursor = 'pointer';
+        nameElement.onclick = () => {
+            window.location.href = `/category/${id}`;
         };
 
-        if (!hasChildren) {
-            // Optionally, if you want to keep the link for visual styling purposes
-            const link = document.createElement('a');
-            link.href = `/category/${id}`;
-            link.innerText = name;
-            box.appendChild(link);
-        } else {
-            const textNode = document.createTextNode(name);
-            box.appendChild(textNode);
+        box.appendChild(nameElement);
 
+        if (hasChildren) {
             const icon = document.createElement('i');
             icon.className = 'fa fa-angle-right ms-2';
+            icon.style.cursor = 'pointer';
+            icon.onclick = (event) => {
+                event.stopPropagation();
+                clickHandler();
+            };
             box.appendChild(icon);
         }
 

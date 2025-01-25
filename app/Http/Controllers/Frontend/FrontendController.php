@@ -66,27 +66,6 @@ class FrontendController extends Controller
         return response()->json(['categories' => $categories]);
     }
 
-    // public function getChildren($categoryId)
-    // {
-    //     // Find category by ID
-    //     $category = Category::find($categoryId);
-
-    //     if (!$category) {
-    //         return response()->json(['error' => 'Category not found'], 404);
-    //     }
-
-    //     // Fetch the children of the given category
-    //     $children = $category->children->map(function ($child) {
-    //         return [
-    //             'id' => $child->id,
-    //             'name' => $child->name,
-    //             'has_children' => $child->children()->exists(),
-    //         ];
-    //     });
-
-    //     return response()->json(['children' => $children]);
-    // }
-
     public function index()
     {
         // Fetch parent categories with their children
@@ -96,14 +75,6 @@ class FrontendController extends Controller
 
     public function show($id)
     {
-        //     // Show category details for the frontend
-        //     $category = Category::findOrFail($id);  // Find the category by ID
-        //     $category = Category::with('products')->findOrFail($id);
-        //     $category = Category::with(['products.brand'])->findOrFail($id);
-        //     $category = Category::with(['products.mainDocuments', 'products.documents'])->findOrFail($id);
-        //     // $attributes = $category->attributes()->with('shortAttributes')->get();
-
-        //     return view('frontend.category.show', compact('category'));
 
         $category = Category::with([
             'products',

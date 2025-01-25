@@ -137,13 +137,13 @@
             <?php $__currentLoopData = $brand; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div style="width: 220px" class="category-item text-center">
                     <div class="icon-container">
-                        <a href="<?php echo e(route('subcategory', ['category_id' => $cat->id])); ?>">
+                        <a href="#">
                             <img src="<?php echo e(asset($b->image)); ?>" alt="<?php echo e($b->name); ?>"
                                  class="img-fluid rounded-circle mx-2"
                                  style="width: 150px; height: 150px;">
                         </a>
                     </div>
-                    <h5 class="mt-3" style="word-wrap: break-word; white-space:-moz-pre-wrap; white-space:pre-wrap"><?php echo e($cat->name); ?></h5>
+                    <h5 class="mt-3" style="word-wrap: break-word; white-space:-moz-pre-wrap; white-space:pre-wrap"><?php echo e($b->name); ?></h5>
                 </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
