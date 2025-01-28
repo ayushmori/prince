@@ -7,7 +7,11 @@
 <link href="{{ asset('assets/exzoom/jquery.exzoom.css') }}" rel="stylesheet">
 
 <p class="product-path text-muted mt-3 ms-3">
-    Home / {{$product->category->name}} / {{$product->name}}
+git     Products & Services
+    @foreach ($breadcrumb as $category)
+        > <a href="{{ url('/category', $category->id) }}">{{ $category->name }}</a>
+    @endforeach
+    > {{ $product->name }}
 </p>
 
 <main class="product-page">
@@ -52,29 +56,18 @@
                         <h2 class="product-name">{{ $product->name }}</h2>
                         <hr>
 
-                        <!-- Breadcrumb Navigation -->
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ url('/category/'.$product->category->slug) }}">{{ $product->category->name }}</a></li>
-                                <li class="breadcrumb-item active">{{ $product->name }}</li>
-                            </ol>
-                        </nav>
-
                         <!-- Pricing Section -->
                         <div class="mb-3">
-                            <span class="selling-price h4 text-success">${{ number_format($product->selling_price, 2) }}</span>
-                            @if($product->original_price > $product->selling_price)
-                                <span class="original-price text-muted text-decoration-line-through">${{ number_format($product->original_price, 2) }}</span>
-                                <span class="discount text-danger">
-                                    ({{ round((($product->original_price - $product->selling_price) / $product->original_price) * 100) }}% OFF)
-                                </span>
+                            @if(isset($product->price))
+                                <h3 class="text-primary">Price: ₹{{ $product->price }}</h3>
+                            @else
+                                <h3 class="text-primary">Price not available</h3>
                             @endif
                         </div>
 
                         <!-- Stock Status -->
                         <div class="mb-3">
-                            @if($product->quantity > 0)
+                            @if($product->stock > 0)
                                 <span class="badge bg-success">In Stock</span>
                             @else
                                 <span class="badge bg-danger">Out of Stock</span>

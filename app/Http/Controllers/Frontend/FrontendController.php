@@ -12,8 +12,20 @@ class FrontendController extends Controller
 
     public function showProduct($id)
     {
-        $product = Product::findOrFail($id);
-        return view('frontend.product.show', compact('product'));
+        $product = Product::with('category')->findOrFail($id);
+        $breadcrumb = $this->getBreadcrumb($product->category);
+
+        return view('frontend.product.show', compact('product', 'breadcrumb'));
+    }
+
+    private function getBreadcrumb($category)
+    {
+        $breadcrumb = [];
+        while ($category) {
+            array_unshift($breadcrumb, $category);
+            $category = $category->parent;
+        }
+        return $breadcrumb;
     }
 
     public function aboutpage()
@@ -75,17 +87,20 @@ class FrontendController extends Controller
 
     public function show($id)
     {
-
         $category = Category::with([
-            'products',
             'products.brand',
             'products.mainDocuments',
             'products.documents',
-            'products.attributes', // Load attributes for each product
-            'products.attributes.shortAttributes' // Load related shortAttributes for each attribute
+            'products.attributes',
+            'products.attributes.shortAttributes'
         ])->findOrFail($id);
 
-        // Pass the category to the view
-        return view('frontend.category.show', compact('category'));
+        // Get categories with parent_id equal to the current category's ID
+        $childCategories = Category::where('parent_id', $id)->get();
+
+        // Get unique brands from the current category's products
+        $relatedBrands = $category->products->pluck('brand')->filter()->unique();
+
+        return view('frontend.category.show', compact('category', 'relatedBrands', 'childCategories'));
     }
 }

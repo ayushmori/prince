@@ -9,54 +9,45 @@
             <div class="card mb-4">
                 <h5 class="card-header text-white fw-bold" style="background-color: #0d6efd;">Categories</h5>
                 <div class="card-body">
-                    @foreach ($categories as $cat)
-                        <div class="mb-2">
-                            <input 
-                                type="checkbox" 
-                                class="form-check-input me-2" 
-                                id="cat-{{ $cat->id }}" 
-                                onclick="filterCategory('{{ url('/category', $cat->id) }}', this)" 
-                                {{ request()->is('category/' . $cat->id) ? 'checked' : '' }} 
-                            >
-                            <label for="cat-{{ $cat->id }}" class="form-check-label">{{ $cat->name }}</label>
-
-                            <!-- Subcategories -->
-                            @if (isset($cat->subcategories) && $cat->subcategories->count() > 0)
-                                <div class="ms-3">
-                                    @foreach ($cat->subcategories as $subcat)
-                                        <div>
-                                            <input 
-                                                type="checkbox" 
-                                                class="form-check-input me-2" 
-                                                id="subcat-{{ $subcat->id }}" 
-                                                onclick="filterCategory('{{ url('/subcategory', $subcat->id) }}', this)" 
-                                                {{ request()->is('subcategory/' . $subcat->id) ? 'checked' : '' }} 
-                                            >
-                                            <label for="subcat-{{ $subcat->id }}" class="form-check-label">{{ $subcat->name }}</label>
-                                        </div>
-                                    @endforeach
+                    <!-- Show categories with parent_id equal to the current category's ID -->
+                    @if($childCategories && $childCategories->count() > 0)
+                        <div class="subcategories ms-3">
+                            @foreach($childCategories as $subcategory)
+                                <div class="mb-2">
+                                    <input type="checkbox"
+                                        class="form-check-input me-2 filter-checkbox"
+                                        name="category[]"
+                                        id="cat-{{ $subcategory->id }}"
+                                        onclick="filterCategory('{{ url('/category', $subcategory->id) }}', this)"
+                                        {{ request()->is('category/' . $subcategory->id) ? 'checked' : '' }}>
+                                    <label for="cat-{{ $subcategory->id }}" class="form-check-label">
+                                        {{ $subcategory->name }}
+                                    </label>
                                 </div>
-                            @endif
+                            @endforeach
                         </div>
-                    @endforeach
+                    @endif
                 </div>
             </div>
 
-            <!-- Filter by Brand -->
+            <!-- Brands Filter -->
             <div class="card mb-4">
                 <h5 class="card-header text-white fw-bold" style="background-color: #0d6efd;">Brands</h5>
                 <div class="card-body">
-                    @foreach ($brands as $brand)
-                        <div class="mb-2">
-                            <input 
-                                type="checkbox" 
-                                class="form-check-input me-2" 
-                                id="brand-{{ $brand->id }}" 
-                                onclick="filterCategory('{{ url('/brand', $brand->id) }}', this)" 
-                                {{ request()->is('brand/' . $brand->id) ? 'checked' : '' }} 
-                            >
-                            <label for="brand-{{ $brand->id }}" class="form-check-label">{{ $brand->name }}</label>
-                        </div>
+                    @foreach($relatedBrands as $brand)
+                        @if($brand) {{-- Check if brand exists --}}
+                            <div class="mb-2">
+                                <input type="checkbox"
+                                    class="form-check-input me-2 filter-checkbox"
+                                    name="brand[]"
+                                    id="brand-{{ $brand->id }}"
+                                    onclick="filterCategory('{{ url('/brand', $brand->id) }}', this)"
+                                    {{ request()->is('brand/' . $brand->id) ? 'checked' : '' }}>
+                                <label for="brand-{{ $brand->id }}" class="form-check-label">
+                                    {{ $brand->name }}
+                                </label>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>
