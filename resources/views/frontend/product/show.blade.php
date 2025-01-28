@@ -7,7 +7,7 @@
 <link href="{{ asset('assets/exzoom/jquery.exzoom.css') }}" rel="stylesheet">
 
 <p class="product-path text-muted mt-3 ms-3">
-    Products & Services
+git     Products & Services
     @foreach ($breadcrumb as $category)
         > <a href="{{ url('/category', $category->id) }}">{{ $category->name }}</a>
     @endforeach
