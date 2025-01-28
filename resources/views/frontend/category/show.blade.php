@@ -97,11 +97,15 @@
                                             <div class="card-body d-flex flex-column">
                                                 <h5 class="card-title">{{ $product->name }}</h5>
                                                 <p class="card-text">{{ $product->serial_number }}</p>
+                                                <p class="card-text"><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p> <!-- Add price here -->
                                                 <div class="mt-auto">
                                                     <a href="{{ url('/product', $product->id) }}" class="btn btn-primary mb-2">View Details</a>
                                                     <a href="#" class="btn btn-link">Documents</a>
                                                 </div>
                                             </div>
+
+
+                                    
                                         </div>
                                     </div>
                                 @endforeach

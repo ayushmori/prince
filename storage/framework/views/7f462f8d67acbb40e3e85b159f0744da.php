@@ -5,7 +5,11 @@
 <link href="<?php echo e(asset('assets/exzoom/jquery.exzoom.css')); ?>" rel="stylesheet">
 
 <p class="product-path text-muted mt-3 ms-3">
-    Home / <?php echo e($product->category->name); ?> / <?php echo e($product->name); ?>
+git     Products & Services
+    <?php $__currentLoopData = $breadcrumb; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        > <a href="<?php echo e(url('/category', $category->id)); ?>"><?php echo e($category->name); ?></a>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    > <?php echo e($product->name); ?>
 
 </p>
 
@@ -51,29 +55,18 @@
                         <h2 class="product-name"><?php echo e($product->name); ?></h2>
                         <hr>
 
-                        <!-- Breadcrumb Navigation -->
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                <li class="breadcrumb-item"><a href="<?php echo e(url('/category/'.$product->category->slug)); ?>"><?php echo e($product->category->name); ?></a></li>
-                                <li class="breadcrumb-item active"><?php echo e($product->name); ?></li>
-                            </ol>
-                        </nav>
-
                         <!-- Pricing Section -->
                         <div class="mb-3">
-                            <span class="selling-price h4 text-success">$<?php echo e(number_format($product->selling_price, 2)); ?></span>
-                            <?php if($product->original_price > $product->selling_price): ?>
-                                <span class="original-price text-muted text-decoration-line-through">$<?php echo e(number_format($product->original_price, 2)); ?></span>
-                                <span class="discount text-danger">
-                                    (<?php echo e(round((($product->original_price - $product->selling_price) / $product->original_price) * 100)); ?>% OFF)
-                                </span>
+                            <?php if(isset($product->price)): ?>
+                                <h3 class="text-primary">Price: ₹<?php echo e($product->price); ?></h3>
+                            <?php else: ?>
+                                <h3 class="text-primary">Price not available</h3>
                             <?php endif; ?>
                         </div>
 
                         <!-- Stock Status -->
                         <div class="mb-3">
-                            <?php if($product->quantity > 0): ?>
+                            <?php if($product->stock > 0): ?>
                                 <span class="badge bg-success">In Stock</span>
                             <?php else: ?>
                                 <span class="badge bg-danger">Out of Stock</span>

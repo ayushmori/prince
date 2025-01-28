@@ -7,54 +7,47 @@
             <div class="card mb-4">
                 <h5 class="card-header text-white fw-bold" style="background-color: #0d6efd;">Categories</h5>
                 <div class="card-body">
-                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="mb-2">
-                            <input 
-                                type="checkbox" 
-                                class="form-check-input me-2" 
-                                id="cat-<?php echo e($cat->id); ?>" 
-                                onclick="filterCategory('<?php echo e(url('/category', $cat->id)); ?>', this)" 
-                                <?php echo e(request()->is('category/' . $cat->id) ? 'checked' : ''); ?> 
-                            >
-                            <label for="cat-<?php echo e($cat->id); ?>" class="form-check-label"><?php echo e($cat->name); ?></label>
+                    <!-- Show categories with parent_id equal to the current category's ID -->
+                    <?php if($childCategories && $childCategories->count() > 0): ?>
+                        <div class="subcategories ms-3">
+                            <?php $__currentLoopData = $childCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div class="mb-2">
+                                    <input type="checkbox"
+                                        class="form-check-input me-2 filter-checkbox"
+                                        name="category[]"
+                                        id="cat-<?php echo e($subcategory->id); ?>"
+                                        onclick="filterCategory('<?php echo e(url('/category', $subcategory->id)); ?>', this)"
+                                        <?php echo e(request()->is('category/' . $subcategory->id) ? 'checked' : ''); ?>>
+                                    <label for="cat-<?php echo e($subcategory->id); ?>" class="form-check-label">
+                                        <?php echo e($subcategory->name); ?>
 
-                            <!-- Subcategories -->
-                            <?php if(isset($cat->subcategories) && $cat->subcategories->count() > 0): ?>
-                                <div class="ms-3">
-                                    <?php $__currentLoopData = $cat->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <div>
-                                            <input 
-                                                type="checkbox" 
-                                                class="form-check-input me-2" 
-                                                id="subcat-<?php echo e($subcat->id); ?>" 
-                                                onclick="filterCategory('<?php echo e(url('/subcategory', $subcat->id)); ?>', this)" 
-                                                <?php echo e(request()->is('subcategory/' . $subcat->id) ? 'checked' : ''); ?> 
-                                            >
-                                            <label for="subcat-<?php echo e($subcat->id); ?>" class="form-check-label"><?php echo e($subcat->name); ?></label>
-                                        </div>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </label>
                                 </div>
-                            <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Filter by Brand -->
+            <!-- Brands Filter -->
             <div class="card mb-4">
                 <h5 class="card-header text-white fw-bold" style="background-color: #0d6efd;">Brands</h5>
                 <div class="card-body">
-                    <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="mb-2">
-                            <input 
-                                type="checkbox" 
-                                class="form-check-input me-2" 
-                                id="brand-<?php echo e($brand->id); ?>" 
-                                onclick="filterCategory('<?php echo e(url('/brand', $brand->id)); ?>', this)" 
-                                <?php echo e(request()->is('brand/' . $brand->id) ? 'checked' : ''); ?> 
-                            >
-                            <label for="brand-<?php echo e($brand->id); ?>" class="form-check-label"><?php echo e($brand->name); ?></label>
-                        </div>
+                    <?php $__currentLoopData = $relatedBrands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if($brand): ?> 
+                            <div class="mb-2">
+                                <input type="checkbox"
+                                    class="form-check-input me-2 filter-checkbox"
+                                    name="brand[]"
+                                    id="brand-<?php echo e($brand->id); ?>"
+                                    onclick="filterCategory('<?php echo e(url('/brand', $brand->id)); ?>', this)"
+                                    <?php echo e(request()->is('brand/' . $brand->id) ? 'checked' : ''); ?>>
+                                <label for="brand-<?php echo e($brand->id); ?>" class="form-check-label">
+                                    <?php echo e($brand->name); ?>
+
+                                </label>
+                            </div>
+                        <?php endif; ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
@@ -104,11 +97,15 @@
                                             <div class="card-body d-flex flex-column">
                                                 <h5 class="card-title"><?php echo e($product->name); ?></h5>
                                                 <p class="card-text"><?php echo e($product->serial_number); ?></p>
+                                                <p class="card-text"><strong>Price:</strong> $<?php echo e(number_format($product->price, 2)); ?></p> <!-- Add price here -->
                                                 <div class="mt-auto">
                                                     <a href="<?php echo e(url('/product', $product->id)); ?>" class="btn btn-primary mb-2">View Details</a>
                                                     <a href="#" class="btn btn-link">Documents</a>
                                                 </div>
                                             </div>
+
+
+                                    
                                         </div>
                                     </div>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -130,4 +127,5 @@
 </script>
 
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\prince-project\group-project-main\resources\views/frontend/category/show.blade.php ENDPATH**/ ?>
