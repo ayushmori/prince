@@ -22,7 +22,7 @@ Auth::routes();
 use App\Http\Livewire\Products;
 
 Route::get('/products', Products::class);
- 
+
 
 
 
@@ -34,6 +34,7 @@ Route::get('news/{id}', [NewsController::class, 'newsview'])->name('newsview');
 Route::get('/', [SliderController::class, 'view'])->name('sliders');
 Route::get('/api/categories', [CategoryController::class, 'getCategories']);
 Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 'getChildren']);
+Route::get('/api/products', [FrontendController::class, 'filterProducts'])->name('products.filter');
 
 
 // Route::apiResource('main-documents', MainDocumentController::class);
@@ -52,9 +53,7 @@ Route::get('/category/{id}', [FrontendController::class, 'show'])->name('categor
 Route::get('/get-children/{categoryId}', [FrontendController::class, 'getChildren']);
 
 
-Route::get('/category/{categoryId}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
-Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
-Route::get('/category/{id}/ancestors', [CategoryController::class, 'getAncestors']);
+
 
 
 
@@ -64,7 +63,6 @@ Route::get('/category/{slug}', [CategoryController::class, 'viewSubcategory'])->
 
 
 Route::get('/category/{category}/children', [CategoryController::class, 'getChildren'])->name('categories.children');
-Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category.show');
 Route::get('/category/{id}/ancestors', [CategoryController::class, 'getAncestors']);
 Route::get('/admin/products/subcategories/{categoryId}', [CategoryController::class, 'getSubcategories']);
 
