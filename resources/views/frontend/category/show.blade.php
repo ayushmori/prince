@@ -73,39 +73,25 @@
 
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="product" data-bs-toggle="tab" data-bs-target="#product-tab-pane" type="button" role="tab" aria-controls="product-tab-pane" aria-selected="true" style="border-top:2px solid #2561a8">Product</button>
+                        <button class="nav-link active" id="categories" data-bs-toggle="tab" data-bs-target="#categories-tab-pane" type="button" role="tab" aria-controls="categories-tab-pane" aria-selected="true" style="border-top:2px solid #2561a8">Categories</button>
                     </li>
                 </ul>
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="product-tab-pane" role="tabpanel" aria-labelledby="product-tab" tabindex="0">
-                        <main class="product-list mt-4">
+                    <div class="tab-pane fade show active" id="categories-tab-pane" role="tabpanel" aria-labelledby="categories-tab" tabindex="0">
+                        <main class="category-list mt-4">
                             <div class="row row-cols-1 row-cols-md-3 g-4">
-                                @foreach ($category->products as $product)
+                                @foreach ($childCategories as $subcategory)
                                     <div class="col">
                                         <div class="card h-100">
-                                            @php
-                                                $images = json_decode(str_replace('\\', '/', $product->images), true);
-                                            @endphp
-
-                                            @if (!empty($images) && is_array($images))
-                                                <img src="{{ url($images[0]) }}" alt="Product Image" class="card-img-top" style="object-fit: cover; height: 200px;">
-                                            @else
-                                                <img src="{{ asset('images/placeholder.png') }}" alt="No Image" class="card-img-top" style="object-fit: cover; height: 200px;">
-                                            @endif
-
+                                            <img src="{{ asset('uploads/category/' . $subcategory->image) }}" alt="{{ $subcategory->name }}" class="card-img-top" style="object-fit: cover; height: 200px;">
                                             <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title">{{ $product->name }}</h5>
-                                                <p class="card-text">{{ $product->serial_number }}</p>
-                                                <p class="card-text"><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p> <!-- Add price here -->
+                                                <h5 class="card-title">{{ $subcategory->name }}</h5>
+                                                <p class="card-text">{{ $subcategory->description }}</p>
                                                 <div class="mt-auto">
-                                                    <a href="{{ url('/product', $product->id) }}" class="btn btn-primary mb-2">View Details</a>
-                                                    <a href="#" class="btn btn-link">Documents</a>
+                                                    <a href="{{ url('/category', $subcategory->id) }}" class="btn btn-primary mb-2">View Details</a>
                                                 </div>
                                             </div>
-
-
-                                    
                                         </div>
                                     </div>
                                 @endforeach

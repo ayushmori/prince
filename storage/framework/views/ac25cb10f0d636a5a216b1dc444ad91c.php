@@ -73,33 +73,23 @@
 
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="product" data-bs-toggle="tab" data-bs-target="#product-tab-pane" type="button" role="tab" aria-controls="product-tab-pane" aria-selected="true" style="border-top:2px solid #2561a8">Product</button>
+                        <button class="nav-link active" id="categories" data-bs-toggle="tab" data-bs-target="#categories-tab-pane" type="button" role="tab" aria-controls="categories-tab-pane" aria-selected="true" style="border-top:2px solid #2561a8">Categories</button>
                     </li>
                 </ul>
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="product-tab-pane" role="tabpanel" aria-labelledby="product-tab" tabindex="0">
-                        <main class="product-list mt-4">
+                    <div class="tab-pane fade show active" id="categories-tab-pane" role="tabpanel" aria-labelledby="categories-tab" tabindex="0">
+                        <main class="category-list mt-4">
                             <div class="row row-cols-1 row-cols-md-3 g-4">
-                                <?php $__currentLoopData = $category->products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php $__currentLoopData = $childCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="col">
                                         <div class="card h-100">
-                                            <?php
-                                                $images = json_decode(str_replace('\\', '/', $product->images), true);
-                                            ?>
-
-                                            <?php if(!empty($images) && is_array($images)): ?>
-                                                <img src="<?php echo e(url($images[0])); ?>" alt="Product Image" class="card-img-top" style="object-fit: cover; height: 200px;">
-                                            <?php else: ?>
-                                                <img src="<?php echo e(asset('images/placeholder.png')); ?>" alt="No Image" class="card-img-top" style="object-fit: cover; height: 200px;">
-                                            <?php endif; ?>
-
+                                            <img src="<?php echo e(asset('uploads/category/' . $subcategory->image)); ?>" alt="<?php echo e($subcategory->name); ?>" class="card-img-top" style="object-fit: cover; height: 200px;">
                                             <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title"><?php echo e($product->name); ?></h5>
-                                                <p class="card-text"><?php echo e($product->serial_number); ?></p>
+                                                <h5 class="card-title"><?php echo e($subcategory->name); ?></h5>
+                                                <p class="card-text"><?php echo e($subcategory->description); ?></p>
                                                 <div class="mt-auto">
-                                                    <a href="<?php echo e(url('/product', $product->id)); ?>" class="btn btn-primary mb-2">View Details</a>
-                                                    <a href="#" class="btn btn-link">Documents</a>
+                                                    <a href="<?php echo e(url('/category', $subcategory->id)); ?>" class="btn btn-primary mb-2">View Details</a>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,1 +1,0 @@
-<?php /**PATH C:\xampp\htdocs\liveProject\wetransfer_group-project-main-2-zip_2025-01-15_1212\group-project-main (2)\group-project-main\resources\views/frontend/product/show.blade.php ENDPATH**/ ?>
