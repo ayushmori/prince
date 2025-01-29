@@ -35,7 +35,7 @@ Route::get('/', [SliderController::class, 'view'])->name('sliders');
 Route::get('/api/categories', [CategoryController::class, 'getCategories']);
 Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 'getChildren']);
 Route::get('/api/products', [FrontendController::class, 'filterProducts'])->name('products.filter');
-
+Route::get('/api/subcategories', [FrontendController::class, 'filterSubcategories'])->name('categories.filter');
 
 // Route::apiResource('main-documents', MainDocumentController::class);
 

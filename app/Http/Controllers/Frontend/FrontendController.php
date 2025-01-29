@@ -101,6 +101,55 @@ class FrontendController extends Controller
         // Get unique brands from the current category's products
         $relatedBrands = $category->products->pluck('brand')->filter()->unique();
 
-        return view('frontend.category.show', compact('category', 'relatedBrands', 'childCategories'));
+        // Generate breadcrumb
+        $breadcrumb = $this->getBreadcrumb($category);
+
+        return view('frontend.category.show', compact('category', 'relatedBrands', 'childCategories', 'breadcrumb'));
+    }
+
+    public function filterProducts(Request $request)
+    {
+        $categories = $request->input('categories');
+        $brands = $request->input('brands');
+
+        $query = Product::query();
+
+        if ($categories) {
+            $categoryIds = explode(',', $categories);
+            $query->whereIn('category_id', $categoryIds);
+        }
+
+        if ($brands) {
+            $brandIds = explode(',', $brands);
+            $query->whereIn('brand_id', $brandIds);
+        }
+
+        $products = $query->with(['brand', 'category'])->get();
+
+        return response()->json(['products' => $products]);
+    }
+
+    public function filterSubcategories(Request $request)
+    {
+        $categories = $request->input('categories');
+        $brands = $request->input('brands');
+
+        $query = Category::query();
+
+        if ($categories) {
+            $categoryIds = explode(',', $categories);
+            $query->whereIn('id', $categoryIds);
+        }
+
+        if ($brands) {
+            $brandIds = explode(',', $brands);
+            $query->whereHas('products', function ($q) use ($brandIds) {
+                $q->whereIn('brand_id', $brandIds);
+            });
+        }
+
+        $subcategories = $query->get();
+
+        return response()->json(['subcategories' => $subcategories]);
     }
 }
