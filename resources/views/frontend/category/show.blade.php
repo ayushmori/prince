@@ -90,7 +90,7 @@
                 </ul>
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="categories-tab-pane" role="tabpanel" aria-labelledby="categories-tab" tabindex="0">
+                    {{-- <div class="tab-pane fade show active" id="categories-tab-pane" role="tabpanel" aria-labelledby="categories-tab" tabindex="0">
                         <main class="category-list mt-4">
                             <div class="row row-cols-1 row-cols-md-3 g-4" id="subcategory-list">
                                 @foreach ($childCategories as $subcategory)
@@ -109,7 +109,52 @@
                                 @endforeach
                             </div>
                         </main>
+                    </div> --}}
+
+
+                    <div class="tab-pane fade show active" id="categories-tab-pane" role="tabpanel" aria-labelledby="categories-tab" tabindex="0">
+                        <main class="category-list mt-4">
+                            <div class="row row-cols-1 row-cols-md-3 g-4" id="subcategory-list">
+                                @if($childCategories->count() > 0)
+                                    @foreach ($childCategories as $subcategory)
+                                        <div class="col">
+                                            <div class="card h-100">
+                                                <img src="{{ asset('uploads/category/' . $subcategory->image) }}" alt="{{ $subcategory->name }}" class="card-img-top" style="object-fit: cover; height: 200px;">
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">{{ $subcategory->name }}</h5>
+                                                    <p class="card-text">{{ $subcategory->description }}</p>
+                                                    <div class="mt-auto">
+                                                        <a href="{{ url('/category', $subcategory->id) }}" class="btn btn-primary mb-2">View Details</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                    
+                                {{-- If no subcategories exist, show the products of this category --}}
+                                @if($childCategories->count() == 0 && $category->products->count() > 0)
+                                    @foreach ($category->products as $product)
+                                        <div class="col">
+                                            <div class="card h-100">
+                                                <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}" class="card-img-top" style="object-fit: cover; height: 200px;">
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                                    <p class="card-text">{{ $product->serial_number }}</p>
+                                                    <p class="card-text"><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p>
+                                                    <div class="mt-auto">
+                                                        <a href="{{ url('/product', $product->id) }}" class="btn btn-primary mb-2">View Details</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                        </main>
                     </div>
+                    
+
                 </div>
             @else
                 <p>No category found.</p>
