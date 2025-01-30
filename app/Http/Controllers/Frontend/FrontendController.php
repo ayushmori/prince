@@ -104,6 +104,10 @@ class FrontendController extends Controller
         // Generate breadcrumb
         $breadcrumb = $this->getBreadcrumb($category);
 
+        if (request()->expectsJson()) {
+            return response()->json(['childCategories' => $childCategories]);
+        }
+
         return view('frontend.category.show', compact('category', 'relatedBrands', 'childCategories', 'breadcrumb'));
     }
 
@@ -133,15 +137,19 @@ class FrontendController extends Controller
     {
         $categories = $request->input('categories');
         $brands = $request->input('brands');
+        $parentId = $request->input('parent_id');
 
         $query = Category::query();
 
-        if ($categories) {
+        if ($categories && !empty($categories)) {
             $categoryIds = explode(',', $categories);
             $query->whereIn('id', $categoryIds);
+        } else if ($parentId) {
+            // If no categories selected, show subcategories of current category
+            $query->where('parent_id', $parentId);
         }
 
-        if ($brands) {
+        if ($brands && !empty($brands)) {
             $brandIds = explode(',', $brands);
             $query->whereHas('products', function ($q) use ($brandIds) {
                 $q->whereIn('brand_id', $brandIds);

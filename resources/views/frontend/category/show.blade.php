@@ -51,6 +51,11 @@
                     @endforeach
                 </div>
             </div>
+
+            <!-- Clear Filter Button -->
+            <div class="mb-4">
+                <button class="btn btn-secondary w-100" id="clear-filters">Clear Filters</button>
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -116,36 +121,72 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const checkboxes = document.querySelectorAll('.filter-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const selectedCategories = Array.from(document.querySelectorAll('input[name="category[]"]:checked')).map(cb => cb.value);
-                const selectedBrands = Array.from(document.querySelectorAll('input[name="brand[]"]:checked')).map(cb => cb.value);
+        const clearFiltersButton = document.getElementById('clear-filters');
+        const currentCategoryId = '{{ $category->id }}';
 
+        function updateSubcategoryDisplay() {
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="category[]"]:checked')).map(cb => cb.value);
+            const selectedBrands = Array.from(document.querySelectorAll('input[name="brand[]"]:checked')).map(cb => cb.value);
+
+            if (selectedCategories.length === 0 && selectedBrands.length === 0) {
+                // Show original subcategories of current category
+                loadSubcategoriesForCategory(currentCategoryId);
+            } else {
                 fetchFilteredSubcategories(selectedCategories, selectedBrands);
-            });
-        });
-    });
-
-    function fetchFilteredSubcategories(categories, brands) {
-        const url = new URL('{{ route("categories.filter") }}');
-        url.searchParams.append('categories', categories.join(','));
-        url.searchParams.append('brands', brands.join(','));
-
-        fetch(url, {
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             }
-        })
-        .then(response => response.json())
-        .then(data => {
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSubcategoryDisplay);
+        });
+
+        clearFiltersButton.addEventListener('click', function() {
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            loadSubcategoriesForCategory(currentCategoryId);
+        });
+
+        function loadSubcategoriesForCategory(categoryId) {
+            fetch(`/category/${categoryId}`, {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateSubcategoryList(data.childCategories);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function fetchFilteredSubcategories(categories, brands) {
+            const url = new URL('{{ route("categories.filter") }}');
+            url.searchParams.append('categories', categories.join(','));
+            url.searchParams.append('brands', brands.join(','));
+            url.searchParams.append('parent_id', currentCategoryId);
+
+            fetch(url, {
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateSubcategoryList(data.subcategories);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateSubcategoryList(subcategories) {
             const subcategoryList = document.getElementById('subcategory-list');
             subcategoryList.innerHTML = '';
 
-            data.subcategories.forEach(subcategory => {
+            subcategories.forEach(subcategory => {
                 const subcategoryCard = `
                     <div class="col">
                         <div class="card h-100">
-                            <img src="${subcategory.image}" alt="${subcategory.name}" class="card-img-top" style="object-fit: cover; height: 200px;">
+                            <img src="/uploads/category/${subcategory.image}" alt="${subcategory.name}" class="card-img-top" style="object-fit: cover; height: 200px;">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">${subcategory.name}</h5>
                                 <p class="card-text">${subcategory.description}</p>
@@ -158,9 +199,8 @@
                 `;
                 subcategoryList.insertAdjacentHTML('beforeend', subcategoryCard);
             });
-        })
-        .catch(error => console.error('Error fetching filtered subcategories:', error));
-    }
+        }
+    });
 </script>
 
 @endsection
