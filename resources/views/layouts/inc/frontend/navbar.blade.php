@@ -66,8 +66,8 @@
 
             <!-- Cart Icon with Badge -->
             <span class="position-relative">
-                <i class="fas fa-shopping-cart" style="font-size: 24px; color:#00000;"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                <i class="fas fa-shopping-cart" style="font-size: 24px; color:#00000;" onclick="window.location.href='{{ url('/cart') }}'"></i>
+                <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
             </span>
 
         </div>
@@ -86,7 +86,7 @@
             style="transition: background-color 0.3s ease;">
             Category <i class="bi bi-chevron-down ms-2"></i>
         </a>
-       
+
         <div class="container-fluid">
             <!-- Brand on New Line -->
             <a class="nav-link text-white fw-bold px-3 py-2 rounded" href="#"
@@ -295,7 +295,44 @@
         container.appendChild(box);
     }
 
-    document.addEventListener('DOMContentLoaded', () => initializeCategories());
+    async function updateCartBadge() {
+        const response = await fetch('/api/cart');
+        const data = await response.json();
+        const cartBadge = document.getElementById('cart-badge');
+        cartBadge.innerText = data.cartItemCount;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeCategories();
+        updateCartBadge();
+
+        // Add event listeners to "Add to Cart" buttons
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', async (event) => {
+                event.preventDefault();
+                const productId = button.dataset.productId;
+                await addToCart(productId);
+                updateCartBadge();
+                window.location.href = '/cart'; // Redirect to cart page
+            });
+        });
+    });
+
+    async function addToCart(productId) {
+        const response = await fetch(`/api/cart/add/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        });
+        const data = await response.json();
+        if (data.success) {
+            console.log('Product added to cart');
+        } else {
+            console.error('Failed to add product to cart');
+        }
+    }
 </script>
 <style>
 

@@ -56,19 +56,11 @@ class CategoryController extends Controller
         return response()->json(['children' => $children]);
     }
 
-
-
-
-
-
-
     public function index()
     {
         $parentCategories = Category::with('children')->whereNull('parent_id')->get();
         return view('admin.category.index', compact('parentCategories'));
     }
-
-
 
     public function show($id)
     {
@@ -76,8 +68,6 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);  // Change this line to find by ID
         return view('frontend.category.show', compact('category'));
     }
-
-
 
     public function create()
     {
@@ -128,12 +118,6 @@ class CategoryController extends Controller
         return view('admin.category.edit', compact('category', 'parentCategories'));
     }
 
-
-
-
-
-
-
     // Update an existing category
     public function update(Request $request, Category $category)
     {
@@ -174,7 +158,6 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
-
     // Delete a category
     public function destroy(Category $category)
     {
@@ -188,5 +171,30 @@ class CategoryController extends Controller
 
         // Redirect with success message
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+    }
+
+
+
+
+    // NEW
+    // In your controller (e.g., CategoryController.php)
+    public function filter(Request $request)
+    {
+        $categories = $request->input('categories', []);
+        $brands = $request->input('brands', []);
+        $parentId = $request->input('parent_id');
+
+        // Fetch subcategories and products based on filters
+        $subcategories = Subcategory::whereIn('id', $categories)->get();
+        $products = Product::where('category_id', $parentId)
+            ->when(!empty($brands), function ($query) use ($brands) {
+                return $query->whereIn('brand_id', $brands); // Filter by brands
+            })
+            ->get();
+
+        return response()->json([
+            'subcategories' => $subcategories,
+            'products' => $products,
+        ]);
     }
 }

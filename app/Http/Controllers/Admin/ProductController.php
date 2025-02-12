@@ -90,11 +90,17 @@ class ProductController extends Controller
         if ($request->hasFile('images')) {
             $images = [];
             foreach ($request->file('images') as $image) {
-                $imageName = time() . '-' . $image->getClientOriginalName();
-                $image->move(public_path('product_images'), $imageName);
-                $images[] = 'product_images/' . $imageName;
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = public_path('uploads/products');
+
+                if (!file_exists($imagePath)) {
+                    mkdir($imagePath, 0777, true); // Ensure folder exists
+                }
+
+                $image->move($imagePath, $imageName);
+                $images[] = 'uploads/products/' . $imageName;
             }
-            $product->images;
+            $product->images = json_encode($images);
             $product->save();
         }
 
@@ -209,9 +215,15 @@ class ProductController extends Controller
         if ($request->hasFile('images')) {
             $newImages = [];
             foreach ($request->file('images') as $image) {
-                $imageName = time() . '-' . $image->getClientOriginalName();
-                $image->move(public_path('product_images'), $imageName);
-                $newImages[] = 'product_images/' . $imageName;
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = public_path('uploads/products');
+
+                if (!file_exists($imagePath)) {
+                    mkdir($imagePath, 0777, true); // Ensure folder exists
+                }
+
+                $image->move($imagePath, $imageName);
+                $newImages[] = 'uploads/products/' . $imageName;
             }
             $existingImages = json_decode($product->images ?? '[]');
             $product->images = json_encode(array_merge($existingImages, $newImages));

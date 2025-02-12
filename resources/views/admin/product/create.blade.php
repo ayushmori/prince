@@ -97,7 +97,7 @@
                                 <h5>Existing Images</h5>
                                 <div class="d-flex flex-wrap">
                                     @foreach (json_decode($product->images) as $image)
-                                        <img src="{{ asset('storage/' . $image) }}" alt="Product Image"
+                                        <img src="{{ asset('uploads/products/' . $image) }}" alt="Product Image"
                                             class="img-thumbnail me-2 mb-2" width="100" height="100">
                                     @endforeach
                                 </div>
@@ -108,6 +108,7 @@
             </div>
 
 
+            {{-- Product Documents --}}
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h4 class="card-title">Documents</h4>
@@ -121,13 +122,16 @@
                                     <select name="documents[{{ $index }}][type]" class="form-control" required>
                                         <option value="Software"
                                             {{ old('documents.' . $index . '.type', $document->type) == 'Software' ? 'selected' : '' }}>
-                                            Software</option>
+                                            Software
+                                        </option>
                                         <option value="PDF"
                                             {{ old('documents.' . $index . '.type', $document->type) == 'PDF' ? 'selected' : '' }}>
-                                            PDF</option>
+                                            PDF
+                                        </option>
                                         <option value="Driver"
                                             {{ old('documents.' . $index . '.type', $document->type) == 'Driver' ? 'selected' : '' }}>
-                                            Driver</option>
+                                            Driver
+                                        </option>
                                     </select>
                                     <label for="documents[{{ $index }}][file_path]" class="form-label">File</label>
                                     <input type="file" name="documents[{{ $index }}][file_path]" class="form-control">
@@ -157,7 +161,7 @@
             </div>
 
 
-
+            {{-- Attributes --}}
             <div class="container mt-5">
                 <h3 class="mb-4">Attributes</h3>
                 <div id="attributes" class="mb-4">
@@ -248,7 +252,7 @@
 
 
             <button type="submit"
-                class="btn btn-primary mt-4">{{ isset($product) ? 'Update Product' : 'Create Product' }}</button>
+                class="btn btn-primary mb-3">{{ isset($product) ? 'Update Product' : 'Create Product' }}</button>
         </form>
     </div>
 @endsection
@@ -269,7 +273,7 @@
                 </select>
                 <label for="documents[${index}][file_path]" class="form-label">File</label>
                 <input type="file" name="documents[${index}][file_path]" class="form-control">
-                <button type="button" class="btn btn-danger remove-document">Remove</button>
+                <button type="button" class="btn btn-danger remove-document mt-3">Remove</button>
             `;
             document.getElementById('documents-container').appendChild(documentRow);
         });

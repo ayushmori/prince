@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Livewire\Products;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\BrandController;
@@ -16,10 +18,9 @@ use App\Http\Controllers\Admin\ContactUsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MiniSliderController;
 use App\Http\Controllers\Frontend\FrontendController;
-use App\Http\Controllers\Admin\SecondSliderController;
 
 Auth::routes();
-use App\Http\Livewire\Products;
+use App\Http\Controllers\Admin\SecondSliderController;
 
 Route::get('/products', Products::class);
 
@@ -37,6 +38,9 @@ Route::get('/api/categories/{categoryId}/children', [CategoryController::class, 
 Route::get('/api/products', [FrontendController::class, 'filterProducts'])->name('products.filter');
 Route::get('/api/subcategories', [FrontendController::class, 'filterSubcategories'])->name('categories.filter');
 
+Route::post('/api/cart/add/{product}', [CartController::class, 'addToCart']);
+Route::get('/api/cart', [CartController::class, 'getCartCount']);
+
 // Route::apiResource('main-documents', MainDocumentController::class);
 
 Route::get('/product/{id}', [FrontendController::class, 'showProduct']);
@@ -52,7 +56,10 @@ Route::get('/categories', [FrontendController::class, 'view'])->name('categories
 Route::get('/category/{id}', [FrontendController::class, 'show'])->name('category.show');
 Route::get('/get-children/{categoryId}', [FrontendController::class, 'getChildren']);
 
-
+// Add To Cart
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 
 
@@ -68,13 +75,14 @@ Route::get('/admin/products/subcategories/{categoryId}', [CategoryController::cl
 
 
 
-
-
 Route::Resource('admin/products', ProductController::class)->middleware([RoleMiddleware::class]);
 Route::Resource('admin/products.attributes', AttributeController::class)->middleware([RoleMiddleware::class]);
 Route::Resource('admin/products.documents', DocumentController::class)->middleware([RoleMiddleware::class]);
 
 Route::get('admin/products/subcategories/{categoryId}', [ProductController::class, 'getSubcategories'])->middleware([RoleMiddleware::class]);
+
+
+
 
 
 

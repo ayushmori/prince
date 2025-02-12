@@ -15,7 +15,10 @@ class FrontendController extends Controller
         $product = Product::with('category')->findOrFail($id);
         $breadcrumb = $this->getBreadcrumb($product->category);
 
-        return view('frontend.product.show', compact('product', 'breadcrumb'));
+        // Check if the product has an image
+        $productImage = $product->image ? asset('uploads/products/' . $product->image) : null;
+
+        return view('frontend.product.show', compact('product', 'breadcrumb', 'productImage'));
     }
 
     private function getBreadcrumb($category)
@@ -50,6 +53,11 @@ class FrontendController extends Controller
     {
         // Eager load attributes and short_attributes
         $products = Product::with(['brand', 'category', 'attributes.short_attributes'])->get();
+
+        // Filter out products without images
+        $products = $products->filter(function ($product) {
+            return !empty($product->image);
+        });
 
         return view('frontend.product.index', compact('products'));
     }
@@ -159,5 +167,70 @@ class FrontendController extends Controller
         $subcategories = $query->get();
 
         return response()->json(['subcategories' => $subcategories]);
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $product = new Product();
+        // ...existing code to set other product attributes...
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+            // Move image to public/uploads/products
+            $image->move(public_path('uploads/products'), $imageName);
+
+            // Save the image filename in the database
+            $product->image = $imageName;
+        }
+
+        $product->save();
+
+        return redirect()->route('products.index');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'documents.*.type' => 'required|string',
+            'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip',
+        ]);
+
+        // Update product details
+        $product->update([
+            'name' => $request->input('name'),
+            'price' => $request->input('price'),
+            // Add other fields as needed
+        ]);
+
+        // Handle documents
+        if ($request->has('documents')) {
+            foreach ($request->input('documents') as $index => $documentData) {
+                $filePath = null;
+
+                // Check if a new file is uploaded
+                if ($request->hasFile("documents.$index.file_path")) {
+                    $file = $request->file("documents.$index.file_path");
+                    $filePath = $file->store('documents', 'public'); // Store the file in the "public/documents" directory
+                }
+
+                // Update or create the document
+                $product->documents()->updateOrCreate(
+                    ['id' => $documentData['id'] ?? null], // Check if document exists
+                    [
+                        'type' => $documentData['type'],
+                        'file_path' => $filePath ?? $documentData['file_path'], // Use existing file path if no new file is uploaded
+                    ]
+                );
+            }
+        }
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 }

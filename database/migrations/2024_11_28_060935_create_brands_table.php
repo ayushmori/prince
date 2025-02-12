@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration; // Add this line
 
 return new class extends Migration
 {
@@ -19,6 +20,9 @@ return new class extends Migration
             $table->unsignedInteger('serial_number')->unique();
             $table->timestamps();
         });
+
+        // Add logging to check if the brands parameter is being received correctly
+        Log::info('Selected Brands:', request()->input('brands'));
     }
 
     /**

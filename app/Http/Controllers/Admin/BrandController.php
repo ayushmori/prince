@@ -129,4 +129,75 @@ class BrandController extends Controller
 
         return $nextSerialNumber;
     }
+
+    // NEW
+    public function show($id)
+    {
+        $category = Category::findOrFail($id);
+        $childCategories = Category::where('parent_id', $id)->get();
+        $relatedBrands = Brand::whereIn('id', $category->products->pluck('brand_id'))->get();
+
+        \Log::info('Related Brands:', $relatedBrands->toArray());
+
+        return view('categories.show', [
+            'category' => $category,
+            'childCategories' => $childCategories,
+            'relatedBrands' => $relatedBrands,
+        ]);
+    }
+
+
+    // public function filterCategories(Request $request)
+    // {
+    //     $categoryIds = explode(',', $request->categories);
+    //     $brandIds = explode(',', $request->brands);
+
+    //     // Fetch subcategories only if no brand is selected
+    //     $subcategories = [];
+    //     if (empty($brandIds)) {
+    //         $subcategories = Category::whereIn('parent_id', $categoryIds)->get();
+    //     }
+
+    //     // Fetch products based on category and brand filters
+    //     $products = Product::whereIn('category_id', $categoryIds);
+
+    //     if (!empty($brandIds)) {
+    //         $products->whereIn('brand_id', $brandIds);
+    //     }
+
+    //     $products = $products->get();
+
+    //     return response()->json([
+    //         'subcategories' => $subcategories,
+    //         'products' => $products
+    //     ]);
+    // }
+
+
+    public function filterCategories(Request $request)
+    {
+        $categoryIds = $request->has('categories') ? explode(',', $request->categories) : [];
+        $brandIds = $request->has('brands') ? explode(',', $request->brands) : [];
+
+        $productsQuery = Product::query();
+
+        // Filter by categories (if selected)
+        if (!empty($categoryIds)) {
+            $productsQuery->whereIn('category_id', $categoryIds);
+        }
+
+        // Filter by brands (if selected)
+        if (!empty($brandIds)) {
+            $productsQuery->whereIn('brand_id', $brandIds);
+        }
+
+        $products = $productsQuery->get();
+
+        \Log::info('Filtered Brands:', $brandIds); // Debugging line
+        \Log::info('Products:', $products->toArray()); // Debugging line
+
+        return response()->json([
+            'products' => $products
+        ]);
+    }
 }

@@ -11,7 +11,7 @@
                             <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text">
                                 <strong>Price:</strong> ${{ number_format($product->price, 2) }}<br>
-                                
+
                                 <strong>Category:</strong> {{ $product->category->name }}
                             </p>
                         </div>
@@ -22,8 +22,7 @@
                         @if (!empty($images) && is_array($images))
                             @foreach ($images as $image)
                                 @if (!empty($image))
-                                    <img src="{{ url($image) }}" alt="Product Image" class="img-thumbnail" width="50"
-                                        height="50">
+                                    <img src="{{ url($image) }}" alt="Product Image" class="img-thumbnail" width="50" height="50">
                                 @else
                                     <p>No image available for this entry.</p>
                                 @endif

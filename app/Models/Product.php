@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 
@@ -55,6 +55,5 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'subcategory_id');
     }
-
 
 }
