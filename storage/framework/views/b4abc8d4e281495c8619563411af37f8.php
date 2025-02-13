@@ -337,30 +337,55 @@ ul {
     // });
 
 
-    $(document).ready(function() {
-        $('.category-filter, .language-filter').change(function() {
-            let selectedCategories = [];
-            $('.category-filter:checked').each(function() {
-                selectedCategories.push($(this).val());
-            });
+    // $(document).ready(function() {
+    //     $('.category-filter, .language-filter').change(function() {
+    //         let selectedCategories = [];
+    //         $('.category-filter:checked').each(function() {
+    //             selectedCategories.push($(this).val());
+    //         });
 
-            let selectedLanguages = [];
-            $('.language-filter:checked').each(function() {
-                selectedLanguages.push($(this).val());
-            });
+    //         let selectedLanguages = [];
+    //         $('.language-filter:checked').each(function() {
+    //             selectedLanguages.push($(this).val());
+    //         });
 
-            $('#documentList .card').each(function() {
-                let category = $(this).data('category');
-                let language = $(this).data('language');
-                let categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
-                let languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(language);
+    //         $('#documentList .card').each(function() {
+    //             let category = $(this).data('category');
+    //             let language = $(this).data('language');
+    //             let categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
+    //             let languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(language);
 
-                if (categoryMatch && languageMatch) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+    //             if (categoryMatch && languageMatch) {
+    //                 $(this).show();
+    //             } else {
+    //                 $(this).hide();
+    //             }
+    //         });
+    //     });
+    // });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let categoryDropdown = document.getElementById("categoryDropdown");
+        let categoryMenu = document.querySelector("#categoryDropdown + .dropdown-menu");
+        let languageFilterContainer = document.getElementById("languageFilterContainer");
+
+        categoryDropdown.addEventListener("click", function () {
+            if (!categoryMenu.classList.contains("show")) {
+                // Dropdown is opening - move language filter down
+                let dropdownHeight = categoryMenu.scrollHeight;
+                languageFilterContainer.style.marginTop = dropdownHeight + "px";
+            } else {
+                // Dropdown is closing - reset position
+                languageFilterContainer.style.marginTop = "0px";
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!categoryDropdown.contains(event.target) && !categoryMenu.contains(event.target)) {
+                languageFilterContainer.style.marginTop = "0px";
+            }
         });
     });
 </script>
