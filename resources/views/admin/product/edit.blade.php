@@ -113,11 +113,10 @@
                         <h5>Existing Images</h5>
                         <div class="d-flex flex-wrap">
                             @foreach (json_decode($product->images) as $image)
-                                <img src="{{ asset('' . $image) }}" alt="Product Image"
+                                <img src="{{ asset('storage/' . $image) }}" alt="Product Image"
                                     class="img-thumbnail me-2 mb-2" width="100" height="100">
                             @endforeach
                         </div>
-
                     </div>
                 @endif
 
