@@ -81,6 +81,25 @@
 
 
 
+                    <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i
+                                data-feather="airplay"></i><span>Documents Type</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="<?php echo e(route('document-types.create')); ?>">Add Document Type</a></li>
+                            <li><a href="<?php echo e(route('document-types.index')); ?>">View Document Type</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i
+                            data-feather="airplay"></i><span>Documents Category</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="<?php echo e(url('admin/document-category/create')); ?>">Add Document Category</a></li>
+                            <li><a href="<?php echo e(url('admin/document-category')); ?>">View Document Category</a></li>
+                        </ul>
+                    </li>
+
+
+
                     
 
                     <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"

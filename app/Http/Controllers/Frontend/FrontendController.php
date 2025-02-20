@@ -1,22 +1,20 @@
 <?php
-
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Document;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class FrontendController extends Controller
 {
-
     public function showProduct($id)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with('category.parent')->findOrFail($id);
         $breadcrumb = $this->getBreadcrumb($product->category);
-
-        // Check if the product has an image
-        $productImage = $product->image ? asset('uploads/products/' . $product->image) : null;
+        $productImage = $product->image ? asset('uploads/products/' . $product->image) : asset('default-product.png');
 
         return view('frontend.product.show', compact('product', 'breadcrumb', 'productImage'));
     }
@@ -35,51 +33,47 @@ class FrontendController extends Controller
     {
         return view('frontend.pages.about-us');
     }
+
     public function contactpage()
     {
         return view('frontend.pages.contact-us');
     }
+
     public function getChildren(Category $category)
     {
-        $children = $category->children()->with('children')->get();
-        return response()->json($children);
+        return response()->json($category->children()->with('children')->get());
     }
     public function download()
     {
-        return view('frontend.pages.download');
+        $categories = Category::whereNull('parent_id')->get();
+        // $brands = Brand::all();
+        $documents = Document::all(); // Fetch all documents
+
+        return view('frontend.pages.download', compact('categories', 'documents'));
     }
 
     public function products()
     {
-        // Eager load attributes and short_attributes
-        $products = Product::with(['brand', 'category', 'attributes.short_attributes'])->get();
-
-        // Filter out products without images
-        $products = $products->filter(function ($product) {
-            return !empty($product->image);
-        });
+        $products = Product::with(['brand', 'category', 'attributes.short_attributes'])
+            ->whereNotNull('image')
+            ->get();
 
         return view('frontend.product.index', compact('products'));
     }
 
     public function view()
     {
-        // Fetch parent categories and eager load any children using 'parentCategory'
         $categories = Category::with('children')->whereNull('parent_id')->get();
-
         return view('frontend.category.index', compact('categories'));
     }
 
     public function getCategories()
     {
-        // Fetch parent categories and check if they have children
-        $categories = Category::whereNull('parent_id')->get();
-
-        $categories = $categories->map(function ($category) {
+        $categories = Category::whereNull('parent_id')->get()->map(function ($category) {
             return [
                 'id' => $category->id,
                 'name' => $category->name,
-                'has_children' => $category->children()->exists(), // Check if the category has children
+                'has_children' => $category->children()->exists(),
             ];
         });
 
@@ -88,7 +82,6 @@ class FrontendController extends Controller
 
     public function index()
     {
-        // Fetch parent categories with their children
         $parentCategories = Category::with('children')->whereNull('parent_id')->get();
         return view('admin.category.index', compact('parentCategories'));
     }
@@ -99,17 +92,11 @@ class FrontendController extends Controller
             'products.brand',
             'products.mainDocuments',
             'products.documents',
-            'products.attributes',
             'products.attributes.shortAttributes'
         ])->findOrFail($id);
 
-        // Get categories with parent_id equal to the current category's ID
         $childCategories = Category::where('parent_id', $id)->get();
-
-        // Get unique brands from the current category's products
         $relatedBrands = $category->products->pluck('brand')->filter()->unique();
-
-        // Generate breadcrumb
         $breadcrumb = $this->getBreadcrumb($category);
 
         if (request()->expectsJson()) {
@@ -121,68 +108,45 @@ class FrontendController extends Controller
 
     public function filterProducts(Request $request)
     {
-        $categories = $request->input('categories');
-        $brands = $request->input('brands');
-
         $query = Product::query();
 
-        if ($categories) {
-            $categoryIds = explode(',', $categories);
-            $query->whereIn('category_id', $categoryIds);
+        if ($categories = $request->input('categories')) {
+            $query->whereIn('category_id', explode(',', $categories));
         }
 
-        if ($brands) {
-            $brandIds = explode(',', $brands);
-            $query->whereIn('brand_id', $brandIds);
+        if ($brands = $request->input('brands')) {
+            $query->whereIn('brand_id', explode(',', $brands));
         }
 
-        $products = $query->with(['brand', 'category'])->get();
-
-        return response()->json(['products' => $products]);
+        return response()->json(['products' => $query->with(['brand', 'category'])->get()]);
     }
 
     public function filterSubcategories(Request $request)
     {
-        $categories = $request->input('categories');
-        $brands = $request->input('brands');
-        $parentId = $request->input('parent_id');
-
         $query = Category::query();
 
-        if ($categories && !empty($categories)) {
-            $categoryIds = explode(',', $categories);
-            $query->whereIn('id', $categoryIds);
-        } else if ($parentId) {
-            // If no categories selected, show subcategories of current category
+        if ($categories = $request->input('categories')) {
+            $query->whereIn('id', explode(',', $categories));
+        } elseif ($parentId = $request->input('parent_id')) {
             $query->where('parent_id', $parentId);
         }
 
-        if ($brands && !empty($brands)) {
-            $brandIds = explode(',', $brands);
-            $query->whereHas('products', function ($q) use ($brandIds) {
-                $q->whereIn('brand_id', $brandIds);
+        if ($brands = $request->input('brands')) {
+            $query->whereHas('products', function ($q) use ($brands) {
+                $q->whereIn('brand_id', explode(',', $brands));
             });
         }
 
-        $subcategories = $query->get();
-
-        return response()->json(['subcategories' => $subcategories]);
+        return response()->json(['subcategories' => $query->get()]);
     }
 
     public function storeProduct(Request $request)
     {
         $product = new Product();
-        // ...existing code to set other product attributes...
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-
-            // Move image to public/uploads/products
-            $image->move(public_path('uploads/products'), $imageName);
-
-            // Save the image filename in the database
-            $product->image = $imageName;
+            $imagePath = $request->file('image')->store('uploads/products', 'public');
+            $product->image = $imagePath;
         }
 
         $product->save();
@@ -194,7 +158,6 @@ class FrontendController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Validate the request
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
@@ -202,35 +165,37 @@ class FrontendController extends Controller
             'documents.*.file_path' => 'nullable|file|mimes:pdf,doc,docx,zip',
         ]);
 
-        // Update product details
         $product->update([
             'name' => $request->input('name'),
             'price' => $request->input('price'),
-            // Add other fields as needed
         ]);
 
-        // Handle documents
         if ($request->has('documents')) {
             foreach ($request->input('documents') as $index => $documentData) {
                 $filePath = null;
-
-                // Check if a new file is uploaded
                 if ($request->hasFile("documents.$index.file_path")) {
-                    $file = $request->file("documents.$index.file_path");
-                    $filePath = $file->store('documents', 'public'); // Store the file in the "public/documents" directory
+                    $filePath = $request->file("documents.$index.file_path")->store('documents', 'public');
                 }
 
-                // Update or create the document
                 $product->documents()->updateOrCreate(
-                    ['id' => $documentData['id'] ?? null], // Check if document exists
+                    ['id' => $documentData['id'] ?? null],
                     [
                         'type' => $documentData['type'],
-                        'file_path' => $filePath ?? $documentData['file_path'], // Use existing file path if no new file is uploaded
+                        'file_path' => $filePath ?? $documentData['file_path'],
                     ]
                 );
             }
         }
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
+    }
+
+
+
+
+    public function getSubcategories(Request $request)
+    {
+        $subcategories = Category::whereIn('parent_id', $request->categories)->get();
+        return response()->json($subcategories);
     }
 }

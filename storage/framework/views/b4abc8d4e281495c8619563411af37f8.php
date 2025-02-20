@@ -199,68 +199,81 @@
                     <!-- Filters -->
                     <div class="col-md-3 mt-3">
                         <div class="mb-3">
-                            <h5>Filter by <span class="text-primary reset-btn" style="cursor: pointer; float: right;">↻ Reset All</span></h5>
-
-                            <!-- Document Category Dropdown -->
                             <div class="dropdown">
-                                <button class="btn btn-light w-100 d-flex justify-content-between shadow-sm" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span>Document Category</span> <i class="bi bi-chevron-down"></i>
-                                </button>
-                                <ul class="dropdown-menu p-3 w-100 shadow" aria-labelledby="categoryDropdown">
-                                    <li><input type="checkbox" class="category-filter" value="CAD"> CAD, Drawings, & Curves</li>
-                                    <li><input type="checkbox" class="category-filter" value="Catalogs"> Catalogs & Brochures</li>
-                                    <li><input type="checkbox" class="category-filter" value="Conformity"> Conformity Assessments</li>
-                                    <li><input type="checkbox" class="category-filter" value="Installation"> Installation & User Guides</li>
-                                    <li><input type="checkbox" class="category-filter" value="Sustainability"> Sustainability</li>
-                                </ul>
+                                <h5 class="card-header text-white fw-bold" style="background-color: #0d6efd;">Document Category</h5>
+                                <div class="border p-3">
+                                    <input type="checkbox" class="category-filter" value="Software"> Software <br>
+                                    <input type="checkbox" class="category-filter" value="PDF"> PDF <br>
+                                    <input type="checkbox" class="category-filter" value="Driver"> Driver <br>
+                                </div>
                             </div>
+
+
                         </div>
 
-                        <!-- Language Dropdown -->
+                        <!-- Language -->
                         <div class="mb-3" id="languageFilterContainer">
                             <div class="dropdown">
-                                <button class="btn btn-light w-100 d-flex justify-content-between shadow-sm" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span>Language</span> <i class="bi bi-chevron-down"></i>
-                                </button>
-                                <ul class="dropdown-menu p-3 w-100 shadow" aria-labelledby="languageDropdown">
-                                    <li><input type="checkbox" class="language-filter" value="English" checked> English</li>
-                                    <li><input type="checkbox" class="language-filter" value="All"> All Languages</li>
-                                </ul>
+                                <h5 class="card-header text-white fw-bold" style="background-color: #0d6efd;">Language</h5>
+                                <div class="border p-3">
+                                    <input type="checkbox" class="language-filter" value="English" checked> English <br>
+                                    <input type="checkbox" class="language-filter" value="All"> All Languages <br>
+                                </div>
                             </div>
+
+
                         </div>
+
+                        <!-- Clear Filter Button -->
+                        <div class="mb-4">
+                            <button class="btn btn-secondary w-100" id="clear-filters">Clear Filters</button>
+                        </div>
+
                     </div>
 
-
-
                     <!-- Document List -->
-                    <div class="col-md-9">
-                        
+                    <div class="col-md-8 mt-3" style="margin-left: 80px;">
                         <div id="documentList">
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <h5>Canalis KN Certificate LCIE according to IEC 61439-6</h5>
-                                    <p>PDF (403.1 KB) | 17 May 2023 | Certificate - IEC/CEI</p>
-                                    <button class="btn btn-outline-primary">Download</button>
-                                </div>
-                            </div>
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <h5>Canalis KN 40 to 160A</h5>
-                                    <p>PDF (9.2 MB) | 12 Apr 2023 | Catalogue</p>
-                                    <button class="btn btn-outline-primary">Download</button>
-                                </div>
-                            </div>
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <h5>PEP - Canalis KNA 40A to 160A</h5>
-                                    <p>PDF (368.2 KB) | 21 Mar 2023 | Environmental disclosure</p>
-                                    <button class="btn btn-outline-primary">Download</button>
-                                </div>
-                            </div>
+                            <?php if(isset($product) && $product->documents->count() > 0): ?>
+                                <?php $__currentLoopData = $product->documents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $document): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php
+                                        $documentType = 'File';
+                                        if (Str::endsWith($document->file_path, '.pdf')) {
+                                            $documentType = 'PDF';
+                                        } elseif (Str::endsWith($document->file_path, ['.exe', '.zip'])) {
+                                            $documentType = 'Software';
+                                        } elseif (Str::endsWith($document->file_path, ['.dll', '.inf'])) {
+                                            $documentType = 'Driver';
+                                        }
+                                    ?>
+                                    <div class="card mb-2 document-item"
+                                        data-category="<?php echo e($documentType); ?>"
+                                        data-language="<?php echo e($document->language ?? 'English'); ?>">
+                                        <div class="card-body">
+                                            <a href="<?php echo e(asset('documents/' . basename($document->file_path))); ?>" target="_blank" class="btn btn-outline-primary float-end">Download</a>
+                                            <h5 style="text-align:left">
+                                                <a href="<?php echo e(asset('documents/' . basename($document->file_path))); ?>" target="_blank" class="text-decoration-none text-dark">
+                                                    <?php echo e($document->title ?? ucfirst($document->type)); ?>
+
+                                                </a>
+                                            </h5>
+                                            <p>
+                                                <?php echo e($documentType); ?> 
+                                                <?php echo e(date('d M Y', strtotime($document->created_at))); ?> |
+                                                <?php echo e(ucfirst($document->type)); ?>
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php else: ?>
+                                <p class="text-muted"><i>No uploaded documents available.</i></p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
         </div>
@@ -273,9 +286,10 @@
 <link rel="stylesheet" href="<?php echo e(asset('assets/exzoom/jquery.exzoom.css')); ?>">
 <script src="<?php echo e(asset('assets/exzoom/jquery.exzoom.js')); ?>"></script>
 <style>
-ul {
-    list-style-type: none;
-}
+    ul {
+        list-style-type: none;
+    }
+
 </style>
 <script>
     $(document).ready(function() {
@@ -310,6 +324,50 @@ ul {
                     console.error('Error:', error);
                 }
             });
+        });
+
+
+        // Filter documents based on selected categories and languages
+        function filterDocuments() {
+            let selectedCategories = [];
+            $('.category-filter:checked').each(function() {
+                selectedCategories.push($(this).val());
+            });
+
+            let selectedLanguages = [];
+            $('.language-filter:checked').each(function() {
+                selectedLanguages.push($(this).val());
+            });
+
+            $('#documentList .document-item').each(function() {
+                let category = $(this).data('category');
+                let language = $(this).data('language');
+                let categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
+                let languageMatch = selectedLanguages.length === 0 || selectedLanguages.includes(language);
+
+                if (categoryMatch && languageMatch) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        $('.category-filter, .language-filter').change(function() {
+            filterDocuments();
+        });
+
+        $('#clear-filters').on('click', function() {
+            $('.category-filter, .language-filter').prop('checked', false);
+            filterDocuments();
+        });
+
+        // Scroll to documents section
+        $('#scroll-to-documents').on('click', function(e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $(".container.mt-4").offset().top
+            }, 1000);
         });
     });
 

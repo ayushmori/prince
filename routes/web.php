@@ -7,8 +7,10 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\DocumentTypeController;
 use App\Http\Controllers\MainDocumentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -62,7 +64,8 @@ Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.u
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 
-
+// Downloads
+Route::get('/download', [DownloadController::class, 'downloadPage'])->name('download.page');
 
 
 Route::get('categories', [CategoryController::class, 'view'])->name('categories.view');
@@ -100,7 +103,7 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
 
     // Route::put('/main-documents/update/{id}', [MainDocumentController::class, 'update'])->name('main-documents.update');
 
-
+    Route::get('document-types', [DocumentTypeController::class, 'index'])->name('admin.document-types.index');
 
 });
 
@@ -209,4 +212,33 @@ Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
 });
 
 
-// <------------------------------------------------------------------------------------------------------------------------------------>//
+// Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+//     Route::get('documents-type', [DocumentTypeController::class, 'index'])->name('admin.documents-type.index');
+//     Route::get('documents-type/create', [DocumentTypeController::class, 'create'])->name('admin.documents-type.create');
+//     Route::post('documents-type', [DocumentTypeController::class, 'store'])->name('admin.documents-type.store');
+//     Route::get('documents-type/{documents_type}/edit', [DocumentTypeController::class, 'edit'])->name('admin.documents-type.edit');
+//     Route::put('documents-type/{documents_type}', [DocumentTypeController::class, 'update'])->name('admin.documents-type.update');
+//     Route::delete('documents-type/{documents_type}', [DocumentTypeController::class, 'destroy'])->name('admin.documents-type.destroy');
+// });
+
+Route::prefix('admin')->middleware([RoleMiddleware::class])->group(function () {
+    Route::get('document-types', [DocumentTypeController::class, 'index'])->name('admin.document-types.index');
+    Route::get('document-types/create', [DocumentTypeController::class, 'create'])->name('admin.document-types.create');
+    Route::post('document-types', [DocumentTypeController::class, 'store'])->name('admin.document-types.store');
+    Route::get('document-types/{id}/edit', [DocumentTypeController::class, 'edit'])->name('admin.document-types.edit');
+    Route::put('document-types/{id}', [DocumentTypeController::class, 'update'])->name('admin.document-types.update');
+    Route::delete('document-types/{id}', [DocumentTypeController::class, 'destroy'])->name('admin.document-types.destroy');
+    Route::delete('/admin/documents-type/{id}', [DocumentTypeController::class, 'destroy'])->name('admin.document-types.destroy');  
+    Route::delete('document-types/{id}', [DocumentTypeController::class, 'destroy'])->name('admin.documents-type.delete');
+    Route::post('documents-type/save/{id?}', [DocumentTypeController::class, 'save'])->name('admin.documents-type.save');
+    Route::get('document-types/form', [DocumentTypeController::class, 'form'])->name('admin.documents-type.form');
+});
+
+Route::resource('document-types', DocumentTypeController::class);
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('documents-type', DocumentTypeController::class);
+});
+
+
+

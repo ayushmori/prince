@@ -41,8 +41,8 @@
     <form action="{{ route('main-documents.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <div class="form-group mb-4">
-            <label for="product_id">Product Name</label>
+        {{-- <div class="form-group mb-4">
+            <label for="product_id">Document Name</label>
             <select name="product_id" id="product_id" class="form-control">
                 <option value="">Select Product</option>
                 @foreach ($products as $Product)
@@ -52,20 +52,69 @@
                     </option>
                 @endforeach
             </select>
+        </div> --}}
+
+        <div class="mb-3">
+            <label for="type" class="form-label">Document Name</label>
+            <input type="text" class="form-control" id="type" name="type" required>
         </div>
 
         {{-- <div class="mb-3">
             <label for="product_id" class="form-label">Product ID</label>
             <input type="number" class="form-control" id="product_id" name="product_id" required>
         </div> --}}
-        <div class="mb-3">
-            <label for="type" class="form-label">Type</label>
+        {{-- <div class="mb-3">
+            <label for="type" class="form-label">Document Type</label>
             <input type="text" class="form-control" id="type" name="type" required>
+        </div> --}}
+
+        <div class="document mb-3" id="document-0">
+            <label for="documents[0][type]" class="form-label">Document Type</label>
+            <select name="documents[0][type]" class="form-control" required>
+                <option value="Software">Software</option>
+                <option value="PDF">PDF</option>
+                <option value="Driver">Driver</option>
+            </select>
+            {{-- <label for="documents[0][file_path]" class="form-label">File</label>
+            <input type="file" name="documents[0][file_path]" class="form-control"> --}}
         </div>
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title">
+
+        <!-- Category -->
+        <div class="form-group mb-4">
+            <label for="category_id">Category</label>
+            <select name="category_id" id="category_id" class="form-control" required>
+                <option value="">Select Category</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}"
+                        {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                    @if ($category->children)
+                        @foreach ($category->children as $childCategory)
+                            @include('admin.product.partials.category-options', [
+                                'category' => $childCategory,
+                                'level' => 1,
+                            ])
+                        @endforeach
+                    @endif
+                @endforeach
+            </select>
         </div>
+
+        <!-- Brand -->
+        <div class="form-group mb-4">
+            <label for="brand_id">Brand</label>
+            <select name="brand_id" id="brand_id" class="form-control">
+                <option value="">Select Brand</option>
+                @foreach ($brands as $brand)
+                    <option value="{{ $brand->id }}"
+                        {{ old('brand_id', $product->brand_id ?? '') == $brand->id ? 'selected' : '' }}>
+                        {{ $brand->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea class="form-control" id="description" name="description"></textarea>
@@ -75,7 +124,7 @@
             <input type="text" class="form-control" id="file_path" name="file_path" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Add Document</button>
+        <button type="submit" class="btn btn-primary mb-3  float-end">Add Document</button>
     </form>
 </div>
 </body>

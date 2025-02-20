@@ -4,271 +4,567 @@
 
 @section('content')
 
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach ($sliders as $key => $sliderItem)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                    @if ($sliderItem->image)
-                        <img src="{{ asset('/uploads/slider/' . $sliderItem->image) }}" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Image">
-                    @endif
-                </div>
-            @endforeach
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
+    <div>
 
-    <style>
-        .carousel-inner img {
-        height: 50vh; /* Adjust percentage as needed */
-        object-fit: cover;
-    }
-    </style>
+        <!-- Owl Carousel CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
-    @if (isset($brand) && $brand->count() > 0)
+        <!-- jQuery (Required for Owl Carousel) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-        <div class="container brand-container my-4">
-            <div id="animated-brands">
-                @foreach ($brand->chunk(2) as $key => $pair)
-                    <div class="row image-pair {{ $key == 0 ? 'active' : '' }}">
-                        @foreach ($pair as $index => $item)
-                            <div class="col-6">
-                                <img src="{{ asset($item->image) }}" alt="Brand Image"
-                                    class="img-fluid w-100 brand-image {{ $index % 2 == 0 ? 'slide-left' : 'slide-right' }}"
-                                    style="object-fit: contain; height: 300px; border-radius: 5px;">
-                            </div>
-                        @endforeach
+        <!-- Owl Carousel JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+        {{-- First Slider --}}
+        <div class="container-fluid p-0">
+            <div id="main-slider" class="owl-carousel owl-theme">
+                @foreach ($sliders as $sliderItem)
+                    <div class="item">
+                        <img src="{{ asset('/uploads/slider/' . $sliderItem->image) }}" class="d-block w-100 full-width-image"
+                            alt="Slider Image">
                     </div>
                 @endforeach
             </div>
         </div>
 
+        <!-- Owl Carousel Script -->
+        <script>
+            $(document).ready(function() {
+                $('#main-slider').owlCarousel({
+                    loop: true,
+                    margin: 0,
+                    nav: false,
+                    dots: false,
+                    autoplay: true,
+                    autoplayTimeout: 3000,
+                    autoplayHoverPause: true,
+                    items: 1, // Show 1 image at a time
+                    navText: ["<span class='prev'>&#10094;</span>", "<span class='next'>&#10095;</span>"]
+                });
+            });
+        </script>
+
+        <!-- CSS for Full-Width Image -->
         <style>
-            .brand-container {
-                overflow: hidden;
-                padding: 10px;
-                cursor: pointer;
+            .full-width-image {
+                width: 100vw;
+                max-height: 600px;
+                object-fit: cover;
             }
 
-            .image-pair {
-                display: none;
-                opacity: 0;
-                transition: opacity 0.5s;
+            .owl-carousel .owl-nav button {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(0, 0, 0, 0.5) !important;
+                color: white !important;
+                font-size: 24px !important;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
             }
 
-            .image-pair.active {
-                display: flex;
-                opacity: 1;
+            .owl-carousel .owl-nav button.owl-prev {
+                left: 20px;
             }
 
-            .brand-image {
-                opacity: 0;
-                transform: translateX(-100%);
-                /* box-shadow: 5px 40px 50px rgba(88, 87, 87, 0.5); Add shadow effect */
-                border-radius: 10px; /* Optional: Slightly rounded corners */
-                transition: box-shadow 0.3s ease-in-out;
-            }
-
-            .brand-image:hover {
-                box-shadow: 0px 6px 100px rgba(0, 0, 0, 0.4); /* Enhance shadow on hover */
-            }
-
-
-            .brand-image.slide-right {
-                transform: translateX(100%);
-            }
-
-            .image-pair.active .brand-image {
-                animation-duration: 1s;
-                animation-fill-mode: forwards;
-            }
-
-            .image-pair.active .slide-left {
-                animation-name: slideFromLeft;
-            }
-
-            .image-pair.active .slide-right {
-                animation-name: slideFromRight;
-            }
-
-            @keyframes slideFromLeft {
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-
-            @keyframes slideFromRight {
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
+            .owl-carousel .owl-nav button.owl-next {
+                right: 20px;
             }
         </style>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const imagePairs = document.querySelectorAll('.image-pair');
-                let currentIndex = 0;
 
-                function showNextPair() {
-                    imagePairs[currentIndex].classList.remove('active');
-                    const currentImages = imagePairs[currentIndex].querySelectorAll('.brand-image');
-                    currentImages.forEach(img => {
-                        img.style.opacity = '0';
-                        img.style.transform = img.classList.contains('slide-left') ? 'translateX(-100%)' :
-                            'translateX(100%)';
+        {{-- Brand Slider --}}
+        @if (isset($brand) && $brand->count() > 0)
+            <div class="container brand-container my-4">
+                <div class="row g-4 mt-3">
+                    @for ($i = 0; $i < 2; $i++)
+                        <div class="col-12 col-md-6">
+                            <div id="brand-slider-{{ $i }}" class="owl-carousel owl-theme">
+                                @foreach ($i == 0 ? $brand : $brand->shuffle() as $item)
+                                    <div class="item brand-image-wrapper">
+                                        <img src="{{ asset($item->image) }}" alt="Brand Image"
+                                            class="img-fluid brand-image">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function() {
+                    $("#brand-slider-0, #brand-slider-1").owlCarousel({
+                        loop: true,
+                        margin: 15,
+                        /* More spacing between slides */
+                        nav: false,
+                        dots: false,
+                        autoplay: true,
+                        autoplayTimeout: 3000,
+                        autoplayHoverPause: true,
+                        responsive: {
+                            0: {
+                                items: 1
+                            },
+                            600: {
+                                items: 1
+                            },
+                            1000: {
+                                items: 1
+                            }
+                        }
                     });
-                    currentIndex = (currentIndex + 1) % imagePairs.length;
-                    imagePairs[currentIndex].classList.add('active');
+                });
+            </script>
+
+            <style>
+                /* Brand Image Wrapper - Adds Shadow Effect */
+                .brand-image-wrapper {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 10px;
+                    border-radius: 10px;
+                    /* box-shadow: 0px 30px 60px rgba(0, 0, 0, 0.7); Smooth shadow effect */
+                    /* background: #2561a8; */
                 }
 
-                setInterval(showNextPair, 4000);
-            });
-        </script>
-    @else
-        <div class="text-center py-4">
-            <h5 class="text-muted">No images available</h5>
-        </div>
-    @endif
+                /* Brand Image Styling */
+                .brand-image {
+                    width: 300px;
+                    height: 300px;
+                    /* padding: 15px; */
+                    background-color: white;
+                    /* box-shadow: 10px 10px 5px rgb(122, 145, 167); */
+                }
+
+                /* Responsive Adjustments */
+                @media (max-width: 768px) {
+                    .brand-image {
+                        height: 200px;
+                        /* Smaller height on mobile */
+                    }
+                }
+            </style>
+        @else
+            <div class="text-center py-4">
+                <h5 class="text-muted">No images available</h5>
+            </div>
+        @endif
 
 
-<div class="container">
-    <h2 class="text-center mb-4">Categories</h2>
-    <div class="categories-slider">
-        <div class="categories-track">
-            @foreach ($category->chunk(10) as $chunk)
-                <div class="categories-row d-flex flex-nowrap">
-                    @foreach ($chunk as $cat)
-                        <div style="width: 220px" class="category-item text-center">
+    </div>
+
+
+    {{-- Categories --}}
+    <div class="container">
+        <h2 class="text-center mb-4 text-dark">Categories<h2>
+                <div class="categories-slider-ltr owl-carousel owl-theme">
+                    @foreach ($category as $cat)
+                        <div class="category-item text-center">
                             <div class="icon-container">
                                 <a href="{{ route('subcategory', ['category_id' => $cat->id]) }}">
                                     <img src="{{ asset('uploads/category/' . $cat->image) }}" alt="{{ $cat->name }}"
-                                        class="img-fluid rounded-circle mx-2" style="width: 150px; height: 100px;">
+                                        class="category-img">
                                 </a>
                             </div>
-                            <h5 class="mt-3" style="word-wrap: break-word; white-space: pre-wrap;">
-                                {{ $cat->name }}</h5>
+                            <h5 class="category-name">{{ $cat->name }}</h5>
                         </div>
                     @endforeach
                 </div>
-            @endforeach
-        </div>
-    </div>
-</div>
-
-<style>
-    .categories-slider {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        padding: 20px 0;
-    }
-
-    .categories-track {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        animation: scroll-category 40s linear infinite;
-    }
-
-    .categories-row {
-        display: flex;
-        width: max-content;
-    }
-
-    .category-item {
-        flex: 0 0 auto;
-        padding: 0 20px;
-    }
-
-    @keyframes scroll-category {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    /* .categories-track:hover {
-        animation-play-state: paused;
-    } */
-</style>
 
 
-    <div id="Controls" class="carousel slide mx-auto mt-4" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-inner">
-            @foreach ($secondSlider as $key => $sliderItem)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                    @if ($sliderItem->image)
-                        <img src="{{ asset('/uploads/second-slider/' . $sliderItem->image) }}" class="d-block w-100" alt="Image" style="height: 350px; object-fit:cover">
-                    @endif
-                </div>
-            @endforeach
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#Controls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#Controls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </div>
+                <style>
+                    .categories-slider {
+                        position: relative;
+                        width: 100%;
+                        overflow: hidden;
+                        padding: 30px 0;
+                        /* Adjusted padding for better spacing */
+                        background: linear-gradient(45deg, #2561a8, #1e3c72);
+                        border-radius: 15px;
+                        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+                    }
+
+                    .category-item {
+                        flex: 0 0 auto;
+                        margin: 20px;
+                        width: 170px;
+                        /* Set a fixed width for uniform box size */
+                        height: 200px;
+                        /* Set a fixed height to ensure all boxes are the same size */
+                        /* margin: 0 15px; Slight margin for spacing */
+                        padding: 20px;
+                        /* Adjusted padding to ensure content fits properly */
+                        background: #ffffff;
+                        border-radius: 12px;
+                        box-shadow: 10px 3px 10px 10px rgba(0, 0, 0, 0.15);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        /* Vertically center content */
+                        align-items: center;
+                        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                        cursor: pointer;
+                        text-align: center;
+                    }
+
+                    .category-item:hover {
+                        transform: scale(1.05);
+                        /* Subtle scale effect on hover */
+                        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+                    }
+
+                    .category-img {
+                        width: 130px;
+                        /* Adjust image width for uniformity */
+                        height: 130px;
+                        /* Adjust image height for uniformity */
+                        object-fit: cover;
+                        /* Ensure the image fits within the circle */
+                        border-radius: 50%;
+                        /* Circular image */
+                        transition: transform 0.2s ease-in-out;
+                        margin-bottom: 15px;
+                        /* Margin for spacing between image and text */
+                    }
+
+                    .category-item:hover .category-img {
+                        transform: scale(1.1);
+                        /* Zoom effect on hover */
+                    }
+
+                    .category-name {
+                        font-size: 18px;
+                        /* Adjust font size */
+                        font-weight: bold;
+                        color: #333;
+                        text-transform: capitalize;
+                        line-height: 1.3;
+                        margin-top: 15px;
+                        /* Added space between name and image */
+                    }
+
+                    .container {
+                        margin-top: 60px;
+                        /* Space on top to separate from previous content */
+                    }
+
+                    h2 {
+                        margin-bottom: 40px;
+                        /* More space below the title */
+                    }
+                </style>
+
+                <script>
+                    $(document).ready(function() {
+                        // First slider (Right to Left)
+                        $(".categories-slider-rtl").owlCarousel({
+                            loop: true,
+                            margin: 30,
+                            nav: true,
+                            dots: false,
+                            items: 1,
+                            responsive: {
+                                600: {
+                                    items: 3
+                                },
+                                1000: {
+                                    items: 5
+                                }
+                            },
+                            autoplay: true,
+                            autoplayTimeout: 5000,
+                            autoplayHoverPause: true,
+                            smartSpeed: 800,
+                            rtl: true // Moves from right to left
+                        });
+
+                        // Second slider (Left to Right)
+                        $(".categories-slider-ltr").owlCarousel({
+                            loop: true,
+                            margin: 30,
+                            nav: true,
+                            dots: false,
+                            items: 1,
+                            responsive: {
+                                600: {
+                                    items: 3
+                                },
+                                1000: {
+                                    items: 5
+                                }
+                            },
+                            autoplay: true,
+                            autoplayTimeout: 5000,
+                            autoplayHoverPause: true,
+                            smartSpeed: 800,
+                            rtl: false // Moves from left to right
+                        });
+                    });
+                </script>
 
 
-    <style>
-        .carousel {
-            direction: ltr;
-        }
-    </style>
-
-
-    <div class="container">
-        <h2 class="text-center mb-4">Authorized Brands</h2>
-        <div class="brands-slider">
-            <div class="brands-track d-flex">
-                @foreach ($brand as $b)
-                    <div style="width: 220px" class="category-item text-center">
-                        <div class="icon-container">
-                            <a href="#">
-                                <img src="{{ asset($b->image) }}" alt="{{ $b->name }}"
-                                    class="img-fluid rounded-circle mx-2" style="width: 150px; height: 150px;">
-                            </a>
+                <div class="categories-slider-ltr mt-3 owl-carousel owl-theme">
+                    @foreach ($category as $cat)
+                        <div class="category-item text-center">
+                            <div class="icon-container">
+                                <a href="{{ route('subcategory', ['category_id' => $cat->id]) }}">
+                                    <img src="{{ asset('uploads/category/' . $cat->image) }}" alt="{{ $cat->name }}"
+                                        class="category-img">
+                                </a>
+                            </div>
+                            <h5 class="category-name">{{ $cat->name }}</h5>
                         </div>
-                        <h5 class="mt-3" style="word-wrap: break-word; white-space:-moz-pre-wrap; white-space:pre-wrap">
-                            {{ $b->name }}</h5>
-                    </div>
-                @endforeach
-            </div>
-        </div>
+                    @endforeach
+                </div>
     </div>
-       {{-- brands slider --}}
 
     <style>
-        .brands-slider {
+        .categories-slider {
             position: relative;
             width: 100%;
             overflow: hidden;
-            padding: 20px 0;
-        }
-
-        .brands-track {
-            display: flex;
-            width: fit-content;
-            animation: scroll 40s linear infinite;
+            padding: 30px 0;
+            /* Adjusted padding for better spacing */
+            background: linear-gradient(45deg, #2561a8, #1e3c72);
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .category-item {
             flex: 0 0 auto;
-            padding: 0 20px;
+            margin-left: 40px;
+            width: 170px;
+            /* Set a fixed width for uniform box size */
+            height: 250px;
+            /* Set a fixed height to ensure all boxes are the same size */
+            /* margin: 0 15px; Slight margin for spacing */
+            padding: 20px;
+            /* Adjusted padding to ensure content fits properly */
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Vertically center content */
+            align-items: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .category-item:hover {
+            transform: scale(1.05);
+            /* Subtle scale effect on hover */
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .category-img {
+            width: 130px;
+            /* Adjust image width for uniformity */
+            height: 130px;
+            /* Adjust image height for uniformity */
+            object-fit: cover;
+            /* Ensure the image fits within the circle */
+            border-radius: 50%;
+            /* Circular image */
+            transition: transform 0.2s ease-in-out;
+            margin-bottom: 15px;
+            /* Margin for spacing between image and text */
+        }
+
+        .category-item:hover .category-img {
+            transform: scale(1.1);
+            /* Zoom effect on hover */
+        }
+
+        .category-name {
+            font-size: 18px;
+            /* Adjust font size */
+            font-weight: bold;
+            color: #333;
+            text-transform: capitalize;
+            line-height: 1.3;
+            margin-top: 15px;
+            /* Added space between name and image */
+        }
+
+        .container {
+            margin-top: 60px;
+            /* Space on top to separate from previous content */
+        }
+
+        h2 {
+            margin-bottom: 40px;
+            /* More space below the title */
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".categories-slider-ltr").owlCarousel({
+                loop: true,
+                margin: 30,
+                nav: true,
+                dots: false,
+                items: 1,
+                responsive: {
+                    600: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 5
+                    }
+                },
+                autoplay: true,
+                autoplayTimeout: 5000,
+                autoplayHoverPause: true,
+                smartSpeed: 800,
+                rtl: false // Moves from left to right
+            });
+        });
+    </script>
+
+    {{-- singel silder  --}}
+    <div class="owl-carousel owl-theme mt-5">
+        @foreach ($secondSlider as $sliderItem)
+            <div class="item">
+                @if ($sliderItem->image)
+                    <img src="{{ asset('/uploads/second-slider/' . $sliderItem->image) }}" alt="Image" class="w-100"
+                        style="height: 350px; object-fit:cover;">
+                @endif
+            </div>
+        @endforeach
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $(".owl-carousel").owlCarousel({
+                loop: true, // Infinite loop
+                margin: 10, // Space between items
+                nav: false,
+                dots: false, // Show navigation arrows
+                autoplay: true, // Auto-slide enabled
+                autoplayTimeout: 3000, // 3 seconds per slide
+                responsive: {
+                    0: {
+                        items: 1
+                    }, // 1 item for mobile
+                    600: {
+                        items: 1
+                    }, // 2 items for tablets
+                    1000: {
+                        items: 1
+                    } // 3 items for larger screens
+                }
+            });
+        });
+    </script>
+
+    {{-- Authorized Brands --}}
+    <div class="container">
+        <h2 class="text-center mt-4 text-dark">Authorized Brands</h2>
+        <div class="brands-slider mt-3">
+            <div class="brands-track d-flex">
+                @foreach ($brand as $b)
+                    <div class="category-item text-center">
+                        <div class="icon-container">
+                            <a href="#">
+                                <img src="{{ asset($b->image) }}" alt="{{ $b->name }}"
+                                    class="img-fluid rounded-circle mx-2 brand-logo">
+                            </a>
+                        </div>
+                        <h5 class="mt-3 brand-name">
+                            {{ $b->name }}
+                        </h5>
+                    </div>
+                @endforeach
+
+                {{-- Duplicate items for smooth looping --}}
+                @foreach ($brand as $b)
+                    <div class="category-item text-center">
+                        <div class="icon-container">
+                            <a href="#">
+                                <img src="{{ asset($b->image) }}" alt="{{ $b->name }}"
+                                    class="img-fluid rounded-circle mx-2 brand-logo">
+                            </a>
+                        </div>
+                        <h5 class="mt-3 brand-name">
+                            {{ $b->name }}
+                        </h5>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .container {
+            text-align: center;
+        }
+
+        .brands-slider {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px;
+            background: #2561a8;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .brands-track {
+            display: flex;
+            animation: scroll 40s linear infinite;
+            width: max-content;
+        }
+
+        .category-item {
+            flex: 0 0 auto;
+            margin-left: 20px;
+            width: 230px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.6);
+        }
+
+        .brand-name {
+            margin-top: 15px;
+            width: 160px;
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
         }
 
         @keyframes scroll {
@@ -277,103 +573,106 @@
             }
 
             100% {
-                transform: translateX(50%);
+                transform: translateX(-50%);
             }
         }
-
-        /* .brands-track:hover {
-            animation-play-state: paused;
-        } */
     </style>
 
 
 
 
-    <div class="container mt-2">
-        <div class="row g-4">
-            @foreach (range(0, 1) as $index) <!-- Change the range to 0, 1 for two sliders -->
-                <div class="col-12 col-md-6"> <!-- Adjusted col size to fit two sliders -->
-                    <div class="mini-slider-container">
-                        <div class="image-track">
-                            @foreach ($minislider as $image)
-                                <div class="slide-image">
-                                    <img src="{{ asset('uploads/mini-slider/' . $image->image) }}" alt="Slider Image"
-                                         class="mini-slider-image">
+
+
+    @if (isset($minislider) && $minislider->count() > 0)
+        <div class="container mt-5">
+            <div class="row g-4">
+                @for ($i = 0; $i < 2; $i++)
+                    <div class="col-12 col-md-6">
+                        <div id="mini-slider-{{ $i }}" class="owl-carousel owl-theme">
+                            @foreach ($i == 0 ? $minislider : $minislider->shuffle() as $image)
+                                <div class="item mini-slider-wrapper">
+                                    <div class="mini-slider-shadow"> <!-- Shadow Wrapper -->
+                                        <img src="{{ asset('uploads/mini-slider/' . $image->image) }}" alt="Slider Image"
+                                            class="img-fluid mini-slider-image">
+                                    </div>
                                 </div>
                             @endforeach
-                            <div class="slide-image">
-                                <img src="{{ asset('uploads/mini-slider/' . $minislider[0]->image) }}" alt="Slider Image"
-                                     class="mini-slider-image">
-                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endfor
+            </div>
         </div>
-    </div>
 
-    <style>
-        .mini-slider-container {
-            position: relative;
-            width: 100%;
-            height: 250px;
-            overflow: hidden;
-            border-radius: 5px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .image-track {
-            position: absolute;
-            display: flex;
-            width: calc(100% * {{ count($minislider) + 1 }});
-            height: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .slide-image {
-            width: calc(100% / {{ count($minislider) + 1 }});
-            height: 100%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-        }
-
-        .mini-slider-image {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const containers = document.querySelectorAll('.mini-slider-container');
-
-            containers.forEach((container, containerIndex) => {
-                const track = container.querySelector('.image-track');
-                let currentPosition = 0;
-
-                setInterval(() => {
-                    currentPosition = (currentPosition + 1) % ({{ count($minislider) + 1 }});
-                    track.style.transform =
-                        `translateX(-${currentPosition * (100 / ({{ count($minislider) + 1 }}))}%)`;
-                }, 3000 + (containerIndex * 1000));
+        <script>
+            $(document).ready(function() {
+                $("#mini-slider-0, #mini-slider-1").owlCarousel({
+                    loop: true,
+                    margin: 15,
+                    /* Increased spacing between slides */
+                    nav: false,
+                    dots: true,
+                    /* Enabled dots for better navigation */
+                    autoplay: true,
+                    autoplayTimeout: 3000,
+                    autoplayHoverPause: true,
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+                        /* Mobile - 1 image per slide */
+                        600: {
+                            items: 2
+                        },
+                        /* Tablet - 2 images per slide */
+                        1000: {
+                            items: 2
+                        } /* Desktop - 2 images per slide */
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 
+        <style>
+            /* Wrapper to center the image and maintain spacing */
+            .mini-slider-wrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 15px;
+            }
 
+            /* Shadow Wrapper to make sure the shadow is visible */
+            .mini-slider-shadow {
+                display: inline-block;
+                /* padding: 10px; */
+                background-color: white;
+                border-radius: 10px;
+                /* box-shadow: 10px 10px 20px rgba(122, 145, 167); */
+                /* Shadow effect */
+            }
 
+            /* Mini Slider Image Styling */
+            .mini-slider-image {
+                width: 300px;
+                height: 300px;
+                object-fit: contain;
+                /* border-radius: 10px; */
+                background-color: white;
+            }
 
-
-
-
-
+            /* Responsive Tweaks */
+            @media (max-width: 768px) {
+                .mini-slider-image {
+                    width: 250px;
+                    height: 250px;
+                }
+            }
+        </style>
+    @else
+        <div class="text-center py-4">
+            <h5 class="text-muted">No images available</h5>
+        </div>
+    @endif
 
 
 
@@ -440,7 +739,7 @@
     </div>
 
     {{--  Our Happy Customers  --}}
-    <div class="container mt-1">
+    <div class="container mt-1" id="customers">
         <div class="row justify-content-center">
             <h2 class="text-center mb-4">Our Happy Customers</h2>
 
@@ -490,7 +789,20 @@
             </div>
         </div>
     </div>
+    <style>
+        .card {
+            height: 100%;
+            /* Ensures equal height for all cards */
+        }
 
+        .card-body {
+            height: 100%;
+            overflow: hidden;
+            /* Prevents scroll bar */
+        }
+    </style>
+
+    {{-- last 5 image  --}}
     <div id="silder" class="carousel slide mx-auto" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -558,50 +870,3 @@
     </div>
 
 @endsection
-
-<style>
-    .carousel-control-prev:hover,
-    .carousel-control-next:hover {
-        /* background-color: #000; */
-        background-color: rgba(71, 71, 71, 0.432) !important;
-        /* Change this to your desired color */
-        /* border-radius: 50%; */
-        /* padding: 10px; */
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var carousels = document.querySelectorAll('.carousel');
-
-        // Loop through each carousel and manage autoplay
-        carousels.forEach((carousel, index) => {
-            var interval = 5000; // Time between slide transitions
-            var direction = index % 2 === 0 ? 'next' : 'prev'; // Alternate directions
-
-            // Function to simulate clicking next/prev based on alternating direction
-            setInterval(() => {
-                var action = carousel.querySelector(`.carousel-control-${direction}`);
-                if (action) {
-                    action.click(); // Trigger the slide change action
-                }
-            }, interval);
-        });
-    });
-
-    // Initialize the first Bootstrap Carousel with autoplay functionality
-    var myCarousel = document.getElementById('carouselExampleControls');
-    var carousel = new bootstrap.Carousel(myCarousel, {
-        interval: 5000, // Autoplay interval in milliseconds
-        ride: 'carousel', // Auto-rotate the carousel
-        wrap: true // Ensure carousel loops back around
-    });
-
-    // Initialize the second Bootstrap Carousel with autoplay functionality
-    var imageCarousel = document.getElementById('imageCarousel');
-    var carouselInstance = new bootstrap.Carousel(imageCarousel, {
-        interval: 5000, // Autoplay interval in milliseconds
-        ride: 'carousel', // Auto-rotate the carousel
-        wrap: true // Ensure carousel loops back around
-    });
-</script>

@@ -346,7 +346,7 @@
                  </li>
                  <li class="maximize"><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i
                              data-feather="maximize"></i></a></li>
-                 <li class="profile-nav onhover-dropdown p-0 me-0">
+                 <li class="profile-nav onhover-dropdown p-0 me-0 ">
                      <div class="media profile-media"><img class="b-r-10"
                              src="../assets/images/dashboard/profile.jpg" alt="">
                          <div class="media-body"><span>Admin</span>

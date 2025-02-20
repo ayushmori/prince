@@ -126,16 +126,28 @@
                     <!-- Products Tab -->
                     @if($category->products->count() > 0)
                     <div class="tab-pane fade {{ $childCategories->count() == 0 ? 'show active' : '' }}" id="products-pane">
-                        <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mt-3">
                             @foreach ($category->products as $product)
                                 <div class="col">
-                                    <div class="card h-100 shadow-sm d-flex flex-column">
-                                        {{-- <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}" class="card-img-top" style="object-fit: cover; height: 200px;"> --}}
-                                        <img src="{{ $product->image ? asset('uploads/products/' . $product->image) : asset('images/fallback.jpg') }}"
-                                            alt="{{ $product->name }}"
-                                            class="card-img-top"
-                                            style="object-fit: cover; height: 200px;">
-
+                                    <div class="card">
+                                        @php
+                                            $images = json_decode(str_replace('\\', '/', $product->images), true);
+                                        @endphp
+                
+                                        <div class="card-img-top">
+                                            @if (!empty($images) && is_array($images))
+                                                @foreach ($images as $image)
+                                                    @if (!empty($image))
+                                                        <img src="{{ url($image) }}" alt="Product Image" class="img-fluid" />
+                                                    @else
+                                                        <p>No image available for this entry.</p>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <p>No images available</p>
+                                            @endif
+                                        </div>
+                
                                         <div class="card-body d-flex flex-column">
                                             <h5 class="card-title text-primary text-truncate">{{ $product->name }}</h5>
                                             <p class="card-text text-muted text-truncate">{{ $product->serial_number }}</p>
@@ -149,7 +161,8 @@
                             @endforeach
                         </div>
                     </div>
-                    @endif
+                @endif
+                
                 </div>
 
             @else
@@ -160,141 +173,6 @@
 </div>
 
 <script>
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     const checkboxes = document.querySelectorAll('.filter-checkbox');
-    //     const clearFiltersButton = document.getElementById('clear-filters');
-    //     const currentCategoryId = '{{ $category->id }}';
-
-    //     const subcategoryTab = document.getElementById('subcategories-tab');
-    //     const productsTab = document.getElementById('products-tab');
-
-    //     // Hide subcategories tab if no subcategories exist
-    //     if (!document.getElementById('subcategory-list').children.length) {
-    //         if (subcategoryTab) subcategoryTab.style.display = 'none';
-    //         if (productsTab) productsTab.classList.add('active');
-    //     }
-
-    //     // Function to update the display based on selected filters
-    //     function updateDisplay() {
-    //         const selectedCategories = Array.from(document.querySelectorAll('input[name="category[]"]:checked')).map(cb => cb.value);
-    //         const selectedBrands = Array.from(document.querySelectorAll('input[name="brand[]"]:checked')).map(cb => cb.value);
-
-    //         if (selectedCategories.length === 0 && selectedBrands.length === 0) {
-    //             loadSubcategoriesAndProducts(currentCategoryId);
-    //         } else {
-    //             fetchFilteredData(selectedCategories, selectedBrands);
-    //         }
-    //     }
-
-    //     // Add event listeners to checkboxes
-    //     checkboxes.forEach(checkbox => {
-    //         checkbox.addEventListener('change', updateDisplay);
-    //     });
-
-    //     // Clear filters button
-    //     clearFiltersButton.addEventListener('click', function () {
-    //         checkboxes.forEach(checkbox => checkbox.checked = false);
-    //         loadSubcategoriesAndProducts(currentCategoryId);
-    //     });
-
-    //     // Load subcategories and products for the current category
-    //     function loadSubcategoriesAndProducts(categoryId) {
-    //         fetch(`/category/${categoryId}`, {
-    //             headers: {
-    //                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-    //                 'Accept': 'application/json'
-    //             }
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             updateSubcategoryList(data.childCategories);
-    //             updateProductList(data.products);
-    //         })
-    //         .catch(error => console.error('Error:', error));
-    //     }
-
-    //     // Fetch filtered data based on selected categories and brands
-    //     function fetchFilteredData(categories, brands) {
-    //         const url = new URL('{{ route("categories.filter") }}');
-
-    //         if (categories.length > 0) {
-    //             url.searchParams.set('categories', categories.join(','));
-    //         } else {
-    //             url.searchParams.delete('categories');
-    //         }
-
-    //         if (brands.length > 0) {
-    //             url.searchParams.set('brands', brands.join(','));
-    //         } else {
-    //             url.searchParams.delete('brands');
-    //         }
-
-    //         url.searchParams.set('parent_id', currentCategoryId);
-
-    //         fetch(url, {
-    //             headers: {
-    //                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-    //                 'Accept': 'application/json'
-    //             }
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             updateSubcategoryList(data.subcategories);
-    //             updateProductList(data.products);
-    //         })
-    //         .catch(error => console.error('Error:', error));
-    //     }
-
-    //     // Update subcategory list in the UI
-    //     function updateSubcategoryList(subcategories) {
-    //         const subcategoryList = document.getElementById('subcategory-list');
-    //         subcategoryList.innerHTML = '';
-
-    //         subcategories.forEach(subcategory => {
-    //             const subcategoryCard = `
-    //                 <div class="col">
-    //                     <div class="card h-100 shadow-sm">
-    //                         <img src="/uploads/category/${subcategory.image}" alt="${subcategory.name}" class="card-img-top" style="object-fit: cover; height: 200px;">
-    //                         <div class="card-body d-flex flex-column">
-    //                             <h5 class="card-title text-primary text-truncate">${subcategory.name}</h5>
-    //                             <p class="card-text text-muted text-truncate">${subcategory.description}</p>
-    //                             <div class="mt-auto">
-    //                                 <a href="/category/${subcategory.id}" class="btn btn-primary mb-2">View Details</a>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             `;
-    //             subcategoryList.insertAdjacentHTML('beforeend', subcategoryCard);
-    //         });
-    //     }
-
-    //     // Update product list in the UI
-    //     function updateProductList(products) {
-    //         const productList = document.querySelector('#products-pane .row');
-    //         productList.innerHTML = '';
-
-    //         products.forEach(product => {
-    //             const productCard = `
-    //                 <div class="col">
-    //                     <div class="card h-100 shadow-sm">
-    //                         <img src="/uploads/products/${product.image}" alt="${product.name}" class="card-img-top" style="object-fit: cover; height: 200px;">
-    //                         <div class="card-body d-flex flex-column">
-    //                             <h5 class="card-title text-primary text-truncate">${product.name}</h5>
-    //                             <p class="card-text text-muted text-truncate">${product.serial_number}</p>
-    //                             <p class="card-text"><strong>Price:</strong> $${product.price.toFixed(2)}</p>
-    //                             <div class="mt-auto">
-    //                                 <a href="/product/${product.id}" class="btn btn-primary mb-2">View Details</a>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             `;
-    //             productList.insertAdjacentHTML('beforeend', productCard);
-    //         });
-    //     }
-    // });
-
     document.addEventListener('DOMContentLoaded', function () {
         const checkboxes = document.querySelectorAll('.filter-checkbox');
         const clearFiltersButton = document.getElementById('clear-filters');
