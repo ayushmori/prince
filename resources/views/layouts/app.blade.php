@@ -43,10 +43,24 @@
     <!-- Apply Custom Font -->
     <style>
         @font-face {
-            font-family: 'Arial Rounded MT' !important;
-            src: url('{{ asset('assets/fonts/ArialRoundedMT.ttf') }}') format('truetype');
-            font-weight: 300;
-            font-style: bold;
+            font-family: 'Poppins';
+            src: url('/fonts/Poppins-Regular.woff2') format('woff2'),
+                 url('/fonts/Poppins-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            src: url('/fonts/Poppins-Bold.woff2') format('woff2'),
+                 url('/fonts/Poppins-Bold.woff') format('woff');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        /* Apply font to website */
+        body {
+            font-family: 'Poppins', sans-serif;
         }
 
         /* body {

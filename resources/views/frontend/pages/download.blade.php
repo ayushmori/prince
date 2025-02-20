@@ -3,142 +3,157 @@
 @section('title', 'Download')
 
 @section('content')
-    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/css/menu.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/css/animate.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('assets/css/owl.carousel.min.css') }}" rel="stylesheet">
+    <div class="container py-4">
+        <h2 class="mb-3">Download Documents</h2>
 
-    <div class="section">
-        <div class="container">
-            <div class="search-panel">
-                <div class="row">
-                    <div class="col-md-4">
-                        <select class="text-field" id="downloadBrand" name="downloadBrand">
-                            <option value="0" selected>- Select Brand -</option>
-                            <option value="3">Inovance</option>
-                            <option value="4">Autonics</option>
-                            <option value="5">Schneider Electric</option>
-                            <option value="6">Rtelligent</option>
-                            <option value="7">Modbus</option>
-                        </select>
+        <div class="row">
+            <!-- Filters (Left Side) -->
+            <div class="col-md-3">
+                <div class="p-3 bg-white shadow rounded">
+                    <h5>Filter by</h5>
+
+                    <!-- Search Bar -->
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="searchProduct" placeholder="Search product">
                     </div>
-                    <div class="col-md-4">
-                        <select class="text-field" id="downloadCategory" name="downloadCategory">
-                            <option value="0" selected>- Select Category -</option>
-                        </select>
+
+                    <!-- Category Filter -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Category</label>
+                        <ul class="list-unstyled">
+                            @foreach ($categories as $category)
+                                <li>
+                                    <label class="d-flex align-items-center">
+                                        <input type="checkbox" name="category[]" value="{{ $category->id }}" class="filter-checkbox category-checkbox me-2">
+                                        <span>{{ $category->name }}</span>
+                                    </label>
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
-                    <div class="col-md-4">
-                        <select class="text-field" id="downloadSubCategory" name="downloadSubCategory">
-                            <option value="0" selected>- Select Subcategory -</option>
-                        </select>
+
+                    <!-- Subcategory Filter (Dynamic) -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Subcategory</label>
+                        <ul id="subcategory-list" class="list-unstyled">
+                            <p>Select a category to see subcategories.</p>
+                        </ul>
                     </div>
+
+                    <!-- Brand Filter -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Brand</label>
+                        <ul class="list-unstyled">
+                            @foreach ($brands as $brand)
+                                <li>
+                                    <label class="d-flex align-items-center">
+                                        <input type="checkbox" name="brand[]" value="{{ $brand->id }}" class="filter-checkbox me-2">
+                                        <span>{{ $brand->name }}</span>
+                                    </label>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <button class="btn btn-primary w-100" id="applyFilters">Apply Filters</button>
+                    <button class="btn btn-outline-secondary w-100 mt-2" id="resetFilters">Reset All</button>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-md-8">
-                        <input type="text" class="text-field" id="searchProduct" placeholder="Search product">
-                    </div>
-                    <button class="custbtn" id="searchButton">Search</button>
+            </div>
+
+            <!-- Documents (Right Side) -->
+            <div class="col-md-9">
+                <div class="row" id="documentsList">
+                    @foreach ($documents as $document)
+                        <div class="col-md-6 mb-3">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $document->title }}</h5>
+                                    <p class="text-muted">{{ $document->category->name ?? 'N/A' }} | {{ $document->brand->name ?? 'N/A' }}</p>
+                                    <a href="{{ $document->file_path }}" class="btn btn-sm btn-primary">Download</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="section pt0">
-        <div class="container">
-            <div class="image-grid">
-                @foreach (['Inovance', 'Autonics', 'Schneider Electric', 'Rtelligent', 'Modbus'] as $index => $brand)
-                    <div>
-                        <a href="download/{{ strtolower(str_replace(' ', '-', $brand)) }}/{{ $index + 3 }}"
-                            title="{{ $brand }}">
-                            <img class="img-responsive"
-                                src="{{ asset('images/' . ($index + 3) . strtolower(str_replace(' ', '-', $brand)) . '.png') }}"
-                                alt="{{ $brand }}">
-                        </a>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
+    <!-- jQuery -->
     <script src="{{ asset('admin/js/jquery-1.12.4.min.js') }}"></script>
-    <script src="{{ asset('admin/js/bootstrap.min.js') }}"></script>
+
     <script>
-        document.getElementById("searchButton").addEventListener("click", function () {
-            alert("Search functionality not implemented yet.");
+      $(document).ready(function() {
+    function applyFilters() {
+        let selectedCategories = [];
+        let selectedSubcategories = [];
+        let selectedBrands = [];
+        let searchQuery = $('#searchProduct').val();
+
+        $('input[name="category[]"]:checked').each(function() {
+            selectedCategories.push($(this).val());
         });
+
+        $('input[name="subcategory[]"]:checked').each(function() {
+            selectedSubcategories.push($(this).val());
+        });
+
+        $('input[name="brand[]"]:checked').each(function() {
+            selectedBrands.push($(this).val());
+        });
+
+        $.ajax({
+            url: "{{ route('download.page') }}",
+            method: "GET",
+            data: {
+                category: selectedCategories,
+                subcategory: selectedSubcategories,
+                brand: selectedBrands,
+                search: searchQuery
+            },
+            success: function(response) {
+                let documentsList = $('#documentsList');
+                documentsList.empty();
+
+                if (response.documents.length > 0) {
+                    response.documents.forEach(document => {
+                        documentsList.append(`
+                            <div class="col-md-6 mb-3">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${document.title}</h5>
+                                        <p class="text-muted">${document.category?.name ?? 'N/A'} | ${document.brand?.name ?? 'N/A'}</p>
+                                        <a href="${document.file_path}" class="btn btn-sm btn-primary">Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    documentsList.html('<p class="text-center">No documents found.</p>');
+                }
+            }
+        });
+    }
+
+    // Automatically apply filters when filters are changed
+    $('.filter-checkbox, #searchProduct').on('input change', function() {
+        applyFilters();
+    });
+
+    // Reset filters
+    $('#resetFilters').on('click', function() {
+        $('.filter-checkbox').prop('checked', false);
+        $('#searchProduct').val('');
+        $('#subcategory-list').html('<p>Select a category to see subcategories.</p>');
+        applyFilters();
+    });
+
+    // Search functionality
+    $('#searchButton').on('click', function() {
+        applyFilters();
+    });
+});
+
     </script>
-
-    <style>
-        /* General Styling */
-        .section {
-            padding: 30px 0;
-            background-color: #f9f9f9;
-        }
-
-        .container {
-            max-width: 1140px;
-            margin: auto;
-        }
-
-        /* Search Panel */
-        .search-panel {
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .text-field {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .custbtn {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .custbtn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Image Grid */
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .image-grid img {
-            width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .image-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .image-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .search-panel {
-                padding: 15px;
-            }
-        }
-    </style>
 @endsection

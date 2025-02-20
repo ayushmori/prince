@@ -114,6 +114,25 @@
 
 
 
+                    <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i
+                                data-feather="airplay"></i><span>Documents Type</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ route('document-types.create') }}">Add Document Type</a></li>
+                            <li><a href="{{ route('document-types.index') }}">View Document Type</a></li>
+                        </ul>
+                    </li>
+
+
+                    <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i
+                            data-feather="airplay"></i><span>Documents Category</span></a>
+                        <ul class="sidebar-submenu">
+                            <li><a href="{{ url('admin/document-category/create') }}">Add Document Category</a></li>
+                            <li><a href="{{ url('admin/document-category') }}">View Document Category</a></li>
+                        </ul>
+                    </li>
+
+
+
                     {{-- <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#"><i data-feather="airplay"></i><span>Setting</span></a>
               <ul class="sidebar-submenu">
                 <li><a href="{{ url('admin/settings/about-us' )}}">About-Us</a></li>

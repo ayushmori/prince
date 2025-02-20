@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+    @extends('layouts.admin')
 
 @section('content')
 
@@ -47,7 +47,7 @@
                 <form action="{{ route('main-documents.update', $document->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                
+
 
                     {{-- <div class="mb-3 row">
                         <label class="col-sm-3 col-form-label">Product_id</label>
@@ -79,8 +79,8 @@
                         <input class="form-control" type="text" name="description" value="{{ $document->description }}">
                         </div>
                     </div>
-                   
-                    
+
+
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>

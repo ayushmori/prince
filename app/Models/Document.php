@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Document extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'type', 'file_path'];
-    // protected $casts = [
-    //     'documents' => array()
-    // ];
+    protected $fillable = ['title', 'file_path', 'category_id', 'brand_id'];
 
-    public function product()
+    public function category()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Category::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 }
